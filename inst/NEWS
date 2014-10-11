@@ -1,0 +1,43 @@
+CHANGES IN VERSION 0.99.23
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o added methods for specLSet class: 
+        ionlibrary, rt.input, rt.normalized
+
+    o fixed Sys.time() units in message.
+
+USER UNVISIBLE CHANGES
+
+    o genSwathIonLib using bpmapply
+
+
+
+CHANGES IN VERSION 0.99.22
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o specLSet plot method
+
+CHANGES IN VERSION 0.99.21
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o specLSet class
+
+    o replace print by show and write.Spectronaut method in specL and specLSet classes
+
+CHANGES IN VERSION 0.99.20
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o replaced mclapply by BiocParalle::bplapply
+
+    o print method
+
+    o include iRTpeptide data
+

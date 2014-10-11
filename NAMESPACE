@@ -1,0 +1,21 @@
+import("methods")
+import("RSQLite")
+
+importFrom("DBI", dbDriver)
+
+
+importFrom("protViz", aa2mass)
+importFrom("protViz", findNN)
+importFrom("protViz", findNN_)
+importFrom("protViz", fragmentIon)
+
+importFrom("seqinr", read.fasta)
+
+export("read.bibliospec")
+export("annotateProteinID")
+export("genSwathIonLib")
+
+exportClasses("specL", "specLSet")
+
+exportMethods("show", "plot", "write.Spectronaut", 
+    "ionlibrary", "rt.input", "rt.normalized")

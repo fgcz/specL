@@ -1,0 +1,358 @@
+%\VignetteIndexEntry{specL}
+
+\documentclass[12pt]{article}
+
+<<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
+BiocStyle::latex()
+@
+
+\title{\Biocpkg{specL} - Prepare Peptide Spectrum Matches for Use in Targeted Proteomics}
+
+\author{
+    Christian Panse\thanks{\email{cp@fgcz.ethz.ch}}\\
+    Christian Trachsel\thanks{\email{christian.trachsel@fgcz.ethz.ch}}\\
+    Jonas Grossmann\thanks{\email{jg@fgcz.ethz.ch}}\\
+}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+Targeted proteomics is a fast evolving field in proteomics science and 
+was even elected as method of the year in 2012 
+\footnote{\url{http://www.nature.com/nmeth/journal/v10/n1/pdf/nmeth.2329.pdf}, 
+2014-09-22}. Especially targeted methods like SWATH \cite{SWATH} open 
+promising perspectives for the identification and quantification of 
+peptides and proteins. All targeted
+methods  have in common the need of precise MS coordinates composed 
+of precursor mass, fragment masses, and retention time. The combination 
+of this information is kept in so called assays or spectra libraries. Here we 
+present an R package able to produce such libraries out of peptide 
+identification results (Mascot (dat), TPP (pep.xml and mzXMLs), 
+ProteinPilot (group), Omssa (omx)). . 
+\Biocpkg{specL} is an easy to use, versatile and flexible function, 
+which can be integrated into already existing commercial 
+or non commercial analysis pipelines for targeted proteomics 
+data analysis. Some examples of today's pipelines are ProteinPilot 
+combined with Peakview (ABSciex), Spectronaut (Biognosys) or 
+OpenSwath \cite{pmid24727770}.
+
+In the following vignette it is described how the \Biocpkg{specL} package 
+can be used for the included data sets \Rcode{peptideStd} and 
+\Rcode{peptideStd.redundant}.
+
+
+\section{Workflow}
+
+\subsection{Prologue - How to get the input for the specL package?}
+
+Since peptide identification (using, e.g., Mascot, Sequest, xTandem!,
+Omssa, ProteinPilot) 
+usually creates result files which are 
+heavily redundant and therefore unsuited for spectrum library building, 
+the search results must first be filtered. To create non-redundant 
+input files, we use the BiblioSpec \cite{pmid18428681} algorithm 
+implemented in Skyline \cite{pmid20147306}. A given search result (e.g. 
+Mascot.DAT file) is loaded into the software Skyline and is redundancy 
+filtered. The 'Skyline workflow step' provides two sqlite readable 
+files as output named \Rcode{'*.blib'} and \Rcode{'*.redundant.blib'}. 
+These files are ideally used as ideal input for this packages.
+Note here, that Skyline is very flexible when it comes to peptide
+identification results. It means with Skyline you can build the spectrum
+library files for almost all search engines (even from other spectrum
+library files such as spectraST \cite{pmid18806791}).
+
+The first step which has to be performed on the R shell is loading 
+\Biocpkg{specL} library.
+
+<<keep.source = FALSE, eval = TRUE, fig = FALSE, echo=FALSE>>=
+options(width = 80)
+@
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+library(specL)
+data(peptideStd)
+@
+
+
+\subsection{Input: Redundant plus non-redundant blib files}
+for demonstration \Biocpkg{specL}  
+contains the two data sets namely \Rcode{peptideStd} and 
+\Rcode{peptideStd.redundant}. This is a data set which 
+comes from two standard run experiment which are routinely
+used to check the liquid chromatographic system is still working
+appropriate. The sample consists of a digest of the Fetuin protein 
+(Bos taurus, uniprot id: P12763). 40 femtomole are loaded on column.
+Mascot was used to search and identify the respective peptides.
+
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+demoIdx <- 40
+str(peptideStd[[demoIdx]])
+@
+
+For both \Rcode{peptideStd}, \Rcode{peptideStd.redandant} data sets the 
+Skyline software was used to generate the bibliospec files which 
+contain the peptide sequences with the respective peptide spectrum 
+match (PSM). The read.bibliospec function was used to read the blib 
+files into R.
+
+The peptide spectrum match can be displayed using the 
+\CRANpkg{protViz} \Rfunction{peakplot} function. 
+
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=5>>=
+res.peakplot <- peakplot(peptideSequence=peptideStd[[demoIdx]]$peptideSequence, 
+               spec=peptideStd[[demoIdx]], 
+               ion.axes=TRUE)
+
+@
+
+\subsection{Protein ID annotation using FASTA} 
+
+The information to which protein a peptide-spectrum-match belongs (PSM) 
+is not stored by BiblioSpec. Therefore \Biocpkg{specL} provides the 
+\Rfunction{annotateProteinID} function which uses R's internal \Rfunction{grep} 
+to 'reassigning' the protein information. Therefore a \Robject{fasta} object has 
+to be loaded into the R system using \Rfunction{read.fasta} of the 
+\CRANpkg{seqinr} package. For this, not necessarily, the same 
+\Robject{fasta} file needs to be provided as in the original database 
+search.
+
+The following lines demonstrate a simple sanity check with a single 
+FASTA style formated protein entry. Also it demonstrates the use case
+how to identify entries in the R-object which are from one or a few proteins
+of interest.
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+ irtFASTAseq <- paste(">zz|ZZ_FGCZCont0260|",
+"iRT_Protein_with_AAAAK_spacers concatenated Biognosys\n",
+"LGGNEQVTRAAAAKGAGSSEPVTGLDAKAAAAKVEATFGVDESNAKAAAAKYILAGVENS",
+"KAAAAKTPVISGGPYEYRAAAAKTPVITGAPYEYRAAAAKDGLDAASYYAPVRAAAAKAD",
+"VTPADFSEWSKAAAAKGTFIIDPGGVIRAAAAKGTFIIDPAAVIRAAAAKLFLQFGAQGS",
+"PFLK\n")
+
+Tfile <- file();  cat(irtFASTAseq, file = Tfile);
+fasta.irtFASTAseq <-read.fasta(Tfile, as.string=TRUE, seqtype="AA")
+close(Tfile)
+@
+
+As expected the \Rcode{peptideStd} data, e.g., our demo Object, does not 
+contain any protein information yet.
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+peptideStd[[demoIdx]]$proteinInformation
+@
+
+The protein information can be added as follow:
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+peptideStd <- annotateProteinID(peptideStd, 
+    fasta=fasta.irtFASTAseq)
+@
+
+The following lines show now the object indices of those entries which do
+hav a protein information now.
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+(idx<-which(unlist(lapply(peptideStd, 
+    function(x){nchar(x$proteinInformation)>0}))))
+@
+
+As expected, there are now a number of peptide sequences
+annotated with the protein ID. 
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+peptideStd[[demoIdx]]$proteinInformation
+@
+
+
+Please note, that the default digest pattern is defined as 
+<<keep.source = FALSE, eval = FALSE, fig = FALSE>>=
+digestPattern = "(([RK])|(^)|(^M))"
+@
+for tryptic peptides. For other enzymes, the pattern has to 
+be adapted. For example, for semi-tryptic identifications use
+\Rcode{digestPattern = ""}.
+
+\subsection{Generate the spectrum library (assay)}
+
+\Rfunction{genSwathIonLib} is the main contribution of the 
+\Biocpkg{specL} package. It generates the spectra library used in a 
+targeted data extraction workflow from a mass spectrometric 
+measurement.
+
+Generation of the spec Library with default settings.
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+res.genSwathIonLib <- genSwathIonLib(data=peptideStd, 
+                                     data.fit=peptideStd.redundant)
+@
+
+The determined mass spec coordinates of the selected tandem mass spectrum 
+\Rcode{demoIdx} look like this:
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+res.genSwathIonLib@ionlibrary[[demoIdx]]
+@
+
+It can be displayed using the \Rfunction{specL::plot} function.
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=5>>=
+plot(res.genSwathIonLib@ionlibrary[[demoIdx]])
+@
+
+The following code considers only the top five y ions.
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=5>>=
+# define customized fragment ions
+# for demonstration lets consider only the top five singly charged y ions.
+
+r.genSwathIonLib.top5 <- genSwathIonLib(peptideStd,
+    peptideStd.redundant, topN=5,
+    fragmentIonFUN=function (b, y) {
+      return( cbind(y1_=y) )
+      }
+    )
+
+plot(r.genSwathIonLib.top5@ionlibrary[[demoIdx]])
+
+@
+
+\subsection{Normalizing the retention time using iRT peptides}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Retention time is a very important parameter in targeted data 
+extraction. However retention times are not easy to transfer between 
+different reverse phase columns or HPLC systems. To make transfer 
+applicable and account for inter run shift in retention time Biognosys 
+\cite{pmid22577012} invented the iRT normalization based on iRT / HRM 
+peptides. For this, a set of well behaving peptides (good flying 
+properties, good fragmention characteristics, completely artifical) 
+which cover the whole rt-gradient are spiked into each sample. 
+For this set of peptide an idependent retention time (dimension less) 
+is suggested by Biognosys. With this at hand, the set of peptides can later 
+be used to apply a linear regression model to adapt all measured 
+retention times into an independent retention time 
+scale. \\
+If the identification results contain iRT peptides the package 
+supports the conversion to the iRT scale. For this (if the identification 
+result are based on multiple input files) the redundant BiblioSpec file 
+is required where all iRT peptides from all measurements are stored. 
+For the most representative spectrum in the non-redundant R-object the 
+original filename is identified and the respective linear model for this
+one particular MS experiment is applied 
+to normalize the retention time to the iRT scale.
+The iRT peptides as well as their independent retention times are
+stored in the \Rcode{iRTpeptides} object.
+
+\Biocpkg{specL} uses by default the iRT peptide table to normalize
+into the independent retention time but could also be extended or 
+changed to custom iRT peptides if available.
+<<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
+iRTpeptides
+@
+
+
+The method genSwathIonLib uses:
+
+<<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
+fit <- lm(formula = rt ~ aggregateInputRT * fileName, data=m)
+@
+
+to build the linear models for each MS measurement individually. 
+For defining \Rcode{m} both data sets were aggregated over the attributes
+\Rcode{peptide} and \Rcode{fileName} using the \Rcode{mean} operator.
+
+<<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
+data<-aggregate(df$rt, by=list(df$peptide, df$fileName), FUN=mean)
+data.fit<-aggregate(df.fit$rt, by=list(df.fit$peptide, df.fit$fileName), FUN=mean)
+@
+
+Afterwards the following join operator was applied.
+
+<<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
+m <- merge(iRT, data.fit, by.x='peptide', by.y='peptide')
+@
+
+% http://www.ncbi.nlm.nih.gov/pubmed/22577012
+
+The following graph displays the normalized retention time versus 
+the measured retention time after applying the calculated model 
+to the two data sets.
+
+
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=5, height=5>>=
+# calls the plot method for a specLSet object
+plot(res.genSwathIonLib)
+
+# graph the iRT peptides of "zz|ZZ_FGCZCont0260|"
+points(res.genSwathIonLib@rt.normalized[idx] ~ res.genSwathIonLib@rt.input[idx], 
+       col='black', lwd=4, pch="x", cex=2)
+@
+
+Shown are original retention time (in minutes) and iRT (dimensionless)
+for two standard run experiments (color black and red). Indicated 
+with black {\bf X} are the iRT peptides which are the base for the 
+regression.
+
+
+\subsection{Output: R console or csv file}
+The output can be written as an ASCII text file.
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE, echo=TRUE>>=
+write.Spectronaut(res.genSwathIonLib, file="specL-Spectronaut.txt")
+@
+
+
+\subsection{Epilogue - What can I do with that library now?}
+
+The specL output text file can directly be used as input (assay) for 
+the Spectronaut software from Biognosys or with minimal reshaping for 
+Peakview. Alternatively it can be used as a basis for script based 
+construction of SRM/MRM assays.
+
+\section{Acknowledgement}
+
+The authors thank all colleagues of the Functional Genomics Center 
+Zuerich (FGCZ), and especial thank goes to our test users Sira 
+Echevarr\'{i}a Zome\~{n}o (Swiss Federal Institute of Technology in 
+Zurich (ETHZ)), Tobias Kockmann (Swiss Federal Institute of Technology in 
+Zurich (ETHZ)) and Stephan Michalik (Ernst-Moritz-Arndt-Universit{\"a}t Greifswald, Germany).
+
+\section{To Do for next releases}
+\begin{itemize}
+
+\item new option for \Rfunction{specL::genSwathIonLib}; Exclude fragment 
+ions from precursor \Rcode{window = TRUE, FALSE}
+
+\item new option for \Rfunction{specL::genSwathIonLib}; Calculate 
+\Rcode{q1.in-silico} as an alternative to \Rcode{q1}
+
+\item new option for \Rfunction{specL::genSwathIonLib}; Predict 
+transitions for heavy labeled peptides using information from light 
+peptides \Rcode{predictHeavy = TRUE,FALSE, LabelFile = 
+"fileWithHeavyAA"}
+
+\item new export function into TraML format for compatibility with OpenSWATH \cite{pmid24727770}
+
+\item streamline modsequence, e.g. \texttt{AAAMASATTM$\left[16.0\right]$LTTK} 
+for compatibility with peakView V2.0
+
+\item replace \CRANpkg{seqinr} \Rfunction{read.fasta} by using \Biocpkg{Biostrings} \Rfunction{readAAStringSet} 
+to handle fasta files 
+
+\end{itemize}
+
+\section{Session information}
+
+An overview of the package versions used to produce this document are 
+shown below.
+
+<<sessioninfo, results=tex, echo=FALSE>>=
+toLatex(sessionInfo())
+@
+  
+\bibliography{specL}
+
+\end{document}

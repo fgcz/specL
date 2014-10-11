@@ -1,0 +1,23 @@
+Package: specL
+Type: Package
+Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
+        Proteomics
+Version: 0.99.23
+Author: Christian Trachsel <christian.trachsel@fgcz.uzh.ch>, Christian
+        Panse <cp@fgcz.ethz.ch>, Jonas Grossmann <jg@fgcz.ethz.ch>
+Maintainer: Christian Panse <cp@fgcz.ethz.ch>
+Depends: R (>= 3.0.2), methods, DBI, RSQLite, seqinr, protViz (>=
+        0.2.5)
+Suggests: RUnit, BiocGenerics, BiocStyle, BiocParallel
+Description: specL provides a function for generating spectra libraries
+        which can be used for MRM SRM MS workflows in proteomics. The
+        package provides a BiblioSpec reader, a function which can add
+        the protein information using a FASTA formatted amino acid
+        file, and an export method for using the created library in the
+        Spectronaut software.
+License: GPL-3
+URL: http://www.bioconductor.org/packages/devel/bioc/html/specL.html
+Collate: read.bibliospec.R genSwathIonLib.R annotateProteinID.R
+        AllGenerics.R specL.R specLSet.R
+biocViews: MassSpectrometry, Proteomics
+LazyData: true
