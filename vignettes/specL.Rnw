@@ -336,8 +336,8 @@ peptides \Rcode{predictHeavy = TRUE,FALSE, LabelFile =
 
 \item new export function into TraML format for compatibility with OpenSWATH \cite{pmid24727770}
 
-\item streamline modsequence, e.g. \texttt{AAAMASATTM$\left[16.0\right]$LTTK} 
-for compatibility with peakView V2.0
+%\item streamline modsequence, e.g. \texttt{AAAMASATTM$\left[16.0\right]$LTTK} 
+%for compatibility with peakView V2.0
 
 \item replace \CRANpkg{seqinr} \Rfunction{read.fasta} by using \Biocpkg{Biostrings} \Rfunction{readAAStringSet} 
 to handle fasta files 

@@ -68,6 +68,7 @@ read.bibliospec <- function(file){
             mZ=mZ, 
             intensity=intensity, 
             peptideSequence=x$peptideSeq,
+            peptideModSeq=x$peptideModSeq,
             charge=x$precursorCharge, 
             pepmass=x$precursorMZ,
             fileName = x$fileName,
