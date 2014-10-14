@@ -91,26 +91,37 @@ and passed by the \code{data} function parameter.
 If no BiblioSpec files are available also Mascot DAT files 
 can be read using scripts contained in the protViz package exec folder.
 
+If the protein information is lost you can benefit
+for the \code{specL::annotateProteinID.Rd} method.
+
 The function first appear in the \code{protViz} 0.1.45 package. 
 It has been removed in \code{protViz} 0.2.6 to avoid package dependencies.
 
 }
 
 \value{
-    The output is a data structure containing a \code{specLSet} object.
-    a list of \code{specL} objects, a vector of normalized retention times \code{rt}, 
-    and a vector of original retention times \code{rt.org}.
+
+    The output is a data structure defined as \code{specLSet} object.
+    The generic methode \code{ionlibrary} returns a list of \code{specL} objects, 
+    \code{specLSet} also stores the input and normalized retention times.
+
 }
 
 \seealso{ 
 
+    The S4 class definition:
+  \code{showClass("specL")}
+  \code{showClass("specLSet")}
+
+    and the package vignette file.
   \code{vignette('specL')} 
 
 }
 
 \author{
 
-   Christian Panse, Christian Trachsel, and Jonas Grossmann 2012, 2013, 2014
+   Christian Panse, Christian Trachsel, 
+   and Jonas Grossmann 2012, 2013, 2014
 
 }
 
@@ -133,9 +144,26 @@ It has been removed in \code{protViz} 0.2.6 to avoid package dependencies.
         return( cbind(b1_, y1_, b2_, y2_, b3_, y3_) )
     }
 
-    L <- genSwathIonLib(data=peptideStd, 
+    peptideStd.ionLib <- genSwathIonLib(data=peptideStd, 
         data.fit=peptideStd.redundant, 
         fragmentIonFUN=myFragmentIon)
 
-    plot(L)
+
+    idx<-40
+
+    op <- par(mfrow = c(2,1))
+
+    plot(peptideStd.ionLib)
+
+    text(rt.input(peptideStd.ionLib)[idx],
+        rt.normalized(peptideStd.ionLib)[idx],
+        "X", cex=1.5)
+
+    plot(ionlibrary(peptideStd.ionLib)[[idx]])
+
+
+    \dontrun{
+        write.Spectronaut(peptideStd.ionLib, 
+            file="peptideStd.ionLib.csv")
+   }
 }

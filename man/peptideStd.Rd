@@ -13,7 +13,6 @@
     This dataset is a list of a peptide spectrum matches  
     (protein identification result) from two standard runs. 
 
-
 }
 
 \details{
@@ -35,6 +34,32 @@
 
     peakplot(peptideStd[[40]]$peptideSequence, peptideStd[[40]])
 
+    \dontrun{
+
+        download.file("http://fgcz-data.uzh.ch/~cpanse/specL/data/peptideStd.blib", 
+            destfile="peptideStd.blib")
+
+        download.file("http://fgcz-data.uzh.ch/~cpanse/specL/data/peptideStd.redundant.blib", 
+            destfile="peptideStd.redundant.blib")
+
+        # checksum
+
+        if (require(tools)){
+            md5sum(c("peptideStd.blib", "peptideStd.redundant.blib")) == 
+                c("3f231931e54efd6516d7aa302073b17f", 
+                    "8bab829d9e99344136613a17c0374b90")
+        }
+
+        peptideStd <- read.bibliospec("peptideStd.blib")
+        peptideStd.redundant <- read.bibliospec("peptideStd.redundant.blib")
+
+    }
+
 }
 
 
+\seealso{
+
+    \url{http://fgcz-data.uzh.ch/~cpanse/specL/data/}
+
+}

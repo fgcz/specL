@@ -31,8 +31,8 @@ setMethod(f="plot", signature="specLSet",
           definition=function(x, ...){
               file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
               plot(x@rt.normalized ~ x@rt.input,
-                main='iRT normailzation',
-                xlab="original retention time (min)",
+                main='specLSet iRT normalization',
+                xlab="input retention time (min)",
                 ylab="independent retention time",
                 col=file)
           })

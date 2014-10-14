@@ -42,8 +42,13 @@ to the protein \code{proteinInformation} variable.
 If the function is called on a multi core architecture it uses \code{mclapply}.
 
 It is recommended to load the FASTA file prior to running 
-\code{annotateProteinID} using \code{myFASTA <- read.fasta(file = file, 
-as.string = TRUE, seqtype = "AA")} instead of providing the FASTA file name to 
+\code{annotateProteinID} using 
+
+\code{myFASTA <- read.fasta(file = file, 
+    as.string = TRUE, 
+    seqtype = "AA")} 
+
+instead of providing the FASTA file name to 
 the function.
 }
 
