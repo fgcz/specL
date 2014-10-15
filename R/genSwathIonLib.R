@@ -118,6 +118,15 @@ genSwathIonLib <- function(data,
 
         group_id <- rep(paste(x$peptideSequence, ".", x$charge,";", x$pepmass, sep=''), 1)
 
+        # exspect a modification information, e.g., AAAMASATTM[+16.0]LTTK
+        if ("peptideModSeq" %in% names(x)){
+            if (nchar(x$peptideModSeq) > nchar(x$peptideSequenc)){
+                group_id <- rep(paste(x$peptideModSeq, ".", x$charge,";", x$pepmass, sep=''), 1)
+            }
+        } else{
+           # warning("x$peptideModSeq does not exists!")
+        }
+
         intensity <- 100 * round(x$intensity[findNN.idx] / max(x$intensity[findNN.idx], na.rm=TRUE), 2)
 
         peptide_sequence <- rep(x$peptideSequence, 1)

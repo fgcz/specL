@@ -342,6 +342,8 @@ peptides \Rcode{predictHeavy = TRUE,FALSE, LabelFile =
 \item replace \CRANpkg{seqinr} \Rfunction{read.fasta} by using \Biocpkg{Biostrings} \Rfunction{readAAStringSet} 
 to handle fasta files 
 
+\item add varMods to specL class
+
 \end{itemize}
 
 \section{Session information}

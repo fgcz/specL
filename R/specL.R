@@ -27,6 +27,7 @@ specL <- setClass("specL",
     mZ.error="numeric",
     filename="character")
 )
+#TODO include varMods also in the specL class
 
 setMethod("show", "specL", function(object){
     cat("An \"specL\" object.\n\n")

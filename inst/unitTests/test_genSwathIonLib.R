@@ -21,4 +21,5 @@ function(){
     checkEqualsNumeric(length(r.genSwathIonLib.top5@rt.normalized), length(r.genSwathIonLib.top5@rt.normalized), tolerance=0.001)
 }
 
+
 test_genSwathIonLib()
