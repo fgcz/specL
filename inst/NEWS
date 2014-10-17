@@ -1,4 +1,12 @@
 
+
+CHANGES IN VERSION 1.1.2
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o uses modSeq in group_id iff existing
+
 CHANGES IN VERSION 1.1.1
 -------------------------
 
@@ -7,7 +15,6 @@ USER VISIBLE CHANGES
     o streamline modsequence, e.g., AAAMASATTM[+16.0]LTTK 
     for compatibility with peakView V2.0
 
-    o uses modSeq in group_id iff existing
 
 CHANGES IN VERSION 0.99.23
 -------------------------
