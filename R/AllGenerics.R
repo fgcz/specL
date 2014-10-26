@@ -1,6 +1,6 @@
 #R
-setGeneric("write.Spectronaut",  
-    function(x, ...) standardGeneric("write.Spectronaut"))
+setGeneric("write.spectronaut",  
+    function(x, ...) standardGeneric("write.spectronaut"))
 
 setGeneric("ionlibrary", 
     function(object) standardGeneric("ionlibrary"))

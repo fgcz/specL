@@ -10,7 +10,7 @@
 \alias{plot}
 \alias{plot,specLSet-method}
 
-\alias{write.Spectronaut,specLSet-method}
+\alias{write.spectronaut,specLSet-method}
 
 \alias{ionlibrary}
 \alias{ionlibrary,specLSet-method}
@@ -57,7 +57,7 @@
 
     \item{plot}{\code{signature(x = "specLSet")}: plots normalized verus input rt. }
     
-    \item{write.Spectronaut}{\code{signature(x = "specLSet")}: writes object to ASCII file. }
+    \item{write.spectronaut}{\code{signature(x = "specLSet")}: writes object to ASCII file. }
 
     \item{ionlibrary}{\code{signature(x = "specLSet")}: returns a list of \code{specL} objects. }
 

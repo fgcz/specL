@@ -38,14 +38,14 @@ setMethod(f="plot", signature="specLSet",
           })
             
 
-setMethod(f="write.Spectronaut", signature="specLSet", 
+setMethod(f="write.spectronaut", signature="specLSet", 
           definition=function(x, file="specL.txt", ...){
     if (file.exists(file)){
          warning("file already exists. not writting!")
          return()
     }
 
-    res <- lapply(x@ionlibrary, function(xx){write.Spectronaut(xx, file=file)})
+    res <- lapply(x@ionlibrary, function(xx){write.spectronaut(xx, file=file)})
 }) 
 
 setMethod(f="ionlibrary",  signature="specLSet", 

@@ -2,16 +2,16 @@
 
 \docType{methods}
 
-\alias{write.Spectronaut}
-\alias{write.Spectronaut,specL-methods}
-\alias{write.Spectronaut,specLSet-methods}
-\alias{write.Spectronaut,ANY-method}
+\alias{write.spectronaut}
+\alias{write.spectronaut,specL-methods}
+\alias{write.spectronaut,specLSet-methods}
+\alias{write.spectronaut,ANY-method}
 
-\title{Methods for Function \code{write.Spectronaut} in Package \pkg{specL}}
+\title{Methods for Function \code{write.spectronaut} in Package \pkg{specL}}
 
 \description{
 
-Methods for function \code{write.Spectronaut} in package \pkg{specL} ~~
+Methods for function \code{write.spectronaut} in package \pkg{specL} ~~
 writes specL objects to a file in a format which can be read 
 by the 'Spectronaut' software.
 additional arguments are

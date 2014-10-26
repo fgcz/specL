@@ -71,7 +71,7 @@ setMethod(f="plot", signature="specL",
 
 
 
-setMethod(f="write.Spectronaut", signature="specL", 
+setMethod(f="write.spectronaut", signature="specL", 
           definition=function(x, file="specL.txt", ...){
             
             data=cbind(group_id=x@group_id,
@@ -88,7 +88,8 @@ setMethod(f="write.Spectronaut", signature="specL",
                        irt=x@irt,
                        peptideModSeq=x@peptideModSeq,
                        mZ.error=x@mZ.error,
-                       proteinInformation=x@proteinInformation
+                       proteinInformation=x@proteinInformation,
+                       filename=x@filename
             )
 
             

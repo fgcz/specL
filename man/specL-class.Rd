@@ -8,7 +8,7 @@
 
 \alias{show,specL-method}
 
-\alias{write.Spectronaut,specL-method}
+\alias{write.spectronaut,specL-method}
 
 \title{Class \code{"specL"}}
 
@@ -72,7 +72,7 @@
 
     \item{show}{\code{signature(x = "specL")}: shows the content of \code{specL} object.}
 
-    \item{write.Spectronaut}{\code{signature(x = "specL")}: writes the \code{specL} object to a ASCII file. }
+    \item{write.spectronaut}{\code{signature(x = "specL")}: writes the \code{specL} object to a ASCII file. }
 
 	 }
 }
