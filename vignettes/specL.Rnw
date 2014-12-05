@@ -1,6 +1,5 @@
 %\VignetteIndexEntry{Introduction to specL}
 
-
 \documentclass[12pt]{article}
 
 <<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
@@ -91,7 +90,6 @@ appropriate. The sample consists of a digest of the Fetuin protein
 (Bos taurus, uniprot id: P12763). 40 femtomole are loaded on column.
 Mascot was used to search and identify the respective peptides.
 
-
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
 demoIdx <- 40
 str(peptideStd[[demoIdx]])
@@ -180,6 +178,7 @@ be adapted. For example, for semi-tryptic identifications use
 \Rcode{digestPattern = ""}.
 
 \subsection{Generate the spectrum library (assay)}
+
 
 \Rfunction{genSwathIonLib} is the main contribution of the 
 \Biocpkg{specL} package. It generates the spectra library used in a 
@@ -305,6 +304,8 @@ The output can be written as an ASCII text file.
 write.spectronaut(res.genSwathIonLib, file="specL-Spectronaut.txt")
 @
 
+%\subsection{Best praxis parameter settings for library generation}
+%todo(jonas, ct)
 
 \subsection{Epilogue - What can I do with that library now?}
 

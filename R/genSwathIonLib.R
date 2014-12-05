@@ -31,13 +31,19 @@
 
     m <- merge(iRT, data.fit, by.x='peptide', by.y='peptide')
 
+    if (nrow(m) < 3){
+        message('not enough iRT peptides found for building the model.')
+        message('=> no iRT regression applied, using orgiginal rt instead!')
+        return(rt)
+    }
+
     for (i in sort(unique(m$fileName))){message(paste("found", nrow(m[m$fileName == i,]), "iRT peptide(s) in", i)) }
 
     # build the model
-    # We can do this only of we have found iRT peptides!
+    # we can do this only if we have found iRT peptides!
 
     nFileName <- length(unique (as.factor(fileName)))
-    message("building modell ...")
+    message("building model ...")
 
     if ( nFileName == 1){
 	    message('model with only one file.')

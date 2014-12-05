@@ -21,5 +21,33 @@ function(){
     checkEqualsNumeric(length(r.genSwathIonLib.top5@rt.normalized), length(r.genSwathIonLib.top5@rt.normalized), tolerance=0.001)
 }
 
+test_genSwathIonLib_noiRT_peptides<-
+function(){
+    # case 1: useless peptides
+
+    #reverse peptides
+    n<-7
+    peptide <- unlist(lapply(as.character(iRTpeptides$peptide[1:n]), function(x){rev(x)})) 
+    rt <- seq(-24.9200, 122.2462, length=length(peptide))
+    myiRTpeptides<-cbind(peptide=as.factor(peptide), rt=rt)
+
+    peptideStd.ionLib <- genSwathIonLib(data=peptideStd, data.fit=peptideStd.redundant, iRT=myiRTpeptides)
+
+    # 
+    res <- lapply (1:length(peptideStd), 
+        function(idx){ 
+            checkEqualsNumeric(ionlibrary(peptideStd.ionLib)[[idx]]@irt, 
+                peptideStd[[idx]]$rt, 
+                tolerance=0.05)
+            }
+            )
+}
+
 
 test_genSwathIonLib()
+test_genSwathIonLib_noiRT_peptides()
+
+#TODO(cp):
+# check lower boundary of transitions
+# genSwathIonLib(peptideStd, peptideStd.redundant, topN=15, fragmentIonRange=c(12, 20))
+# nur alle peptide die mind. 12 assigneed fragment ions max 15

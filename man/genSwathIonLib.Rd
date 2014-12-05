@@ -54,7 +54,10 @@
   \item{fragmentIonMzRange}{mZ range filter of framgent ion.}
 
   \item{fragmentIonRange}{range filter of the number of identified fragment ion 
-  set in \code{fragmentIonTyp}.}
+  which are assigned in the spectrum library set in \code{fragmentIonTyp}.
+  Use this option to generate a library with a minimum of five transitions 
+  for all peptides using \code{c(5,100)}, all peptides where at least not five transmissions
+  found were omitted.}
 
   \item{fragmentIonFUN}{\code{function (b, y)} which derives all requested 
     fragment ion out a given tuble of \code{b} and \code{y} ion. If the 

@@ -5,6 +5,7 @@
 \alias{specLSet-class}
 
 \alias{show,specLSet-method}
+\alias{summary,specLSet-method}
 
 
 \alias{plot}
@@ -54,6 +55,8 @@
   \describe{
     
     \item{show}{\code{signature(x = "specLSet")}: shows the object content. }
+
+    \item{summary}{\code{signature(x = "specLSet")}: print summary of object content. }
 
     \item{plot}{\code{signature(x = "specLSet")}: plots normalized verus input rt. }
     

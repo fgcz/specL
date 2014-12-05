@@ -69,7 +69,30 @@ setMethod(f="plot", signature="specL",
                  ))  
 })
 
-
+#TODO(cp):
+#setMethod(f="derive_q3_mass_shift", signature="specL", 
+#          definition=function(x, 
+#            shift=list(AA=c('R', 'K'), deltamass=c(-10.008269, -8.014199)), ...){ 
+#
+#        # S4 copy constructor?
+#        y <- x
+#
+#        for (i in 1:length(shift$AA)){
+#
+#            lastAA <- tail(strsplit(x@peptide_sequence, '')[[1]], n=1)
+#
+#            if (lastAA == shift$AA[i]){
+#
+#                y@q3[x@frg_type == 'y'] <- x@q3[x@frg_type == 'y'] + shift$deltamass[i]
+#
+#                break
+#
+#            }
+##        }
+#
+#    return (y)
+#}
+#)
 
 setMethod(f="write.spectronaut", signature="specL", 
           definition=function(x, file="specL.txt", ...){
@@ -91,7 +114,6 @@ setMethod(f="write.spectronaut", signature="specL",
                        proteinInformation=x@proteinInformation,
                        filename=x@filename
             )
-
             
             if (file.exists(file) == FALSE){
               message(paste("writting specL object (including header) to file '", file,  "' ...", sep=''))

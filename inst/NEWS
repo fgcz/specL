@@ -1,4 +1,14 @@
 
+CHANGES IN VERSION 1.1.4
+-------------------------
+USER VISIBLE CHANGES
+
+    o summary methode of specLSet class 
+
+USER UNVISIBLE CHANGES
+
+    o unit test for data containing no iRT peptides
+
 CHANGES IN VERSION 1.1.3
 -------------------------
 
