@@ -11,8 +11,8 @@
 \alias{plot}
 \alias{plot, specLSet-method}
 
-\alias{merge}
-\alias{merge, specLSet-method}
+\alias{merge.specLSet}
+\alias{merge.specLSet, specLSet-method}
 
 \alias{write.spectronaut, specLSet-method}
 
@@ -66,7 +66,7 @@
     
     \item{write.spectronaut}{\code{signature(x = "specLSet")}: writes object to ASCII file. }
 
-    \item{merge}{\code{signature(x = "specLSet")}: merges two specLSet objects.}
+    \item{merge.specLSet}{\code{signature(x = "specLSet")}: merges two specLSet objects.}
 
     \item{ionlibrary}{\code{signature(x = "specLSet")}: returns a list of \code{specL} objects. }
 
