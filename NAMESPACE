@@ -18,4 +18,4 @@ export("genSwathIonLib")
 exportClasses("specL", "specLSet")
 
 exportMethods("show", "summary", "plot", "write.spectronaut", 
-    "ionlibrary", "rt.input", "rt.normalized")
+    "ionlibrary", "rt.input", "rt.normalized", "merge.specLSet")

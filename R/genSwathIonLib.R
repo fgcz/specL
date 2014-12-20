@@ -1,8 +1,8 @@
 #R
 
-# $HeadURL: http://fgcz-svn.unizh.ch/repos/fgcz/testing/proteomics/R/protViz/R/swath.R $
-# $Id: swath.R 6657 2014-09-10 12:21:01Z cpanse $
-# $Date: 2014-09-10 14:21:01 +0200 (Wed, 10 Sep 2014) $
+# $HeadURL$
+# $Id$
+# $Date$
 
 # this function is for normalizing the rt on data
 # for building the model data.fit  is used
@@ -98,6 +98,7 @@ genSwathIonLib <- function(data,
     AminoAcids = protViz::AA,
     file = NULL){ 
 
+    # one transition is useless anyway
     if (fragmentIonRange[1] < 2){
         fragmentIonRange = c(2,100)
         warning("min fragmentIonRange should be at least set to 2. reset fragmentIonRange = c(2,100).")
@@ -113,6 +114,8 @@ genSwathIonLib <- function(data,
         if (sum(is.na(q3)) > 0){
             stop("ERROR")
         }
+
+        #message(paste("length of q3 ", length(q3)))
 
         irt <- round(rep(rt, m), 2)
         decoy <- rep(0, m)
@@ -140,7 +143,6 @@ genSwathIonLib <- function(data,
         peptideModSeq <- x$peptideModSeq
 
         massErrorFilter <- ( (mZ.error_ < max.mZ.Da.error) & (fragmentIonMzRange[1] < q3 & q3 < fragmentIonMzRange[2]) )
-
         
         intensity.idx <- rev(order(intensity[massErrorFilter]))
 
@@ -207,6 +209,8 @@ genSwathIonLib <- function(data,
     message("start generating specLSet object ..." )
     time.start <- Sys.time(); 
 
+    message(paste("length of findNN idx ", length(findNN.idx)))
+
     # prepare table for output
     if (require(BiocParallel)){
         message("using BiocParallel::bpmapply( ..." )
@@ -222,8 +226,16 @@ genSwathIonLib <- function(data,
     time.end <- Sys.time();
     message(paste("time taken: ",  difftime(time.end, time.start, units='secs'), "secs"))
 
+    output <- output[which(unlist(lapply (output, function (x) {fragmentIonRange[1] <= length(x@q3) && length(x@q3) <= fragmentIonRange[2]})))]
    
     return(specLSet(ionlibrary=output, 
+        input.parameter=list(mascotIonScoreCutOFF=mascotIonScoreCutOFF, 
+                   proteinIDPattern=proteinIDPattern,
+                   max.mZ.Da.error = max.mZ.Da.error, 
+                   ignoreMascotIonScore = ignoreMascotIonScore,
+                   topN = topN,
+                   fragmentIonMzRange = fragmentIonMzRange,
+                   fragmentIonRange = fragmentIonRange),
         rt.normalized=unlist(x.rt), 
         rt.input=unlist(lapply(data, function(x){x$rt}))))
 }

@@ -1,7 +1,7 @@
 #R 
-# $HeadURL: http://fgcz-svn.unizh.ch/repos/fgcz/testing/proteomics/R/protViz/R/swath.R $
-# $Id: swath.R 6657 2014-09-10 12:21:01Z cpanse $
-# $Date: 2014-09-10 14:21:01 +0200 (Wed, 10 Sep 2014) $
+# $HeadURL$
+# $Id$
+# $Date$
 
 # this function is for normalizing the rt on data
 # for building the model data.fit  is used

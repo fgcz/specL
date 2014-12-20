@@ -9,24 +9,28 @@
 
 
 \alias{plot}
-\alias{plot,specLSet-method}
+\alias{plot, specLSet-method}
 
-\alias{write.spectronaut,specLSet-method}
+\alias{merge}
+\alias{merge, specLSet-method}
+
+\alias{write.spectronaut, specLSet-method}
 
 \alias{ionlibrary}
-\alias{ionlibrary,specLSet-method}
+\alias{ionlibrary, specLSet-method}
 
 \alias{rt.normalized}
-\alias{rt.normalized,specLSet-method}
+\alias{rt.normalized, specLSet-method}
 
 \alias{rt.input}
-\alias{rt.input,specLSet-method}
+\alias{rt.input, specLSet-method}
 
 \title{Class \code{"specLSet"}}
 
 \description{
+
     This class is used to store, show, and write 
-       generated results of the package.
+    generated results of the package.
 
 }
 
@@ -61,6 +65,8 @@
     \item{plot}{\code{signature(x = "specLSet")}: plots normalized verus input rt. }
     
     \item{write.spectronaut}{\code{signature(x = "specLSet")}: writes object to ASCII file. }
+
+    \item{merge}{\code{signature(x = "specLSet")}: merges two specLSet objects.}
 
     \item{ionlibrary}{\code{signature(x = "specLSet")}: returns a list of \code{specL} objects. }
 

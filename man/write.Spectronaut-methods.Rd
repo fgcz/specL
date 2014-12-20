@@ -1,4 +1,4 @@
-\name{write.Spectronaut-methods}
+\name{write.spectronaut-methods}
 
 \docType{methods}
 

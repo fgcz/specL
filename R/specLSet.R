@@ -1,7 +1,8 @@
 #R 
-# $HeadURL: http://fgcz-svn.unizh.ch/repos/fgcz/testing/proteomics/R/protViz/R/swath.R $
-# $Id: swath.R 6657 2014-09-10 12:21:01Z cpanse $
-# $Date: 2014-09-10 14:21:01 +0200 (Wed, 10 Sep 2014) $
+#
+# $HeadURL$
+# $Id$
+# $Date$
 
 # this function is for normalizing the rt on data
 # for building the model data.fit  is used
@@ -13,13 +14,15 @@
 specLSet <- setClass("specLSet",
   slots=c(ionlibrary="list",
   rt.normalized="numeric",
-  rt.input="numeric"),
+  rt.input="numeric",
+  input.parameter="list")
 )
 
 setMethod(f="show", signature="specLSet", function(object){
     cat("An \"specLSet\" object.\n\n")
     cat("\ncontent:\n")
-    lapply(c("rt.normalized", "rt.input"), function(x){cat(x, '=', slot(object,x), '\n', fill=TRUE)})
+    lapply(c("rt.normalized", "rt.input"), 
+        function(x){cat(x, '=', slot(object,x), '\n', fill=TRUE)})
     lapply(slot(object,"ionlibrary"), show)
     cat("\nsize:\n")
     memsize <-  format(object.size(object), units = "b")
@@ -27,13 +30,53 @@ setMethod(f="show", signature="specLSet", function(object){
 
 })
 
+.specLSetTest<- function(x, list_q1){
+    # todo(cp): check also q3 and peptideModSeq
+    idx <- findNN(x@q1, list_q1)
+
+    if (abs(list_q1[idx] - x@q1) < 0.01){
+            return(FALSE)
+    }
+
+    return (TRUE)
+}
+
+setMethod(f="merge.specLSet", signature="specLSet", 
+    definition=function(object0, object1){
+        #todo(cp): could be an argument
+        FUN <- .specLSetTest
+
+        object0_q1 <- unlist(lapply(object0@ionlibrary, function(x){return(x@q1)}))
+        idx <- order(object0_q1)
+
+        for (i in 1:length(object1@ionlibrary) ){
+            x <- object1@ionlibrary[[i]]
+
+            if ( FUN(x, object0_q1[idx]) ){
+                object0@ionlibrary <- c(object0@ionlibrary, x)
+
+                object0@rt.input <- c(object0@rt.input, object1@rt.input[i])
+                object0@rt.normalized <- c(object0@rt.normalized, object1@rt.normalized[i])
+            }
+
+        }
+        return (object0)
+    }
+)
+
 setMethod(f="summary", signature="specLSet", function(object){
     cat("Summary of a \"specLSet\" object.\n\n")
 
-#    cat("\nInput:\n")
-#    cat("\nParameter:\n")
+    cat("\nInput:\n")
+    cat("\nParameter:\n")
+
+    mapply (function(x, y){cat(paste("\t",x,'=',y,'\n',sep=''))}, 
+        names(object@input.parameter), object@input.parameter)
+    
 #    cat("\nOutput:\n")
 
+    cat("\nNumber of precursor (q1 and peptideModSeq) = ")
+    cat(length((unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1, x@peptideModSeq, sep='_')})))))
     cat("\nNumber of unique precursor (q1 and peptideModSeq) = ")
     cat(length(unique(unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1, x@peptideModSeq, sep='_')})))))
 
