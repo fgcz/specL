@@ -1,3 +1,87 @@
+
+CHANGES IN VERSION 1.1.6
+-------------------------
+USER VISIBLE CHANGES
+
+    o work on specL_bibliospec summary methode 
+
+CHANGES IN VERSION 1.1.5
+-------------------------
+USER VISIBLE CHANGES
+
+    o specLSet merge function 
+
+    o work on specLSet summary methode 
+
+
+CHANGES IN VERSION 1.1.4
+-------------------------
+USER VISIBLE CHANGES
+
+    o summary methode of specLSet class 
+
+USER UNVISIBLE CHANGES
+
+    o unit test for data containing no iRT peptides
+
+CHANGES IN VERSION 1.1.3
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o renamed write.Spectronaut to write.spectronaut
+
+    o write.spectronaut writes filename 
+
+    o added benchmark section in package vignette
+
+CHANGES IN VERSION 1.1.2
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o uses modSeq in group_id iff existing
+
+CHANGES IN VERSION 1.1.1
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o streamline modsequence, e.g., AAAMASATTM[+16.0]LTTK 
+    for compatibility with peakView V2.0
+
+
+CHANGES IN VERSION 0.99.23
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o added methods for specLSet class: 
+        ionlibrary, rt.input, rt.normalized
+
+    o fixed Sys.time() units in message.
+
+USER UNVISIBLE CHANGES
+
+    o genSwathIonLib using bpmapply
+
+
+
+CHANGES IN VERSION 0.99.22
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o specLSet plot method
+
+CHANGES IN VERSION 0.99.21
+-------------------------
+
+USER VISIBLE CHANGES
+
+    o specLSet class
+
+    o replace print by show and write.Spectronaut method in specL and specLSet classes
 CHANGES IN VERSION 1.1.5
 -------------------------
 USER VISIBLE CHANGES

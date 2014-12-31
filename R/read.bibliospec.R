@@ -1,5 +1,14 @@
 #R
 
+# $HeadURL$
+# $Id$
+# $Date$
+
+
+# TODO(cp): write a summery methide for read.bibliospec
+# o list the number of files
+# o list the number of specs
+
 read.bibliospec <- function(file){
     m <- dbDriver("SQLite", max.con=25)       
     con <- dbConnect(m , dbname=file, flags = SQLITE_RO)
@@ -83,6 +92,28 @@ read.bibliospec <- function(file){
         res[[data.modifications$RefSpectraID[i]]]$varModification[data.modifications$position[i]] <- data.modifications$mass[i]
     }
 
+    class(res)='specL_bibliospec'
+
     dbDisconnect(con)
     return(res)
+}
+#s<-read.bibliospec("/scratch/specL_revisions_201412/p1000_testBelowFour.redundant.blib")
+
+summary.specL_bibliospec <- function (object, ...){
+    cat("Summary of a \"specL_bibliospec\" object.")
+
+    cat("\nNumber of precursor:\n\t")
+    cat(length(object))
+
+    cat("\nFilename(s):\n")
+    files <- sort(unique(unlist(lapply(object, function(x){x$fileName}))))
+    for (f in files){
+        cat("\t")
+        cat (f)
+        cat ("\n")
+    }
+
+    cat("Number of annotated precursor:\n\t")
+    cat(sum(unlist(lapply(object, function(x){x$proteinInformation != ''}))))
+    cat ("\n")
 }

@@ -16,4 +16,4 @@ setGeneric("rt.normalized",
     function(object) standardGeneric("rt.normalized"))
 
 setGeneric("merge.specLSet", 
-    function(object0, object1, FUN) standardGeneric("merge.specLSet"))
+    function(object0, object1) standardGeneric("merge.specLSet"))
