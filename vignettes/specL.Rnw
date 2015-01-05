@@ -90,9 +90,9 @@ appropriate. The sample consists of a digest of the Fetuin protein
 (Bos taurus, uniprot id: P12763). 40 femtomole are loaded on column.
 Mascot was used to search and identify the respective peptides.
 
+
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
-demoIdx <- 40
-str(peptideStd[[demoIdx]])
+summary(peptideStd)
 @
 
 For both \Rcode{peptideStd}, \Rcode{peptideStd.redandant} data sets the 
@@ -101,14 +101,19 @@ contain the peptide sequences with the respective peptide spectrum
 match (PSM). The read.bibliospec function was used to read the blib 
 files into R.
 
-The peptide spectrum match can be displayed using the 
+The from \Rcode{read.bibliospec} generated object has its own plot functions.
+The LC-MS map graphs peptide mass versus retention time.
+<<keep.source = TRUE, eval = TRUE, fig = TRUE>>=
+plot(peptideStd)
+@
+
+
+The individual peptide spectrum match (psm) is displayed by using the 
 \CRANpkg{protViz} \Rfunction{peakplot} function. 
-
 <<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=5>>=
-res.peakplot <- peakplot(peptideSequence=peptideStd[[demoIdx]]$peptideSequence, 
-               spec=peptideStd[[demoIdx]], 
-               ion.axes=TRUE)
-
+demoIdx <- 40
+# str(peptideStd[[demoIdx]])
+res <- plot(peptideStd[[demoIdx]], ion.axes=TRUE)
 @
 
 \subsection{Protein ID annotation using FASTA} 
@@ -179,17 +184,24 @@ be adapted. For example, for semi-tryptic identifications use
 
 \subsection{Generate the spectrum library (assay)}
 
-
 \Rfunction{genSwathIonLib} is the main contribution of the 
 \Biocpkg{specL} package. It generates the spectra library used in a 
 targeted data extraction workflow from a mass spectrometric 
-measurement.
+measurement\footnote{Generating the ion library using iRT peptides is highly recommendend as described. 
+however if you have no iRT peptide continue reading in section \ref{sec:noiRT}.}.
+
 
 Generation of the spec Library with default settings.
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
 res.genSwathIonLib <- genSwathIonLib(data=peptideStd, 
                                      data.fit=peptideStd.redundant)
 @
+
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
+summary(res.genSwathIonLib)
+@
+
 
 The determined mass spec coordinates of the selected tandem mass spectrum 
 \Rcode{demoIdx} look like this:
@@ -215,6 +227,7 @@ r.genSwathIonLib.top5 <- genSwathIonLib(peptideStd,
       }
     )
 
+             
 plot(r.genSwathIonLib.top5@ionlibrary[[demoIdx]])
 
 @
@@ -266,7 +279,9 @@ For defining \Rcode{m} both data sets were aggregated over the attributes
 
 <<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
 data<-aggregate(df$rt, by=list(df$peptide, df$fileName), FUN=mean)
-data.fit<-aggregate(df.fit$rt, by=list(df.fit$peptide, df.fit$fileName), FUN=mean)
+data.fit<-aggregate(df.fit$rt, 
+                    by=list(df.fit$peptide, df.fit$fileName), 
+                    FUN=mean)
 @
 
 Afterwards the following join operator was applied.
@@ -282,13 +297,11 @@ the measured retention time after applying the calculated model
 to the two data sets.
 
 
-<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=5, height=5>>=
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=5, height=8>>=
 # calls the plot method for a specLSet object
+op<-par(mfrow=c(2,1)) 
 plot(res.genSwathIonLib)
-
-# graph the iRT peptides of "zz|ZZ_FGCZCont0260|"
-points(res.genSwathIonLib@rt.normalized[idx] ~ res.genSwathIonLib@rt.input[idx], 
-       col='black', lwd=4, pch="x", cex=2)
+par(op)
 @
 
 Shown are original retention time (in minutes) and iRT (dimensionless)
@@ -296,6 +309,17 @@ for two standard run experiments (color black and red). Indicated
 with black {\bf X} are the iRT peptides which are the base for the 
 regression.
 
+\subsection{Generate the spectrum library having no iRTs\label{sec:noiRT}}
+
+<<keep.source = TRUE, eval = TRUE, fig = FALSE, echo=TRUE>>=
+idx.iRT<-which(unlist(lapply(peptideStd, function(x){
+  if(x$peptideSequence %in% iRTpeptides$peptide){0}else{1}
+  })) == 0)
+
+# remove all iRTs and compute ion library
+res.genSwathIonLib.no_iRT <- genSwathIonLib(peptideStd[-idx.iRT])
+summary(res.genSwathIonLib.no_iRT)
+@
 
 \subsection{Output: R console or csv file}
 The output can be written as an ASCII text file.
@@ -320,6 +344,7 @@ The benchmark were processed on a
 having
 R version 3.1.1 (2014-07-10) , specL 1.1.2, and BiocParallel 1.0.0
 installed. The default setting of BiocParallel has used eight cores.
+As FASTA we used a TAIR10 retrived  \url{http://www.arabidopsis.org/}.
 
 \begin{table}[h]
 \centering
@@ -366,6 +391,8 @@ peptides \Rcode{predictHeavy = TRUE,FALSE, LabelFile =
 to handle fasta files 
 
 \item add varMods to specL class
+
+\item replace mascot score by a generic score
 
 \end{itemize}
 

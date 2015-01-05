@@ -25,11 +25,13 @@ test_genSwathIonLib_noiRT_peptides<-
 function(){
     # case 1: useless peptides
 
-    #reverse peptides
+    #reverse n iRT peptides
     n<-7
-    peptide <- unlist(lapply(as.character(iRTpeptides$peptide[1:n]), function(x){rev(x)})) 
+    peptide <- unlist(lapply(as.character(iRTpeptides$peptide[1:n]),
+                             function(x){paste(rev(strsplit(x,"")[[1]]), collapse='')})) 
+    
     rt <- seq(-24.9200, 122.2462, length=length(peptide))
-    myiRTpeptides<-cbind(peptide=as.factor(peptide), rt=rt)
+    myiRTpeptides<-cbind(peptide=peptide, rt=rt)
 
     peptideStd.ionLib <- genSwathIonLib(data=peptideStd, data.fit=peptideStd.redundant, iRT=myiRTpeptides)
 

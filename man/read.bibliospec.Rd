@@ -5,6 +5,9 @@
 \alias{BiblioSpec}
 \alias{skyline}
 \alias{Skyline}
+\alias{plot.psm_bibliospec}
+\alias{plot.psmSet_bibliospec}
+\alias{summary.psmSet_bibliospec}
 
 \title{BiblioSpec Reader}
 

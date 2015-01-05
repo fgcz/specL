@@ -32,7 +32,14 @@ specL <- setClass("specL",
 setMethod("show", "specL", function(object){
     cat("An \"specL\" object.\n\n")
     cat("\ncontent:\n")
-    lapply(slotNames(object), function(x){cat(x, '=', slot(object,x), '', fill=TRUE)})
+    lapply(slotNames(object), function(x){
+      v <- slot(object, x)
+      if (x == 'filename'){
+        cat (substr(v, nchar(v)-getOption("width")-1, nchar(v)))
+      }else{
+      cat(x, '=', slot(object,x), '', fill=TRUE)}
+      }
+      )
 
     cat("\nsize:\n")
     memsize <-  format(object.size(object), units = "b")

@@ -1,9 +1,17 @@
+CHANGES IN VERSION 1.1.7
+-------------------------
+USER VISIBLE CHANGES
+
+    o introduce peakplot for bibliospec object
+    o introduce LCMS map for bibliospec object
+    o vignette cosmetics
+
 
 CHANGES IN VERSION 1.1.6
 -------------------------
 USER VISIBLE CHANGES
 
-    o work on specL_bibliospec summary methode 
+    o introduce specL_bibliospec summary method
 
 CHANGES IN VERSION 1.1.5
 -------------------------
@@ -11,14 +19,14 @@ USER VISIBLE CHANGES
 
     o specLSet merge function 
 
-    o work on specLSet summary methode 
+    o work on specLSet summary method
 
 
 CHANGES IN VERSION 1.1.4
 -------------------------
 USER VISIBLE CHANGES
 
-    o summary methode of specLSet class 
+    o summary method of specLSet class 
 
 USER UNVISIBLE CHANGES
 
@@ -88,14 +96,14 @@ USER VISIBLE CHANGES
 
     o specLSet merge function 
 
-    o work on specLSet summary methode 
+    o work on specLSet summary method
 
 
 CHANGES IN VERSION 1.1.4
 -------------------------
 USER VISIBLE CHANGES
 
-    o summary methode of specLSet class 
+    o summary method of specLSet class 
 
 USER UNVISIBLE CHANGES
 

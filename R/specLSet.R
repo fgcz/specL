@@ -65,9 +65,9 @@ setMethod(f="merge.specLSet", signature="specLSet",
 )
 
 setMethod(f="summary", signature="specLSet", function(object){
-    cat("Summary of a \"specLSet\" object.\n\n")
-
-    cat("\nInput:\n")
+    cat("Summary of a \"specLSet\" object.\n")
+#
+#    cat("\nInput:\n")
     cat("\nParameter:\n")
 
     mapply (function(x, y){cat(paste("\t",x,'=',y,'\n',sep=''))}, 
@@ -80,20 +80,40 @@ setMethod(f="summary", signature="specLSet", function(object){
     cat("\nNumber of unique precursor (q1 and peptideModSeq) = ")
     cat(length(unique(unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1, x@peptideModSeq, sep='_')})))))
 
-    cat("\nFrequency of number of transitions:")
+    cat("\nNumber of iRT peptide(s) = ")
+    cat(sum(unlist(lapply(slot(object,"ionlibrary"), function(x){
+      if (x@peptide_sequence %in% iRTpeptides$peptide){1}else{0}}))))
+
+    cat("\nNumber of transitions frequency:\n")
     t<-table(unlist((lapply(slot(object,"ionlibrary"), function(x){length(paste(x@q1, x@q3, x@peptideModSeq))}))))
-    print (t)
+    
+    n <- names(t)
+    w <- getOption("width") / 2
+    for (i in 1:length(t)){
+      cat('\t')
+      cat(substr(n[i], nchar(n[i])-w, nchar(n[i])))
+      cat('\t')
+      cat(t[i])
+      cat('\n')
+    }
+    
 
     cat("\nNumber of annotated precursor = ")
     cat(sum(unlist(lapply(slot(object,"ionlibrary"), function(x){x@proteinInformation != ''}))))
 
-    cat("\nFilename(s)\n")
-    files<-((unique(unlist(lapply(slot(object,"ionlibrary"), function(x){x@filename})))))
-    for (f in files){
-        cat("\t")
-        cat (f)
-        cat ("\n")
-    }
+    cat("\nNumber of precursors in Filename(s)\n")
+    t <- table(unlist(lapply(object@ionlibrary, function(x){x@filename})))
+
+    n <- names(t)
+    w <- getOption("width") / 2
+    for (i in 1:length(t)){
+      cat('\t')
+      cat(substr(n[i], nchar(n[i])-w, nchar(n[i])))
+      cat('\t')
+      cat(t[i])
+      cat('\n')
+    }    
+   
     cat("\nMisc:\n")
     memsize <-  format(object.size(object), units = "b")
     cat("\nMemory usage\t=\t", memsize, "\n")
@@ -102,15 +122,25 @@ setMethod(f="summary", signature="specLSet", function(object){
 setMethod(f="plot", signature="specLSet", 
           definition=function(x, ...){
               file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
-              op<-par(mfrow=c(2,1))
+              peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
+            
+              hist(x@rt.normalized)
+              
               plot(x@rt.normalized ~ x@rt.input,
                 main='specLSet iRT normalization',
                 xlab="input retention time (min)",
                 ylab="independent retention time",
                 col=file)
-
-              hist(x@rt.normalized)
-              par(op)
+              
+              idx <- which(peptide %in% iRTpeptides$peptide)
+              # mark the iRT peptides 
+              points(x@rt.input[idx], 
+                     x@rt.normalized[idx], 
+                     col=file[idx], 
+                     lwd=4, pch="x", cex=1.5)
+              
+              legend('topleft', 'iRT peptides', pch='x')
+  
           })
             
 

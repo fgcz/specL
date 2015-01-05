@@ -31,6 +31,12 @@
 
     m <- merge(iRT, data.fit, by.x='peptide', by.y='peptide')
 
+    if (nrow(m) < 1){
+      message('no iRT peptides found for building the model.')
+      message('=> no iRT regression applied, using orgiginal rt instead!')
+      return(rt)
+    }
+    
     if (nrow(m) < 3){
         message('not enough iRT peptides found for building the model.')
         message('=> no iRT regression applied, using orgiginal rt instead!')
@@ -183,7 +189,7 @@ genSwathIonLib <- function(data,
 
     x.AAmass <- protViz::aa2mass(x.peptideSeq, AminoAcids$Monoisotopic, AminoAcids$letter1)
 
-    x.AAmodifiedMass <- mapply(function(x,y){x+y}, x.varModMass, x.AAmass, SIMPLIFY = FALSE)
+    x.AAmodifiedMass <- mapply(function(x, y){x + y}, x.varModMass, x.AAmass, SIMPLIFY = FALSE)
 
     x.rt <- unlist(lapply(data, function(x){x$rt}))
 

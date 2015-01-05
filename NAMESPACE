@@ -12,7 +12,10 @@ importFrom("protViz", fragmentIon)
 importFrom("seqinr", read.fasta)
 
 export("read.bibliospec")
-export("summary.specL_bibliospec")
+export("summary.psmSet_bibliospec")
+export("plot.psmSet_bibliospec")
+export("plot.psm_bibliospec")
+
 
 export("annotateProteinID")
 export("genSwathIonLib")
