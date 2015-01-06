@@ -1,3 +1,15 @@
+CHANGES IN VERSION 1.1.8
+-------------------------
+USER VISIBLE CHANGES
+
+    o renamed annotateProteinID to annotate.protein_id
+    o added graphics on plot.specLSet method
+
+USER UNVISIBLE CHANGES
+
+    o refactored merge
+    
+
 CHANGES IN VERSION 1.1.7
 -------------------------
 USER VISIBLE CHANGES

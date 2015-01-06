@@ -1,8 +1,8 @@
-\name{annotateProteinID}
+\name{annotate.protein_id}
 
-\alias{annotateProteinID}
+\alias{annotate.protein_id}
 
-\title{annotateProteinID}
+\title{Annotate protein_id}
 
 \description{
 
@@ -14,7 +14,7 @@ a peptide sequence assigned.
 
 \usage{
 
-annotateProteinID(data, file = NULL, fasta = read.fasta(file = file, 
+annotate.protein_id(data, file = NULL, fasta = read.fasta(file = file, 
          as.string = TRUE, seqtype = "AA"), digestPattern = "(([RK])|(^)|(^M))") 
 
 }
@@ -25,8 +25,8 @@ annotateProteinID(data, file = NULL, fasta = read.fasta(file = file,
 
   \item{file}{file name of a FASTA file.}
 
-  \item{fasta}{a fasta object as reaturned by the \code{seqinr::read.fasta(...)} 
-  methode.}
+  \item{fasta}{a fasta object as returned by the \code{seqinr::read.fasta(...)} 
+  method.}
 
   \item{digestPattern}{a regex pattern which can be used by the \code{grep} 
   command. the default regex pattern assumes a tryptic digest.}
@@ -39,10 +39,10 @@ The protein sequences a read by the \code{read.fasta} function
 of the \code{seqinr} package. The protein identifier is written 
 to the protein \code{proteinInformation} variable.
 
-If the function is called on a multi core architecture it uses \code{mclapply}.
+If the function is called on a multi-core architecture it uses \code{mclapply}.
 
 It is recommended to load the FASTA file prior to running 
-\code{annotateProteinID} using 
+\code{annotate.protein_id} using 
 
 \code{myFASTA <- read.fasta(file = file, 
     as.string = TRUE, 
@@ -74,7 +74,7 @@ the function.
 
 \examples{
 
-    # annotateProteinID
+    # annotate.protein_id
     
     # our Fasta sequence
       irtFASTAseq <- paste(">zz|ZZ_FGCZCont0260|", 
@@ -93,7 +93,7 @@ the function.
     
     #annotate with proteinID 
     # -> here we find all psms from the one proteinID above
-      peptideStd <- specL::annotateProteinID(peptideStd, 
+      peptideStd <- specL::annotate.protein_id(peptideStd, 
       fasta=fasta.irtFASTAseq)
   
     #show indices for all PSMs where we have a proteinInformation

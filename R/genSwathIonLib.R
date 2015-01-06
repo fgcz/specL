@@ -116,6 +116,7 @@ genSwathIonLib <- function(data,
         q3 <- x$mZ[findNN.idx]
         fi.unlist<-sort(unlist(fi))
         q3.in_silico <- fi.unlist[ findNN_(q3, fi.unlist) ]
+        q1.in_silico <- protViz::parentIonMass(x$peptideSequence) + sum(x$varModification)
 
         if (sum(is.na(q3)) > 0){
             stop("ERROR")
@@ -162,6 +163,7 @@ genSwathIonLib <- function(data,
                       peptide_sequence=peptide_sequence, 
                       proteinInformation=x$proteinInformation,
                       q1=x$pepmass, 
+                      q1.in_silico = q1.in_silico,
                       q3=as.numeric(q3[massErrorFilter])[idx], 
                       q3.in_silico=as.numeric(q3.in_silico[massErrorFilter])[idx], 
                       decoy=as.character(decoy)[idx], 

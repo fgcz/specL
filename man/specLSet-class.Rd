@@ -62,7 +62,7 @@
 
     \item{summary}{\code{signature(x = "specLSet")}: print summary of object content. }
 
-    \item{plot}{\code{signature(x = "specLSet")}: plots normalized verus input rt. }
+    \item{plot}{\code{signature(x = "specLSet")}: plots normalized versus input rt. }
     
     \item{write.spectronaut}{\code{signature(x = "specLSet")}: writes object to ASCII file. }
 
@@ -70,7 +70,7 @@
 
     \item{ionlibrary}{\code{signature(x = "specLSet")}: returns a list of \code{specL} objects. }
 
-    \item{rt.input}{\code{signature(x = "specLSet")}: returns a numeric vector of intput rt values. }
+    \item{rt.input}{\code{signature(x = "specLSet")}: returns a numeric vector of input rt values. }
 
     \item{rt.normalized}{\code{signature(x = "specLSet")}: returns a numeric vector of normalized rt values. }
 	

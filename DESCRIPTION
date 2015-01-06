@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.1.7
+Version: 1.1.8
 Author: Christian Trachsel <christian.trachsel@fgcz.uzh.ch>, Christian
         Panse <cp@fgcz.ethz.ch>, Jonas Grossmann <jg@fgcz.ethz.ch>
 Maintainer: Christian Panse <cp@fgcz.ethz.ch>
@@ -17,7 +17,7 @@ Description: specL provides a function for generating spectra libraries
         Spectronaut software.
 License: GPL-3
 URL: http://www.bioconductor.org/packages/devel/bioc/html/specL.html
-Collate: read.bibliospec.R genSwathIonLib.R annotateProteinID.R
+Collate: read.bibliospec.R genSwathIonLib.R annotate.protein_id.R
         AllGenerics.R specL.R specLSet.R
 biocViews: MassSpectrometry, Proteomics
 LazyData: true

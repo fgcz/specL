@@ -1,7 +1,6 @@
 #R
 
-
-annotateProteinID <- function(data,  
+annotate.protein_id <- function(data,  
     file = NULL,
     fasta = read.fasta(file = file, as.string = TRUE, seqtype="AA"),
     digestPattern = "(([RK])|(^)|(^M))"){

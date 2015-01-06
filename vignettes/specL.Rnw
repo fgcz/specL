@@ -120,7 +120,7 @@ res <- plot(peptideStd[[demoIdx]], ion.axes=TRUE)
 
 The information to which protein a peptide-spectrum-match belongs (PSM) 
 is not stored by BiblioSpec. Therefore \Biocpkg{specL} provides the 
-\Rfunction{annotateProteinID} function which uses R's internal \Rfunction{grep} 
+\Rfunction{annotate.protein\_id} function which uses R's internal \Rfunction{grep} 
 to 'reassigning' the protein information. Therefore a \Robject{fasta} object has 
 to be loaded into the R system using \Rfunction{read.fasta} of the 
 \CRANpkg{seqinr} package. For this, not necessarily, the same 
@@ -154,7 +154,7 @@ peptideStd[[demoIdx]]$proteinInformation
 
 The protein information can be added as follow:
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
-peptideStd <- annotateProteinID(peptideStd, 
+peptideStd <- annotate.protein_id(peptideStd, 
     fasta=fasta.irtFASTAseq)
 @
 
@@ -187,9 +187,9 @@ be adapted. For example, for semi-tryptic identifications use
 \Rfunction{genSwathIonLib} is the main contribution of the 
 \Biocpkg{specL} package. It generates the spectra library used in a 
 targeted data extraction workflow from a mass spectrometric 
-measurement\footnote{Generating the ion library using iRT peptides is highly recommendend as described. 
-however if you have no iRT peptide continue reading in section \ref{sec:noiRT}.}.
-
+measurement. 
+Generating the ion library using iRT peptides is highly recommended as described. 
+However if you have no iRT peptide continue reading in section \ref{sec:noiRT}.
 
 Generation of the spec Library with default settings.
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
@@ -297,9 +297,9 @@ the measured retention time after applying the calculated model
 to the two data sets.
 
 
-<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=5, height=8>>=
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=8>>=
 # calls the plot method for a specLSet object
-op<-par(mfrow=c(2,1)) 
+op<-par(mfrow=c(2,2)) 
 plot(res.genSwathIonLib)
 par(op)
 @
@@ -310,8 +310,9 @@ with black {\bf X} are the iRT peptides which are the base for the
 regression.
 
 \subsection{Generate the spectrum library having no iRTs\label{sec:noiRT}}
-
-<<keep.source = TRUE, eval = TRUE, fig = FALSE, echo=TRUE>>=
+If no iRT peptides are contained in the data not iRT normalization is applied.
+The scatter plot below shows on the y axis that there were not iRT transformation.
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=8>>=
 idx.iRT<-which(unlist(lapply(peptideStd, function(x){
   if(x$peptideSequence %in% iRTpeptides$peptide){0}else{1}
   })) == 0)
@@ -319,6 +320,9 @@ idx.iRT<-which(unlist(lapply(peptideStd, function(x){
 # remove all iRTs and compute ion library
 res.genSwathIonLib.no_iRT <- genSwathIonLib(peptideStd[-idx.iRT])
 summary(res.genSwathIonLib.no_iRT)
+op<-par(mfrow=c(2,2)) 
+plot(res.genSwathIonLib.no_iRT)
+par(op)
 @
 
 \subsection{Output: R console or csv file}

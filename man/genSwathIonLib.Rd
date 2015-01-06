@@ -11,7 +11,7 @@
 \description{
 
     This function generates an ion library for SWATH analysis.
-    It takes a R data object which contains a peaklist.
+    It takes a R data object which contains a peak list.
     The R data object can be generated using the 
     \code{read.bibliospec} function.
     
@@ -47,11 +47,11 @@
 
   \item{max.mZ.Da.error}{the mZ error in Dalton.}
 
-  \item{ignoreMascotIonScore}{boolean if mascot score is considered or not.}
+  \item{ignoreMascotIonScore}{Boolean if mascot score is considered or not.}
 
   \item{topN}{returns the most \code{N} intense fragment ion only.}
 
-  \item{fragmentIonMzRange}{mZ range filter of framgent ion.}
+  \item{fragmentIonMzRange}{mZ range filter of fragment ion.}
 
   \item{fragmentIonRange}{range filter of the number of identified fragment ion 
   which are assigned in the spectrum library set in \code{fragmentIonTyp}.
@@ -60,7 +60,7 @@
   found were omitted.}
 
   \item{fragmentIonFUN}{\code{function (b, y)} which derives all requested 
-    fragment ion out a given tuble of \code{b} and \code{y} ion. If the 
+    fragment ion out a given tuple of \code{b} and \code{y} ion. If the 
     parameter is not specified the method uses an internal function similar 
     as the example below.}
 
@@ -69,11 +69,11 @@
   \code{data}. See also \code{?iRT}. A necessary condition is that 
   \code{data} contains at least two iRT peptides.}
 
-  \item{AminoAcids}{a list containing of 1-letter code and monoisotopic mass of 
+  \item{AminoAcids}{a list containing of 1-letter code and mono-isotopic mass of 
   the amino acids. Default uses the \code{protViz::AA} data set.}
 
   \item{data.fit}{data set containing mZ and peptide sequence 
-  which is used for normalizing rt using a lineat model 
+  which is used for normalizing rt using a linear model 
   \code{lm(formula = rt ~ aggregateInputRT * fileName, data)}. 
   The rt aggregation for the model uses \code{median}.}
 
@@ -95,7 +95,7 @@ If no BiblioSpec files are available also Mascot DAT files
 can be read using scripts contained in the protViz package exec folder.
 
 If the protein information is lost you can benefit
-for the \code{specL::annotateProteinID.Rd} method.
+for the \code{specL::annotate.protein_id.Rd} method.
 
 The function first appear in the \code{protViz} 0.1.45 package. 
 It has been removed in \code{protViz} 0.2.6 to avoid package dependencies.
@@ -105,7 +105,7 @@ It has been removed in \code{protViz} 0.2.6 to avoid package dependencies.
 \value{
 
     The output is a data structure defined as \code{specLSet} object.
-    The generic methode \code{ionlibrary} returns a list of \code{specL} objects, 
+    The generic method \code{ionlibrary} returns a list of \code{specL} objects, 
     \code{specLSet} also stores the input and normalized retention times.
 
 }
@@ -150,6 +150,9 @@ It has been removed in \code{protViz} 0.2.6 to avoid package dependencies.
     peptideStd.ionLib <- genSwathIonLib(data=peptideStd, 
         data.fit=peptideStd.redundant, 
         fragmentIonFUN=myFragmentIon)
+        
+        
+    summary(peptideStd.ionLib)
 
 
     idx<-40
@@ -166,7 +169,7 @@ It has been removed in \code{protViz} 0.2.6 to avoid package dependencies.
 
 
     \dontrun{
-        write.Spectronaut(peptideStd.ionLib, 
+        write.spectronaut(peptideStd.ionLib, 
             file="peptideStd.ionLib.csv")
    }
 }

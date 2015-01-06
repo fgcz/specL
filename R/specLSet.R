@@ -30,7 +30,7 @@ setMethod(f="show", signature="specLSet", function(object){
 
 })
 
-.specLSetTest<- function(x, list_q1){
+.specLSetMergeByQ1inSilico<- function(x, list_q1){
     # todo(cp): check also q3 and peptideModSeq
     idx <- findNN(x@q1, list_q1)
 
@@ -43,8 +43,9 @@ setMethod(f="show", signature="specLSet", function(object){
 
 setMethod(f="merge.specLSet", signature="specLSet", 
     definition=function(object0, object1){
+      
         #todo(cp): could be an argument
-        FUN <- .specLSetTest
+        FUN <- .specLSetMergeByQ1inSilico
 
         object0_q1 <- unlist(lapply(object0@ionlibrary, function(x){return(x@q1)}))
         idx <- order(object0_q1)
@@ -140,6 +141,25 @@ setMethod(f="plot", signature="specLSet",
                      lwd=4, pch="x", cex=1.5)
               
               legend('topleft', 'iRT peptides', pch='x')
+              
+              n<-nchar(as.character(unique(file)))
+              legend('bottomright', 
+                     substr(as.character(unique(file)), n - 25, n),
+                     pch=22, 
+                     col=unique(file),cex=1.0)
+              
+              frg <- table(unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z,sep='_')})))
+              cm<-rainbow(length(frg))
+              pie(frg,
+                  col=cm)
+              
+              
+              plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})), 
+                   unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
+                   col=as.factor(unlist(lapply(x@ionlibrary, function(xx){xx@filename}))),
+                   xlab='rt.normalized',
+                   ylab='fragment ion mass',
+                   pch='_')
   
           })
             

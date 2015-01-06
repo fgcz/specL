@@ -132,7 +132,9 @@ plot.psmSet_bibliospec <- function (object, ...){
   charge <- unlist(lapply(object, function(x){x$charge}))
   filename <- as.numeric(as.factor(unlist(lapply(object, function(x){x$fileName}))))
   
-  plot(pepmass ~ rt, pch=filename, col=charge, 
+  plot(pepmass ~ rt, 
+       pch=filename, 
+       col=charge, 
        main='LCMS map',
        xlab='retention time',
        ylab='peptide mass', ...)
@@ -141,6 +143,12 @@ plot.psmSet_bibliospec <- function (object, ...){
   legend('topleft', paste(cc,'+',sep=''), col=cc, pch=22)
   
   text(rt,pepmass, 1:length(rt),pos=3,col=charge,cex=0.5)
+  
+  fn<-unique(unlist(lapply(object, function(x){x$fileName})))
+  n<-nchar(fn)
+  legend('bottomright', 
+         substr(fn, n - 25, n), 
+         pch=unique(filename),cex=1.0)
   
 }
 

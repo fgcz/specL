@@ -1,7 +1,7 @@
 #R
 
 
-test_annotateProteinID<-
+test_annotate.protein_id<-
 function(){
 
     irtFASTAseq <- paste(">zz|ZZ_FGCZCont0260|",
@@ -15,7 +15,7 @@ function(){
     fasta.irtFASTAseq <-read.fasta(Tfile, as.string=TRUE, seqtype="AA")
     close(Tfile)
 
-    peptideStd <- specL::annotateProteinID(peptideStd,
+    peptideStd <- specL::annotate.protein_id(peptideStd,
         fasta=fasta.irtFASTAseq)
 
     (idx<-which(unlist(lapply(peptideStd, 
@@ -34,4 +34,4 @@ function(){
 
 }
 
-test_annotateProteinID()
+test_annotate.protein_id()
