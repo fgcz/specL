@@ -1,3 +1,14 @@
+CHANGES IN VERSION 1.1.9
+-------------------------
+USER VISIBLE CHANGES
+
+    o new features in specLSet 'summary' plot
+
+USER UNVISIBLE CHANGES
+
+    o refactored merge.specLSet; merge by group_id 
+    o added unit test for merge.specLSet
+
 CHANGES IN VERSION 1.1.8
 -------------------------
 USER VISIBLE CHANGES

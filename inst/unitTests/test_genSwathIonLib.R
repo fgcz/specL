@@ -1,4 +1,7 @@
 #R
+# $HeadURL$
+# $Id$
+# $Date$
 
 
 test_genSwathIonLib<-
@@ -15,10 +18,17 @@ function(){
     c(800.4497, 604.3285,1016.5222, 503.2805, 929.4925),
     tolerance=0.001)
 
-    checkEqualsNumeric(r.genSwathIonLib.top5@rt.input[1:5], c(16.83185, 13.13262, 18.54058, 18.36923, 15.30478), tolerance=0.001)
-    checkEqualsNumeric(r.genSwathIonLib.top5@rt.normalized[1:5], c(95.97314,  52.60417, 116.00582, 113.99703,  78.07007), tolerance=0.001)
+    checkEqualsNumeric(r.genSwathIonLib.top5@rt.input[1:5], 
+                       c(16.83185, 13.13262, 18.54058, 18.36923, 15.30478), 
+                       tolerance=0.001)
+    
+    checkEqualsNumeric(r.genSwathIonLib.top5@rt.normalized[1:5], 
+                       c(95.97314,  52.60417, 116.00582, 113.99703,  78.07007), 
+                       tolerance=0.001)
 
-    checkEqualsNumeric(length(r.genSwathIonLib.top5@rt.normalized), length(r.genSwathIonLib.top5@rt.normalized), tolerance=0.001)
+    checkEqualsNumeric(length(r.genSwathIonLib.top5@rt.normalized), 
+                       length(r.genSwathIonLib.top5@rt.normalized), 
+                       tolerance=0.001)
 }
 
 test_genSwathIonLib_noiRT_peptides<-
@@ -33,7 +43,9 @@ function(){
     rt <- seq(-24.9200, 122.2462, length=length(peptide))
     myiRTpeptides<-cbind(peptide=peptide, rt=rt)
 
-    peptideStd.ionLib <- genSwathIonLib(data=peptideStd, data.fit=peptideStd.redundant, iRT=myiRTpeptides)
+    peptideStd.ionLib <- genSwathIonLib(data=peptideStd, 
+                                        data.fit=peptideStd.redundant, 
+                                        iRT=myiRTpeptides)
 
     # 
     res <- lapply (1:length(peptideStd), 

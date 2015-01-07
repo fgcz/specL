@@ -129,6 +129,10 @@ plot.psmSet_bibliospec <- function (object, ...){
   
   rt <- unlist(lapply(object, function(x){x$rt}))
   pepmass <- unlist(lapply(object, function(x){x$pepmass}))
+  
+  peptide <- unlist(lapply(object, function(x){x$peptideSequence}))
+  idx.iRT <- which(peptide %in% iRTpeptides$peptide)
+  
   charge <- unlist(lapply(object, function(x){x$charge}))
   filename <- as.numeric(as.factor(unlist(lapply(object, function(x){x$fileName}))))
   
@@ -140,7 +144,8 @@ plot.psmSet_bibliospec <- function (object, ...){
        ylab='peptide mass', ...)
   
   cc<-sort(unique(charge))
-  legend('topleft', paste(cc,'+',sep=''), col=cc, pch=22)
+  legend('topleft', "iRT peptides", pch=22)
+  legend('left', paste(cc,'+',sep=''), col=cc, pch=22, title='charge')
   
   text(rt,pepmass, 1:length(rt),pos=3,col=charge,cex=0.5)
   
@@ -148,7 +153,10 @@ plot.psmSet_bibliospec <- function (object, ...){
   n<-nchar(fn)
   legend('bottomright', 
          substr(fn, n - 25, n), 
-         pch=unique(filename),cex=1.0)
+         pch=unique(filename),
+         cex=1.0, title='input file names')
+  
+  points(rt[idx.iRT], pepmass[idx.iRT], pch=22, cex=2)
   
 }
 

@@ -30,30 +30,21 @@ setMethod(f="show", signature="specLSet", function(object){
 
 })
 
-.specLSetMergeByQ1inSilico<- function(x, list_q1){
-    # todo(cp): check also q3 and peptideModSeq
-    idx <- findNN(x@q1, list_q1)
-
-    if (abs(list_q1[idx] - x@q1) < 0.01){
-            return(FALSE)
-    }
-
-    return (TRUE)
-}
-
 setMethod(f="merge.specLSet", signature="specLSet", 
     definition=function(object0, object1){
       
-        #todo(cp): could be an argument
-        FUN <- .specLSetMergeByQ1inSilico
-
-        object0_q1 <- unlist(lapply(object0@ionlibrary, function(x){return(x@q1)}))
-        idx <- order(object0_q1)
+        #todo(cp): check parameter of both objects; if one of the parameter differs 
+        # raise an exception
+      
+        object0_group_id <- unlist(lapply(object0@ionlibrary, function(x){return(x@group_id)}))
 
         for (i in 1:length(object1@ionlibrary) ){
             x <- object1@ionlibrary[[i]]
 
-            if ( FUN(x, object0_q1[idx]) ){
+            #if ( FUN(x, object0_q1[idx]) ){\
+              if (x@group_id %in% object0_group_id){
+                
+              }else{
                 object0@ionlibrary <- c(object0@ionlibrary, x)
 
                 object0@rt.input <- c(object0@rt.input, object1@rt.input[i])
@@ -125,13 +116,12 @@ setMethod(f="plot", signature="specLSet",
               file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
               peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             
-              hist(x@rt.normalized)
               
               plot(x@rt.normalized ~ x@rt.input,
-                main='specLSet iRT normalization',
-                xlab="input retention time (min)",
-                ylab="independent retention time",
-                col=file)
+                   main='specLSet iRT normalization',
+                   xlab="input retention time (min)",
+                   ylab="independent retention time",
+                   col=file, ...)
               
               idx <- which(peptide %in% iRTpeptides$peptide)
               # mark the iRT peptides 
@@ -146,21 +136,34 @@ setMethod(f="plot", signature="specLSet",
               legend('bottomright', 
                      substr(as.character(unique(file)), n - 25, n),
                      pch=22, 
-                     col=unique(file),cex=1.0)
+                     col=unique(file),
+                     title='input file names',
+                     cex=1.0)
               
-              frg <- table(unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z,sep='_')})))
-              cm<-rainbow(length(frg))
-              pie(frg,
-                  col=cm)
               
+              frg <- unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z, "+",sep='')}))
+              frg.table <- table(frg)
+              cm<-rainbow(length(frg.table))
+              hist(x@rt.normalized)
               
               plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})), 
                    unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
-                   col=as.factor(unlist(lapply(x@ionlibrary, function(xx){xx@filename}))),
+                   col=cm[as.factor(frg)],
                    xlab='rt.normalized',
                    ylab='fragment ion mass',
-                   pch='_')
-  
+                   pch='_',
+                   main='in-silico rt-fragment ion map')
+              legend('topleft', names(frg.table), pch=22, col=cm, cex=0.75)
+
+              
+              
+              barplot(frg.table, col=cm,
+                   main='ion type / charge state')
+              #legend('topleft', 
+              #       paste(names(frg.table), frg.table, sep'='),
+              #       pch=22, col=cm, cex=0.5)
+                     
+             
           })
             
 

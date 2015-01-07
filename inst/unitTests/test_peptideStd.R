@@ -1,4 +1,8 @@
 #R
+# $HeadURL$
+# $Id$
+# $Date$
+
 
 test_peptideStd <-
 function(){
