@@ -58,10 +58,11 @@ heavily redundant and therefore unsuited for spectrum library building,
 the search results must first be filtered. To create non-redundant 
 input files, we use the BiblioSpec \cite{pmid18428681} algorithm 
 implemented in Skyline \cite{pmid20147306}. A given search result (e.g. 
-Mascot.DAT file) is loaded into the software Skyline and is redundancy 
+Mascot result file) is loaded into the software Skyline and is redundancy 
 filtered. The 'Skyline workflow step' provides two sqlite readable 
-files as output named \Rcode{'*.blib'} and \Rcode{'*.redundant.blib'}. 
-These files are ideally used as ideal input for this packages.
+files\footnote{sqlite uses standart SQL as query language.} 
+as output named \Rcode{'*.blib'} and \Rcode{'*.redundant.blib'}. 
+These files are used as ideal input for this packages.
 Note here, that Skyline is very flexible when it comes to peptide
 identification results. It means with Skyline you can build the spectrum
 library files for almost all search engines (even from other spectrum
@@ -90,7 +91,6 @@ appropriate. The sample consists of a digest of the Fetuin protein
 (Bos taurus, uniprot id: P12763). 40 femtomole are loaded on column.
 Mascot was used to search and identify the respective peptides.
 
-
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
 summary(peptideStd)
 @
@@ -98,8 +98,8 @@ summary(peptideStd)
 For both \Rcode{peptideStd}, \Rcode{peptideStd.redandant} data sets the 
 Skyline software was used to generate the bibliospec files which 
 contain the peptide sequences with the respective peptide spectrum 
-match (PSM). The read.bibliospec function was used to read the blib 
-files into R.
+match (PSM). The \Rfunction{specL::read.bibliospec} function was used 
+to read the blib files into R. 
 
 The from \Rcode{read.bibliospec} generated object has its own plot functions.
 The LC-MS map graphs peptide mass versus retention time.
@@ -348,7 +348,7 @@ The benchmark were processed on a
 having
 R version 3.1.1 (2014-07-10) , specL 1.1.2, and BiocParallel 1.0.0
 installed. The default setting of BiocParallel has used eight cores.
-As FASTA we used a TAIR10 retrived  \url{http://www.arabidopsis.org/}.
+As FASTA we used a TAIR10 retrived from \url{http://www.arabidopsis.org/}.
 
 \begin{table}[h]
 \centering
@@ -375,11 +375,13 @@ Zurich (ETHZ)) and Stephan Michalik (Ernst-Moritz-Arndt-Universit{\"a}t Greifswa
 \section{To Do for next releases}
 \begin{itemize}
 
+\item importer for peakview csv format; enable \Rcode{compare.specLSet(object0, object1)}
+
 \item new option for \Rfunction{specL::genSwathIonLib}; Exclude fragment 
 ions from precursor \Rcode{window = TRUE, FALSE}
 
-\item new option for \Rfunction{specL::genSwathIonLib}; Calculate 
-\Rcode{q1.in-silico} as an alternative to \Rcode{q1}
+%\item new option fo \Rfunction{specL::genSwathIonLib}; Calculate 
+%\Rcode{q1.in-silico} as an alternative to \Rcode{q1} 1.1.8
 
 \item new option for \Rfunction{specL::genSwathIonLib}; Predict 
 transitions for heavy labeled peptides using information from light 

@@ -54,12 +54,17 @@ setMethod(f="plot", signature="specL",
   q3<-slot(x, "q3")
   relativeFragmentIntensity <- slot(x, "relativeFragmentIntensity")
   
+  
+  #n<-nchar(as.character(unique(file)))
+  #filename.short <- substr(as.character(unique(x@filename)), n - 25, n)
+  
   plot(relativeFragmentIntensity ~ q3, 
      main=slot(x, "group_id"),
-     sub=x@proteinInformation,
-     ylim=c(0,110),
+     sub=paste(x@proteinInformation),
+     ylim=c(1,110),
      col='#AAAAAAAA',
-     type='h')
+     type='h',
+     ...)
 
   points(q3, relativeFragmentIntensity, pch=22)
   text(q3, relativeFragmentIntensity, 

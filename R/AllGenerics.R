@@ -17,3 +17,7 @@ setGeneric("rt.normalized",
 
 setGeneric("merge.specLSet", 
     function(object0, object1) standardGeneric("merge.specLSet"))
+
+setGeneric("generate.consensus", 
+           function(object,...) standardGeneric("generate.consensus"))
+

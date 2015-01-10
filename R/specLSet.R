@@ -69,8 +69,8 @@ setMethod(f="summary", signature="specLSet", function(object){
 
     cat("\nNumber of precursor (q1 and peptideModSeq) = ")
     cat(length((unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1, x@peptideModSeq, sep='_')})))))
-    cat("\nNumber of unique precursor (q1 and peptideModSeq) = ")
-    cat(length(unique(unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1, x@peptideModSeq, sep='_')})))))
+    cat("\nNumber of unique precursor\n(q1.in-silico and peptideModSeq) = ")
+    cat(length(unique(unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1.in_silico, x@peptideModSeq, sep='_')})))))
 
     cat("\nNumber of iRT peptide(s) = ")
     cat(sum(unlist(lapply(slot(object,"ionlibrary"), function(x){
@@ -93,9 +93,13 @@ setMethod(f="summary", signature="specLSet", function(object){
     cat("\nNumber of annotated precursor = ")
     cat(sum(unlist(lapply(slot(object,"ionlibrary"), function(x){x@proteinInformation != ''}))))
 
-    cat("\nNumber of precursors in Filename(s)\n")
+    
     t <- table(unlist(lapply(object@ionlibrary, function(x){x@filename})))
-
+    cat("\nNumber of file(s)\n")
+    cat('\t')
+    cat(length(t))
+    cat('\n')
+    cat("\nNumber of precursors in Filename(s)\n")
     n <- names(t)
     w <- getOption("width") / 2
     for (i in 1:length(t)){
@@ -152,7 +156,8 @@ setMethod(f="plot", signature="specLSet",
                    xlab='rt.normalized',
                    ylab='fragment ion mass',
                    pch='_',
-                   main='in-silico rt-fragment ion map')
+                   main='in-silico rt-fragment ion map',
+                   ...)
               legend('topleft', names(frg.table), pch=22, col=cm, cex=0.75)
 
               
@@ -197,3 +202,71 @@ setMethod(f="rt.input",  signature="specLSet",
 setMethod(f="rt.normalized",  signature="specLSet", 
     definition=function(object) object@rt.normalized)
 
+setMethod(f="generate.consensus",  signature="specLSet", 
+          definition=function(object, ...){
+            
+  id<-unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1.in_silico, x@peptideModSeq, sep='_')}))
+  groups <-tapply(1:length(id), id, function(x){x}, simplify=TRUE)
+  
+  if (sum(unlist(lapply(groups, function(x){length(x)>2}))) == 0){
+    warning("no specs for grouping.")
+    return (object)
+  }
+  
+  cat("\nCombining specs having the same group_id:\n")
+  lapply((which(unlist(lapply(groups, function(x){length(x)>2})))), function(xx){
+    cat(paste(groups[[xx]],collapse=', ')[1]);
+    cat(paste(" ->",xx,'\n'))})
+  cat("\n")
+  
+  
+  output<-lapply(1:length(groups), function(i){
+    
+    frg_type<-unlist(lapply(groups[[i]], function(x){object@ionlibrary[[x]]@frg_type}))
+    fgr_nr<-unlist(lapply(groups[[i]], function(x){object@ionlibrary[[x]]@frg_nr}))
+    fgr_z<-unlist(lapply(groups[[i]], function(x){object@ionlibrary[[x]]@frg_z}))
+    
+    q3<-unlist(lapply(groups[[i]], function(x){object@ionlibrary[[x]]@q3}))
+    irt<-unlist(lapply(groups[[i]], function(x){object@ionlibrary[[x]]@irt}))
+    relativeFragmentIntensity<-unlist(lapply(groups[[i]], function(x){l<-object@ionlibrary[[x]]; l@relativeFragmentIntensity}))
+    
+    by.group<-list(frg_type=frg_type,fgr_nr=fgr_nr,fgr_z=fgr_z)
+    
+    q3 <- aggregate(q3, by=by.group, FUN=mean)
+  
+    
+    relativeFragmentIntensity <- aggregate(relativeFragmentIntensity, by=by.group, FUN=mean)
+         
+    filename <- unique(sort(unlist(lapply(groups[[i]], function(x){object@ionlibrary[[x]]@filename}))))
+    
+    if (length(filename)>1){
+      filename<-"*consensus*"
+    }
+    
+    
+    res <- specL(group_id=object@ionlibrary[[groups[[i]][1]]]@group_id, 
+                 peptide_sequence=object@ionlibrary[[groups[[i]][1]]]@peptide_sequence, 
+                 proteinInformation=object@ionlibrary[[groups[[i]][1]]]@proteinInformation,
+                 q1=object@ionlibrary[[groups[[i]][1]]]@q1, 
+                 q1.in_silico = object@ionlibrary[[groups[[i]][1]]]@q1.in_silico,
+                 q3=q3$x, 
+                 q3.in_silico=object@ionlibrary[[groups[[i]][1]]]@q3.in_silico, 
+                 decoy=object@ionlibrary[[groups[[i]][1]]]@decoy,
+                 prec_z=object@ionlibrary[[groups[[i]][1]]]@prec_z, 
+                 frg_type=q3$frg_type, 
+                 frg_nr=q3[,2], 
+                 frg_z=q3[,3], 
+                 relativeFragmentIntensity=relativeFragmentIntensity$x, 
+                 irt=mean(irt), 
+                 peptideModSeq=object@ionlibrary[[groups[[i]][1]]]@peptideModSeq, 
+                 mZ.error=rep(-1, nrow(q3)),
+                 filename=filename
+      )
+    })
+  
+  
+  return(specLSet(ionlibrary=output, 
+                  input.parameter=list(comment='consensus specLSet object'),
+                  rt.normalized=unlist(lapply(output, function(x){x@irt})), 
+                  rt.input=unlist(lapply(output, function(x){x@irt}))))
+})
