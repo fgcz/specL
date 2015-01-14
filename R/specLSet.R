@@ -243,7 +243,6 @@ setMethod(f="generate.consensus",  signature="specLSet",
       filename<-"*consensus*"
     }
     
-    
     res <- specL(group_id=object@ionlibrary[[groups[[i]][1]]]@group_id, 
                  peptide_sequence=object@ionlibrary[[groups[[i]][1]]]@peptide_sequence, 
                  proteinInformation=object@ionlibrary[[groups[[i]][1]]]@proteinInformation,

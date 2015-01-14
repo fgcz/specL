@@ -191,11 +191,29 @@ measurement.
 Generating the ion library using iRT peptides is highly recommended as described. 
 However if you have no iRT peptide continue reading in section \ref{sec:noiRT}.
 
-Generation of the spec Library with default settings.
+Generation of the spec Library with default (see table \ref{table:default}) settings.
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
 res.genSwathIonLib <- genSwathIonLib(data=peptideStd, 
                                      data.fit=peptideStd.redundant)
 @
+
+\begin{table}[h]
+\centering
+\label{table:default}
+\begin{tabular}{l|l|r}
+
+\hline
+parameter      &    description&    value      \\
+\hline
+  \Rcode{max.mZ.Da.error} & max ms2 tolerance& \Rcode{0.1}\\ 
+  \Rcode{topN} &the n most intense fragment ion& 10\\
+  \Rcode{fragmentIonMzRange}&mZ range filter of fragment ion& c(300, 1800)\\
+  \Rcode{fragmentIonRange}&min/max number of fragment ions& \Rcode{c(5,100)}\\
+  \Rcode{fragmentIonFUN} &desired fragment ion types& \Rcode{b1+,y1+,b2+,y2+,b3+,y3+}\\
+\hline
+\end{tabular}
+\caption{\Rfunction{genSwathIonLib} default settings}
+\end{table}
 
 
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
