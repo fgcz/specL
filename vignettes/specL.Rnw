@@ -116,6 +116,17 @@ demoIdx <- 40
 res <- plot(peptideStd[[demoIdx]], ion.axes=TRUE)
 @
 
+\subsection{Read mascot result files}
+Alternatively mascot search result files(dat) can be used applying the 
+R function below to the output of \CRANpkg{protViz} perl file 
+\texttt{protViz\_mascotDat2RData.pl}
+
+However due do the potential high redundancy of peptide spectrum matches such a result will not result in useful ion library. However in the future a redancy filter algorithm might be proopsed to resolve this problem.
+<<keep.source = TRUE, eval = TRUE>>=
+specL:::.mascot2psmSet
+@
+
+
 \subsection{Protein ID annotation using FASTA} 
 
 The information to which protein a peptide-spectrum-match belongs (PSM) 
@@ -419,6 +430,9 @@ to handle fasta files
 \item add varMods to specL class
 
 \item replace mascot score by a generic score
+
+\item in-silico rt ion map plot (\Rfunction{plot.specLSet}) 
+split window into SWATH windows (one plot per, e.g., 25Da window)
 
 \end{itemize}
 

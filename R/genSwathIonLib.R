@@ -39,7 +39,7 @@
     
     if (nrow(m) < 3){
         message('not enough iRT peptides found for building the model.')
-        message('=> no iRT regression applied, using orgiginal rt instead!')
+        message('=> no iRT regression applied, using original rt instead!')
         return(rt)
     }
 

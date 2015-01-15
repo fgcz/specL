@@ -8,7 +8,9 @@ test_genSwathIonLib<-
 function(){
 # TEST 1
     r.genSwathIonLib.top5 <- genSwathIonLib(peptideStd,
-    peptideStd.redundant, topN=5,
+    peptideStd.redundant, topN=5, 
+    fragmentIonRange=c(2,100),
+    fragmentIonMzRange=c(200,2000),
     fragmentIonFUN=function (b, y) {
       return( cbind(y1_=y) )
       }

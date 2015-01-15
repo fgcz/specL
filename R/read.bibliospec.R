@@ -85,7 +85,7 @@ read.bibliospec <- function(file){
             rt=x$retentionTime,
             varModification=rep(0.0, nchar(x$peptideSeq)),
             mascotScore = -10 * log((1E-6 + x$score)) / log(10))
-        class(res[[i]]) = "psm_bibliospec"
+        class(res[[i]]) = "psm"
     }
 
     message(paste("assigning", nrow(data.modifications), "modifications ..."))
@@ -93,16 +93,16 @@ read.bibliospec <- function(file){
         res[[data.modifications$RefSpectraID[i]]]$varModification[data.modifications$position[i]] <- data.modifications$mass[i]
     }
 
-    class(res)='psmSet_bibliospec'
+    class(res)='psmSet'
 
     dbDisconnect(con)
     return(res)
 }
 #s<-read.bibliospec("/scratch/specL_revisions_201412/p1000_testBelowFour.redundant.blib")
 
-summary.psmSet_bibliospec <- function (object, ...){
+summary.psmSet <- function (object, ...){
   
-    cat("Summary of a \"psmSet_bibliospec\" object.")
+    cat("Summary of a \"psmSet\" object.")
 
     cat("\nNumber of precursor:\n\t")
     cat(length(object))
@@ -125,7 +125,7 @@ summary.psmSet_bibliospec <- function (object, ...){
     cat ("\n")
 }
 
-plot.psmSet_bibliospec <- function (object, ...){
+plot.psmSet <- function (object, ...){
   
   rt <- unlist(lapply(object, function(x){x$rt}))
   pepmass <- unlist(lapply(object, function(x){x$pepmass}))
@@ -160,7 +160,7 @@ plot.psmSet_bibliospec <- function (object, ...){
   
 }
 
-plot.psm_bibliospec <- function (object, ...){
+plot.psm <- function (object, ...){
   
   AAmass <- protViz::aa2mass(object$peptideSequence)[[1]]#, protViz::AA$Monoisotopic, protViz::AA$letter1)
   
@@ -172,3 +172,24 @@ plot.psm_bibliospec <- function (object, ...){
   
   return(protViz::peakplot(peptideSequence=object$peptideSequence, spec=spec, fi=fi, ...))
 }
+
+.mascot2psmSet <-
+  function(dat, mod, mascotScoreCutOff=40){
+    res <- lapply(dat, function(x){
+      modString <- as.numeric(strsplit(x$modification, '')[[1]])
+      modString.length <- length(modString)
+      
+      x$varModification <- mod[modString [c(-1, -modString.length)] + 1 ]
+      rt<-x$rtinseconds
+      x<-c(x, rt=rt, fileName="mascot")
+      
+      class(x) <- "psm"
+      return(x)
+    })
+    
+    # filter
+    res<-res[which(unlist(lapply(dat, function(x){
+      x$mascotScore > mascotScoreCutOff && length(x$mZ)>10}))) ]
+    class(res) <- "psmSet"
+    return(res)
+  }
