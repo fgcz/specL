@@ -102,7 +102,7 @@ read.bibliospec <- function(file){
 
 summary.psmSet_bibliospec <- function (object, ...){
   
-    cat("Summary of a \"specL_bibliospec\" object.")
+    cat("Summary of a \"psmSet_bibliospec\" object.")
 
     cat("\nNumber of precursor:\n\t")
     cat(length(object))

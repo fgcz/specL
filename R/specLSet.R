@@ -123,7 +123,7 @@ setMethod(f="plot", signature="specLSet",
               
               plot(x@rt.normalized ~ x@rt.input,
                    main='specLSet iRT normalization',
-                   xlab="input retention time (min)",
+                   xlab="input retention time",
                    ylab="independent retention time",
                    col=file, ...)
               

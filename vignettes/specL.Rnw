@@ -388,7 +388,9 @@ The authors thank all colleagues of the Functional Genomics Center
 Zuerich (FGCZ), and especial thank goes to our test users Sira 
 Echevarr\'{i}a Zome\~{n}o (Swiss Federal Institute of Technology in 
 Zurich (ETHZ)), Tobias Kockmann (Swiss Federal Institute of Technology in 
-Zurich (ETHZ)) and Stephan Michalik (Ernst-Moritz-Arndt-Universit{\"a}t Greifswald, Germany).
+Zurich (ETHZ)),
+Lukas von Ziegler (Brain Research Institute, UZH\texttt{|}ETH Zurich),
+and Stephan Michalik (Ernst-Moritz-Arndt-Universit{\"a}t Greifswald, Germany).
 
 \section{To Do for next releases}
 \begin{itemize}
