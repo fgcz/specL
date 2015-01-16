@@ -116,19 +116,37 @@ demoIdx <- 40
 res <- plot(peptideStd[[demoIdx]], ion.axes=TRUE)
 @
 
-\subsection{Read from mascot result files}
-Alternatively mascot search result files (dat) can be used by applying the 
-\Rfunction{specL:::.mascot2psmSet} on the output of the \CRANpkg{protViz} perl script 
-\texttt{protViz\_mascotDat2RData.pl} which can be found in the exec directory 
-of the \CRANpkg{protViz} package.
+\subsection{Read from Mascot result files}
+Alternatively Mascot search result files (dat) can be used by applying 
+\CRANpkg{protViz} perl script 
+\texttt{protViz\-\_mascotDat2RData.pl}.
 
-However due do the potential high redundancy of peptide spectrum matches such an approach
-will not result in useful ion library. 
-However in the future a redundancy filter algorithm might be proposed to resolve this problem.
+The perl script can be found in the exec directory of the \CRANpkg{protViz} package. 
+The mascot mod\_file can be found in the configurations of the mascot server.
+An example on our Linux shell looks as follow:
 
+\begin{verbatim}
+$ /usr/local/lib/R/site-library/protViz/exec/protViz_mascotDat2RData.pl \
+-d=/usr/local/mascot/data/20130116/F178287.dat \
+-m=mod_file
+\end{verbatim}
+
+\Rcode{mascotDat2RData.pl} requires the Mascot server \Rcode{mod\_file} keeping 
+all the configured modification.
+
+Once the perl script is finished, the resulting RData file be read into the R session using \Rfunction{load}.
+
+Next, the variable modifications, and the S3 psmSet object has to be generated. This 
+can be done by using 
+\Rfunction{specL:::.mascot2psmSet} 
 <<keep.source = TRUE, eval = TRUE>>=
 specL:::.mascot2psmSet
 @
+
+If you are processing Mascot result files you can continue reading in section \ref{sec:genSwathIonLib}.
+
+However, please note, due do the potential high redundancy of peptide spectrum matches in a database search approach, it might not result in useful ion library for targeted data extraction, unless redundancy filtering is handled. 
+However in a future release a redundancy filter algorithm might be proposed to resolve this problem.
 
 
 \subsection{Annotate protein ids using FASTA} 
@@ -198,7 +216,7 @@ be adapted. For example, for semi-tryptic identifications use
 \Rcode{digestPattern = ""}.
 
 \subsection{Generate the spectrum library (assay)}
-
+\label{sec:genSwathIonLib}
 \Rfunction{genSwathIonLib} is the main contribution of the 
 \Biocpkg{specL} package. It generates the spectra library used in a 
 targeted data extraction workflow from a mass spectrometric 
@@ -206,7 +224,7 @@ measurement.
 Generating the ion library using iRT peptides is highly recommended as described. 
 However if you have no iRT peptide continue reading in section \ref{sec:noiRT}.
 
-Generation of the spec Library with default (see table \ref{table:default}) settings.
+Generation of the spec Library with default (see Table \ref{table:default}) settings.
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
 res.genSwathIonLib <- genSwathIonLib(data=peptideStd, 
                                      data.fit=peptideStd.redundant)
@@ -214,7 +232,7 @@ res.genSwathIonLib <- genSwathIonLib(data=peptideStd,
 
 \begin{table}[h]
 \centering
-\label{table:default}
+
 \begin{tabular}{l|l|r}
 
 \hline
@@ -227,7 +245,7 @@ parameter      &    description&    value      \\
   \Rcode{fragmentIonFUN} &desired fragment ion types& \Rcode{b1+,y1+,b2+,y2+,b3+,y3+}\\
 \hline
 \end{tabular}
-\caption{\Rfunction{genSwathIonLib} default settings}
+\caption{\label{table:default}\Rfunction{genSwathIonLib} default settings}
 \end{table}
 
 
@@ -394,7 +412,7 @@ fasta=TAIR10     &                    &           & blib  [unpublished]         
 71032      & 3423196            & 39M       & 65018/136963  & 120M      & 130min         &  30sec \\
 \hline
 fasta=HUMAN   &                    &           & blib  \cite[Rosenberger]{Rosenberger} &           &   &           \\
-88969& 3997085   &   43M     &   256908/3060421 & 4.4G     & $\approx$28days &$\approx$5min \\
+88969& 3997085   &   43M     &   256908/3060421 & 4.4G     & $\approx$7h &$\approx$5min \\
 
 %HUMAN\footnote{Rosenberger et al. in Scientific Data (doi:10.1038/sdata.2014.31)} &&    & & & 256908/3060421&         & 4.4G       & & $\approx$5min\\
 \hline
@@ -402,7 +420,12 @@ fasta=HUMAN   &                    &           & blib  \cite[Rosenberger]{Rosenb
 }
 \end{table}
 The following parameter settings were given to the \Rfunction{genSwathIonLib} function:
-\Rcode{topN=10, fragmentIonMzRange=c(200,2000), fragmentIonRange=c(2,100)}.
+<<keep.source = TRUE, eval = FALSE, fig =FALSE>>=
+res <- genSwathIonLib(data, data.fit,
+  topN=10, 
+  fragmentIonMzRange=c(200,2000), 
+  fragmentIonRange=c(2,100))
+@
 
 
 \section{Acknowledgement}
@@ -441,7 +464,7 @@ to handle fasta files
 
 \item add varMods to specL class
 
-\item replace mascot score by a generic score
+\item replace Mascot score by a generic score
 
 \item in-silico rt ion map plot (\Rfunction{plot.specLSet}) 
 split window into SWATH windows (one plot per, e.g., 25Da window)
