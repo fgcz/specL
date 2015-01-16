@@ -45,7 +45,7 @@
 
   \item{file}{the output file name.}
 
-  \item{max.mZ.Da.error}{the mZ error in Dalton.}
+  \item{max.mZ.Da.error}{the mZ error in Dalton on ms2 level.}
 
   \item{ignoreMascotIonScore}{Boolean if mascot score is considered or not.}
 

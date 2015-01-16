@@ -81,12 +81,12 @@ packageVersion('specL')
 @
 
 
-\subsection{Input: Redundant plus non-redundant blib files}
+\subsection{Read from redundant plus non-redundant blib files}
 for demonstration \Biocpkg{specL}  
 contains the two data sets namely \Rcode{peptideStd} and 
 \Rcode{peptideStd.redundant}. This is a data set which 
-comes from two standard run experiment which are routinely
-used to check the liquid chromatographic system is still working
+comes from two standard run experiments which are routinely
+used to check if the liquid chromatographic system is still working
 appropriate. The sample consists of a digest of the Fetuin protein 
 (Bos taurus, uniprot id: P12763). 40 femtomole are loaded on column.
 Mascot was used to search and identify the respective peptides.
@@ -116,18 +116,22 @@ demoIdx <- 40
 res <- plot(peptideStd[[demoIdx]], ion.axes=TRUE)
 @
 
-\subsection{Read mascot result files}
-Alternatively mascot search result files(dat) can be used applying the 
-R function below to the output of \CRANpkg{protViz} perl file 
-\texttt{protViz\_mascotDat2RData.pl}
+\subsection{Read from mascot result files}
+Alternatively mascot search result files (dat) can be used by applying the 
+\Rfunction{specL:::.mascot2psmSet} on the output of the \CRANpkg{protViz} perl script 
+\texttt{protViz\_mascotDat2RData.pl} which can be found in the exec directory 
+of the \CRANpkg{protViz} package.
 
-However due do the potential high redundancy of peptide spectrum matches such a result will not result in useful ion library. However in the future a redancy filter algorithm might be proopsed to resolve this problem.
+However due do the potential high redundancy of peptide spectrum matches such an approach
+will not result in useful ion library. 
+However in the future a redundancy filter algorithm might be proposed to resolve this problem.
+
 <<keep.source = TRUE, eval = TRUE>>=
 specL:::.mascot2psmSet
 @
 
 
-\subsection{Protein ID annotation using FASTA} 
+\subsection{Annotate protein ids using FASTA} 
 
 The information to which protein a peptide-spectrum-match belongs (PSM) 
 is not stored by BiblioSpec. Therefore \Biocpkg{specL} provides the 
@@ -354,7 +358,7 @@ plot(res.genSwathIonLib.no_iRT)
 par(op)
 @
 
-\subsection{Output: R console or csv file}
+\subsection{Write output to file}
 The output can be written as an ASCII text file.
 
 <<keep.source = TRUE, eval = TRUE, fig = FALSE, echo=TRUE>>=
@@ -377,21 +381,29 @@ The benchmark were processed on a
 having
 R version 3.1.1 (2014-07-10) , specL 1.1.2, and BiocParallel 1.0.0
 installed. The default setting of BiocParallel has used eight cores.
-As FASTA we used a TAIR10 retrived from \url{http://www.arabidopsis.org/}.
+As FASTA we used a TAIR10 retrived from \url{http://www.arabidopsis.org/} and Human Swissprot.
 
 \begin{table}[h]
 \centering
 {\small
-\begin{tabular}{rrr|rrr|rr}
+\begin{tabular}{rrr|rr|rr}
 \hline
-fasta      &                    &           & blib    &                 &           & runtime  &                \\
-\#proteins & \#peptides & file size & \#specs & \#mods & file size & annotate & generate\\\hline \hline
-71032      & 3423196            & 39M       & 39648/118268   & 16554/47547           & 51M       & 79min         &   19sec             \\
-71032      & 3423196            & 39M       & 65018/136963   & 28565/64792           & 120M      & 130min         &  30sec              \\
+fasta=TAIR10     &                    &           & blib  [unpublished]                 &           & runtime  &           \\
+\#proteins & \#tryptic peptides & file size & \#specs &  file size & annotate & generate\\\hline \hline
+71032      & 3423196            & 39M       & 39648/118268  & 51M       & 79min         &   19sec \\
+71032      & 3423196            & 39M       & 65018/136963  & 120M      & 130min         &  30sec \\
+\hline
+fasta=HUMAN   &                    &           & blib  \cite[Rosenberger]{Rosenberger} &           &   &           \\
+88969& 3997085   &   43M     &   256908/3060421 & 4.4G     & $\approx$28days &$\approx$5min \\
+
+%HUMAN\footnote{Rosenberger et al. in Scientific Data (doi:10.1038/sdata.2014.31)} &&    & & & 256908/3060421&         & 4.4G       & & $\approx$5min\\
 \hline
 \end{tabular}
 }
 \end{table}
+The following parameter settings were given to the \Rfunction{genSwathIonLib} function:
+\Rcode{topN=10, fragmentIonMzRange=c(200,2000), fragmentIonRange=c(2,100)}.
+
 
 \section{Acknowledgement}
 
@@ -433,6 +445,8 @@ to handle fasta files
 
 \item in-silico rt ion map plot (\Rfunction{plot.specLSet}) 
 split window into SWATH windows (one plot per, e.g., 25Da window)
+
+\item assay refinement - replace contaminated fragment ion in library
 
 \end{itemize}
 
