@@ -1,4 +1,4 @@
-#R
+1#R
 # AllGenerics.R
 setGeneric("write.spectronaut",  
     function(x, ...) standardGeneric("write.spectronaut"))
@@ -16,7 +16,7 @@ setGeneric("rt.normalized",
     function(object) standardGeneric("rt.normalized"))
 
 setGeneric("merge.specLSet", 
-    function(object0, object1) standardGeneric("merge.specLSet"))
+    function(x, y, ...) standardGeneric("merge.specLSet"))
 
 setGeneric("generate.consensus", 
            function(object,...) standardGeneric("generate.consensus"))

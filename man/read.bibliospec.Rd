@@ -5,18 +5,23 @@
 \alias{BiblioSpec}
 \alias{skyline}
 \alias{Skyline}
-\alias{plot.psm_bibliospec}
-\alias{plot.psmSet_bibliospec}
-\alias{summary.psmSet_bibliospec}
+
+\alias{plot.psm}
+
+\alias{plot.psmSet}
+
+\alias{summary.psmSet}
 
 \title{BiblioSpec Reader}
 
 \description{
 
     This function reads a BiblioSpec generated file and returns 
-    a list of tandem mass specs, peptide assignments, retention times, and 
-    modifications records.
-
+    a list of tandem mass specs (psm objects), 
+    peptide assignments, retention times, and 
+    modifications records. The type of the data structire which is 
+    returned is called psmSet.
+    
 }
 
 \usage{
@@ -63,12 +68,11 @@
 
 \author{
 
-   Christian Panse, 2014
+   Christian Panse, 2014, 2015
 
 }
 
 \examples{
 
     read.bibliospec
-
 }

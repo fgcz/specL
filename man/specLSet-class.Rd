@@ -7,23 +7,28 @@
 \alias{show,specLSet-method}
 \alias{summary,specLSet-method}
 
-
 \alias{plot}
-\alias{plot, specLSet-method}
+\alias{plot,specLSet-method}
 
 \alias{merge.specLSet}
-\alias{merge.specLSet, specLSet-method}
+\alias{merge.specLSet,specLSet-method}
 
-\alias{write.spectronaut, specLSet-method}
+\alias{write.spectronaut,specLSet-method}
 
 \alias{ionlibrary}
-\alias{ionlibrary, specLSet-method}
-
-\alias{rt.normalized}
-\alias{rt.normalized, specLSet-method}
+\alias{ionlibrary,specLSet-method}
 
 \alias{rt.input}
-\alias{rt.input, specLSet-method}
+\alias{rt.input,specLSet-method}
+
+\alias{rt.normalized}
+\alias{rt.normalized,specLSet-method}
+
+\alias{generate.consensus}
+\alias{generate.consensus,specLSet-method}
+
+\alias{ionlibrary}
+\alias{ionlibrary,specLSet-method}
 
 \title{Class \code{"specLSet"}}
 
@@ -44,6 +49,8 @@
 
   \describe{
 
+    \item{\code{input.parameter}:}{A list of parameter values. }
+    
     \item{\code{ionlibrary}:}{A list of \code{"specL"} objects.}
 
     \item{\code{rt.normalized}:}{A numeric vector of  normalized retention time values.}
@@ -65,6 +72,8 @@
     \item{plot}{\code{signature(x = "specLSet")}: plots normalized versus input rt. }
     
     \item{write.spectronaut}{\code{signature(x = "specLSet")}: writes object to ASCII file. }
+    
+    \item{generate.consensus}{\code{signature(x = "specLSet")}: generates consensus specLSet object by combining all specL objects having a redundant group_id which is defined by \code{paste(x@q1.in_silico, x@peptideModSeq, sep='_')}. }
 
     \item{merge.specLSet}{\code{signature(x = "specLSet")}: merges two specLSet objects.}
 

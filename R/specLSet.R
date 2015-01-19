@@ -31,8 +31,9 @@ setMethod(f="show", signature="specLSet", function(object){
 })
 
 setMethod(f="merge.specLSet", signature="specLSet", 
-    definition=function(object0, object1){
-      
+    definition=function(x, y, ... ){
+      object0<-x
+      object1<-y
         #todo(cp): check parameter of both objects; if one of the parameter differs 
         # raise an exception
       
@@ -116,7 +117,7 @@ setMethod(f="summary", signature="specLSet", function(object){
 })
 
 setMethod(f="plot", signature="specLSet", 
-          definition=function(x, ...){
+          definition=function(x, iRTpeptides=specL::iRTpeptides, ...){
               file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
               peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             

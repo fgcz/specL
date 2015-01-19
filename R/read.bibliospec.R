@@ -125,16 +125,16 @@ summary.psmSet <- function (object, ...){
     cat ("\n")
 }
 
-plot.psmSet <- function (object, ...){
+plot.psmSet <- function (x, iRTpeptides=specL::iRTpeptides, ...){
   
-  rt <- unlist(lapply(object, function(x){x$rt}))
-  pepmass <- unlist(lapply(object, function(x){x$pepmass}))
+  rt <- unlist(lapply(x, function(x){x$rt}))
+  pepmass <- unlist(lapply(x, function(xx){xx$pepmass}))
   
-  peptide <- unlist(lapply(object, function(x){x$peptideSequence}))
+  peptide <- unlist(lapply(x, function(xx){xx$peptideSequence}))
   idx.iRT <- which(peptide %in% iRTpeptides$peptide)
   
-  charge <- unlist(lapply(object, function(x){x$charge}))
-  filename <- as.numeric(as.factor(unlist(lapply(object, function(x){x$fileName}))))
+  charge <- unlist(lapply(x, function(xx){xx$charge}))
+  filename <- as.numeric(as.factor(unlist(lapply(x, function(xx){xx$fileName}))))
   
   plot(pepmass ~ rt, 
        pch=filename, 
@@ -149,7 +149,7 @@ plot.psmSet <- function (object, ...){
   
   text(rt,pepmass, 1:length(rt),pos=3,col=charge,cex=0.5)
   
-  fn<-unique(unlist(lapply(object, function(x){x$fileName})))
+  fn<-unique(unlist(lapply(x, function(xx){xx$fileName})))
   n<-nchar(fn)
   legend('bottomright', 
          substr(fn, n - 25, n), 
@@ -160,17 +160,17 @@ plot.psmSet <- function (object, ...){
   
 }
 
-plot.psm <- function (object, ...){
+plot.psm <- function (x, ...){
   
-  AAmass <- protViz::aa2mass(object$peptideSequence)[[1]]#, protViz::AA$Monoisotopic, protViz::AA$letter1)
+  AAmass <- protViz::aa2mass(x$peptideSequence)[[1]]#, protViz::AA$Monoisotopic, protViz::AA$letter1)
   
-  AAmodifiedMass <- AAmass + object$varModification
+  AAmodifiedMass <- AAmass + x$varModification
 
   fi <- protViz::fragmentIon(AAmodifiedMass, FUN=.defaultSwathFragmentIon)[[1]]
   
-  spec <- list(mZ=object$mZ, intensity=object$intensity)
+  spec <- list(mZ=x$mZ, intensity=x$intensity)
   
-  return(protViz::peakplot(peptideSequence=object$peptideSequence, spec=spec, fi=fi, ...))
+  return(protViz::peakplot(peptideSequence=x$peptideSequence, spec=spec, fi=fi, ...))
 }
 
 .mascot2psmSet <-

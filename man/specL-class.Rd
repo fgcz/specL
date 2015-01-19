@@ -35,6 +35,9 @@
     \item{\code{q1}:}{Object of class \code{"numeric"} peptide weight m/Z as 
     measured by the MS device }
     
+     \item{\code{q1.in_silico}:}{Object of class \code{"numeric"} peptide weight m/Z computed in-silico.}
+    
+    
     \item{\code{q3}:}{Object of class \code{"numeric"} measured fragment ions. }
     \item{\code{q3.in_silico}:}{Object of class \code{"numeric"} in-silico 
     derived fragment ions. }

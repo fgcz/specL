@@ -39,7 +39,7 @@ ProteinPilot (group), Omssa (omx)). .
 which can be integrated into already existing commercial 
 or non commercial analysis pipelines for targeted proteomics 
 data analysis. Some examples of today's pipelines are ProteinPilot 
-combined with Peakview (ABSciex), Spectronaut (Biognosys) or 
+combined with Peakview (AB Sciex), Spectronaut (Biognosys) or 
 OpenSwath \cite{pmid24727770}.
 
 In the following vignette it is described how the \Biocpkg{specL} package 
@@ -54,7 +54,7 @@ can be used for the included data sets \Rcode{peptideStd} and
 Since peptide identification (using, e.g., Mascot, Sequest, xTandem!,
 Omssa, ProteinPilot) 
 usually creates result files which are 
-heavily redundant and therefore unsuited for spectrum library building, 
+heavily redundant and therefore unsuited for spectral library building, 
 the search results must first be filtered. To create non-redundant 
 input files, we use the BiblioSpec \cite{pmid18428681} algorithm 
 implemented in Skyline \cite{pmid20147306}. A given search result (e.g. 
@@ -134,7 +134,7 @@ $ /usr/local/lib/R/site-library/protViz/exec/protViz_mascotDat2RData.pl \
 \Rcode{mascotDat2RData.pl} requires the Mascot server \Rcode{mod\_file} keeping 
 all the configured modification.
 
-Once the perl script is finished, the resulting RData file be read into the R session using \Rfunction{load}.
+Once the perl script is finished, the resulting RData file can be read into the R session using \Rfunction{load}.
 
 Next, the variable modifications, and the S3 psmSet object has to be generated. This 
 can be done by using 
@@ -215,10 +215,10 @@ for tryptic peptides. For other enzymes, the pattern has to
 be adapted. For example, for semi-tryptic identifications use
 \Rcode{digestPattern = ""}.
 
-\subsection{Generate the spectrum library (assay)}
+\subsection{Generate the spectral library (assay)}
 \label{sec:genSwathIonLib}
 \Rfunction{genSwathIonLib} is the main contribution of the 
-\Biocpkg{specL} package. It generates the spectra library used in a 
+\Biocpkg{specL} package. It generates the spectral library used in a 
 targeted data extraction workflow from a mass spectrometric 
 measurement. 
 Generating the ion library using iRT peptides is highly recommended as described. 
@@ -360,7 +360,7 @@ for two standard run experiments (color black and red). Indicated
 with black {\bf X} are the iRT peptides which are the base for the 
 regression.
 
-\subsection{Generate the spectrum library having no iRTs\label{sec:noiRT}}
+\subsection{Generate the spectral library having no iRTs\label{sec:noiRT}}
 If no iRT peptides are contained in the data not iRT normalization is applied.
 The scatter plot below shows on the y axis that there were not iRT transformation.
 <<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=8>>=
