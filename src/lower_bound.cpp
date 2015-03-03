@@ -5,8 +5,8 @@
 
 /*
 
-$HeadURL: http://fgcz-svn.unizh.ch/repos/fgcz/testing/proteomics/R/protViz/src/findNN_.cpp $
-$Id: findNN_.cpp 6603 2014-08-12 11:17:31Z cpanse $
+$HeadURL$
+$Id$
 
 */
 
