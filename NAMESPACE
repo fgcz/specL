@@ -1,4 +1,4 @@
-import("Rcpp")
+#import("Rcpp")
 useDynLib(specL)
 
 import("methods")
