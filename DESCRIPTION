@@ -2,12 +2,13 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.1.13 
+Version: 1.1.14 
 Author: Christian Trachsel <christian.trachsel@fgcz.uzh.ch>, Christian
         Panse <cp@fgcz.ethz.ch>, Jonas Grossmann <jg@fgcz.ethz.ch>
 Maintainer: Christian Panse <cp@fgcz.ethz.ch>
 Depends: R (>= 3.0.2), methods, DBI, RSQLite, seqinr, protViz (>=
-        0.2.5)
+        0.2.5), 
+LinkingTo: Rcpp (>= 0.9.9)
 Suggests: RUnit, BiocGenerics, BiocStyle, BiocParallel
 Description: specL provides a function for generating spectra libraries
         which can be used for MRM SRM MS workflows in proteomics. The

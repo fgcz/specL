@@ -1,3 +1,6 @@
+import("Rcpp")
+useDynLib(specL)
+
 import("methods")
 import("RSQLite")
 
@@ -10,6 +13,7 @@ importFrom("protViz", findNN_)
 importFrom("protViz", fragmentIon)
 
 importFrom("seqinr", read.fasta)
+
 
 export("read.bibliospec")
 export("summary.psmSet")

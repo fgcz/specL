@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.1.14
+-------------------------
+USER UNVISIBLE CHANGES
+  o LinkedTo Rcpp; added C++ STL lower bound function 
+  which is reqired for determining overlapping q1 and q3 SWATH windows
+
 CHANGES IN VERSION 1.1.13
 -------------------------
 USER VISIBLE CHANGES

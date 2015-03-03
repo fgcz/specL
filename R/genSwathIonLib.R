@@ -1,4 +1,4 @@
-#R
+a#R
 
 # $HeadURL$
 # $Id$
@@ -6,6 +6,27 @@
 
 # this function is for normalizing the rt on data
 # for building the model data.fit  is used
+
+.swath_q1q3_conflicts <- function(ionlib, breaks=seq(0,2000,by=25), overlap=1.0){
+  
+  lapply(ionlib, function(x){
+    q3 <- x@q3
+    q1 <- x@q1
+  
+    q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
+    q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
+  
+
+    res <- cbind(q1, q1_idx, q3_idx,  
+               lower=breaks[q3_idx], q3, upper=breaks[q3_idx+1], 
+               check=(breaks[q3_idx] < rep(q3, length(q3_idx)) & rep(q3, length(q3_idx)) < breaks[q3_idx+1]), 
+               conflict=(rep(q1_idx, length(q3_idx)) == q3_idx))
+  
+    #print(cbind(q1, q1_idx, breaks[q1_idx], breaks[q1_idx+1])) 
+    print(res)
+  })
+  
+}
 
 .normalize_rt <- function(data, data.fit, iRT, plot=FALSE){
 

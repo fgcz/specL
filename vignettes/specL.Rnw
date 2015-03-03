@@ -166,7 +166,7 @@ how to identify entries in the R-object which are from one or a few proteins
 of interest.
 
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
- irtFASTAseq <- paste(">zz|ZZ_FGCZCont0260|",
+irtFASTAseq <- paste(">zz|ZZ_FGCZCont0260|",
 "iRT_Protein_with_AAAAK_spacers concatenated Biognosys\n",
 "LGGNEQVTRAAAAKGAGSSEPVTGLDAKAAAAKVEATFGVDESNAKAAAAKYILAGVENS",
 "KAAAAKTPVISGGPYEYRAAAAKTPVITGAPYEYRAAAAKDGLDAASYYAPVRAAAAKAD",
@@ -174,7 +174,7 @@ of interest.
 "PFLK\n")
 
 Tfile <- file();  cat(irtFASTAseq, file = Tfile);
-fasta.irtFASTAseq <-read.fasta(Tfile, as.string=TRUE, seqtype="AA")
+fasta.irtFASTAseq <- read.fasta(Tfile, as.string=TRUE, seqtype="AA")
 close(Tfile)
 @
 
