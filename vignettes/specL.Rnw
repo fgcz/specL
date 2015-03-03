@@ -34,8 +34,9 @@ of precursor mass, fragment masses, and retention time. The combination
 of this information is kept in so called assays or spectra libraries. Here we 
 present an R package able to produce such libraries out of peptide 
 identification results (Mascot (dat), TPP (pep.xml and mzXMLs), 
-ProteinPilot (group), Omssa (omx)). . 
-\Biocpkg{specL} is an easy to use, versatile and flexible function, 
+ProteinPilot (group), Omssa (omx)).
+\Biocpkg{specL} (see also \cite{specLBioInf}) is an easy to use, 
+versatile and flexible function, 
 which can be integrated into already existing commercial 
 or non commercial analysis pipelines for targeted proteomics 
 data analysis. Some examples of today's pipelines are ProteinPilot 
