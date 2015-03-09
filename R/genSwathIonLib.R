@@ -1,11 +1,27 @@
-a#R
+#R
 
 # $HeadURL$
 # $Id$
 # $Date$
 
-# this function is for normalizing the rt on data
-# for building the model data.fit  is used
+# .swath_plot_(peptideStd[[136]])
+.swath_plot_ <- function(x){
+  
+  x.AAmass <- protViz::aa2mass(x$peptideSequence, protViz::AA$Monoisotopic, protViz::AA$letter1)
+  
+  x.AAmodifiedMass <- mapply( function(x, y){ x + y }, x$varModification, x.AAmass, SIMPLIFY = FALSE)
+  # fi <- lapply( x.AAmodifiedMass, function(x){ fragmentIon(x, fragmentIonFUN)[[1]] } )
+  
+  fi <- protViz::fragmentIon(x.AAmodifiedMass)[[1]]
+  idx <- which(x$varModification != 0.0)
+  
+  peakplot(peptideSequence=x$peptideSequence, spec=x)
+  abline(v=fi$b[idx])
+  abline(v=fi$y[idx], col='green')
+  
+  print(fi)
+  print(idx)
+}
 
 .swath_q1q3_conflicts <- function(ionlib, breaks=seq(0,2000,by=25), overlap=1.0){
   
@@ -28,6 +44,9 @@ a#R
   
 }
 
+
+# this function is for normalizing the rt on data
+# for building the model data.fit  is used
 .normalize_rt <- function(data, data.fit, iRT, plot=FALSE){
 
     message("normalizing RT ...")
@@ -119,7 +138,7 @@ genSwathIonLib <- function(data,
     ignoreMascotIonScore = TRUE, 
     topN = 10,
     fragmentIonMzRange = c(300, 1800),
-    fragmentIonRange = c(5,100), 
+    fragmentIonRange = c(5, 100), 
     fragmentIonFUN = .defaultSwathFragmentIon, 
     iRT = specL::iRTpeptides,
     AminoAcids = protViz::AA,
@@ -224,16 +243,16 @@ genSwathIonLib <- function(data,
 
     message("generating ion library ...")
     # determine b and y fragment ions while considering the var mods
-    fi<-lapply(x.AAmodifiedMass, function(x){fragmentIon(x, fragmentIonFUN)[[1]]})
+    fi <- lapply(x.AAmodifiedMass, function(x){fragmentIon(x, fragmentIonFUN)[[1]]})
     fragmentIonTyp = names(fi[[1]]) 
     
     # find NN peak
-    findNN.idx<-mapply(function(x.fi, y.data){ findNN_(unlist(x.fi), y.data$mZ) }, 
+    findNN.idx <- mapply(function(x.fi, y.data){ findNN_(unlist(x.fi), y.data$mZ) }, 
         fi, data, 
         SIMPLIFY = FALSE)
 
     # determine mZ error
-    mZ.error<-mapply(function(x, y.findNN.idx, z){
+    mZ.error <- mapply(function(x, y.findNN.idx, z){
                 abs(x$mZ[y.findNN.idx] - unlist(z))
             }, data, findNN.idx, fi, SIMPLIFY = FALSE)
 
