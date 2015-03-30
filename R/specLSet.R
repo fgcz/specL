@@ -121,7 +121,6 @@ setMethod(f="plot", signature="specLSet",
               file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
               peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             
-              
               plot(x@rt.normalized ~ x@rt.input,
                    main='specLSet iRT normalization',
                    xlab="input retention time",
@@ -151,24 +150,47 @@ setMethod(f="plot", signature="specLSet",
               cm<-rainbow(length(frg.table))
               hist(x@rt.normalized)
               
-              plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})), 
-                   unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
-                   col=cm[as.factor(frg)],
-                   xlab='rt.normalized',
-                   ylab='fragment ion mass',
-                   pch='_',
-                   main='in-silico rt-fragment ion map',
-                   ...)
-              legend('topleft', names(frg.table), pch=22, col=cm, cex=0.75)
-
-              
-              
               barplot(frg.table, col=cm,
                    main='ion type / charge state')
               #legend('topleft', 
               #       paste(names(frg.table), frg.table, sep'='),
               #       pch=22, col=cm, cex=0.5)
                      
+              if (require(plotrix)){
+              cm_alpha<-rainbow(length(frg.table), alpha=0.25)
+              plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})), 
+                   unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
+                   col=cm[as.factor(frg)],
+                   xlab='q1',
+                   ylab='q3',
+                   main='Relative Fragment Intensity ~ q1 * q3',
+                   sub='The areas represent the fragment ion intensities.',
+                   type='n',
+                   ...)
+
+              draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})),
+                unlist(lapply(x@ionlibrary, function(xx){xx@q3})),
+                unlist(lapply(x@ionlibrary, function(xx){sqrt(xx@relativeFragmentIntensity)})),
+                col=cm_alpha[as.factor(frg)], border=cm_alpha[as.factor(frg)])
+              legend('topleft', names(frg.table), pch=22, col=cm, cex=0.75)
+
+
+              plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})), 
+                   unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
+                   col=cm[as.factor(frg)],
+                   xlab='rt.normalized',
+                   ylab='fragment ion mass',
+                   type='n',
+                   main='Relative Fragment Intensity ~ rt * fragment ion map',
+                   sub='The areas represent the fragment ion intensities.',
+                   ...)
+              draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})),
+                unlist(lapply(x@ionlibrary, function(xx){xx@q3})),
+                unlist(lapply(x@ionlibrary, function(xx){sqrt(xx@relativeFragmentIntensity)}))/10,
+                col=cm_alpha[as.factor(frg)], border=cm_alpha[as.factor(frg)])
+              legend('topleft', names(frg.table), pch=22, col=cm, cex=0.75)
+              }
+
              
           })
             

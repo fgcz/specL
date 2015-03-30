@@ -349,9 +349,9 @@ the measured retention time after applying the calculated model
 to the two data sets.
 
 
-<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=8>>=
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=6>>=
 # calls the plot method for a specLSet object
-op<-par(mfrow=c(2,2)) 
+op<-par(mfrow=c(2,3)) 
 plot(res.genSwathIonLib)
 par(op)
 @
@@ -364,7 +364,7 @@ regression.
 \subsection{Generate the spectral library having no iRTs\label{sec:noiRT}}
 If no iRT peptides are contained in the data not iRT normalization is applied.
 The scatter plot below shows on the y axis that there were not iRT transformation.
-<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=8>>=
+<<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=6>>=
 idx.iRT<-which(unlist(lapply(peptideStd, function(x){
   if(x$peptideSequence %in% iRTpeptides$peptide){0}else{1}
   })) == 0)
@@ -372,7 +372,7 @@ idx.iRT<-which(unlist(lapply(peptideStd, function(x){
 # remove all iRTs and compute ion library
 res.genSwathIonLib.no_iRT <- genSwathIonLib(peptideStd[-idx.iRT])
 summary(res.genSwathIonLib.no_iRT)
-op<-par(mfrow=c(2,2)) 
+op<-par(mfrow=c(2,3)) 
 plot(res.genSwathIonLib.no_iRT)
 par(op)
 @

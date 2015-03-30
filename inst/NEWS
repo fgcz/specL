@@ -1,6 +1,14 @@
+CHANGES IN VERSION 1.1.15
+-------------------------
+USER UNVISIBLE CHANGES
+
+    o added circle plots to specLSet plot method
+
+
 CHANGES IN VERSION 1.1.14
 -------------------------
 USER UNVISIBLE CHANGES
+
   o LinkedTo Rcpp; added C++ STL lower bound function 
   which is reqired for determining overlapping q1 and q3 SWATH windows
 
