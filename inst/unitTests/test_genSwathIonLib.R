@@ -59,9 +59,63 @@ function(){
             )
 }
 
+test_genSwathIonLib_swath_windows  <-
+function(){
+
+
+    myFragmentIon <- function (b, y) {
+        Hydrogen <- 1.007825
+        Oxygen <- 15.994915
+        Nitrogen <- 14.003074
+        b1_ <- (b )
+        y1_ <- (y ) 
+        b2_ <- (b + Hydrogen) / 2
+        y2_ <- (y + Hydrogen) / 2 
+        b3_ <- (b + 2 * Hydrogen) / 3
+        y3_ <- (y + 2 * Hydrogen) / 3
+        return( cbind(b1_, y1_, b2_, y2_, b3_, y3_) )
+                                                                                            }
+       idx <- 135
+
+    il.default <- genSwathIonLib(data=peptideStd[idx],
+        data.fit=peptideStd.redundant,
+        fragmentIonRange=c(5,10),
+        topN=5,
+        fragmentIonFUN=myFragmentIon)
+
+    il.swath_windows <- genSwathIonLib(data=peptideStd[idx],
+        data.fit=peptideStd.redundant,
+        fragmentIonRange=c(5,10),
+        topN=5,
+        breaks=seq(400,2000,by=25),
+        fragmentIonFUN=myFragmentIon)
+
+    x <- ionlibrary(il.swath_windows)[[1]]
+
+    lapply (x@frg_type == c('y', 'y', 'y', 'y', 'b'), function(x){checkTrue(x)} )
+
+    lapply (x@frg_nr == c(12, 15, 10, 14, 4), function(x){checkTrue(x)} )
+
+    lapply (round(x@relativeFragmentIntensity) == c(100, 60, 56, 40, 23), function(x){checkTrue(x)} )
+
+
+    x <- ionlibrary(il.default)[[1]]
+    breaks <- seq(400,2000,by=25)
+    q3 <- x@q3
+    q1 <- x@q1
+
+    q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
+    q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
+
+    checkTrue(q1_idx == 32)
+    lapply (q3_idx == c(35, 50, 29, 32, 46), function(x){checkTrue(x)} )
+
+}
+
 
 test_genSwathIonLib()
 test_genSwathIonLib_noiRT_peptides()
+test_genSwathIonLib_swath_windows()
 
 #TODO(cp):
 # check lower boundary of transitions

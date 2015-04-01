@@ -15,7 +15,7 @@
   fi <- protViz::fragmentIon(x.AAmodifiedMass)[[1]]
   idx <- which(x$varModification != 0.0)
   
-  peakplot(peptideSequence=x$peptideSequence, spec=x)
+  protViz::peakplot(peptideSequence=x$peptideSequence, spec=x)
   abline(v=fi$b[idx])
   abline(v=fi$y[idx], col='green')
   
@@ -23,7 +23,8 @@
   print(idx)
 }
 
-.swath_q1q3_conflicts <- function(ionlib, breaks=seq(0,2000,by=25), overlap=1.0){
+.swath_q1q3_conflicts <- function(ionlib, breaks=seq(400,2000,by=25), overlap=1.0){
+  
   
   lapply(ionlib, function(x){
     q3 <- x@q3
@@ -39,9 +40,9 @@
                conflict=(rep(q1_idx, length(q3_idx)) == q3_idx))
   
     #print(cbind(q1, q1_idx, breaks[q1_idx], breaks[q1_idx+1])) 
-    print(res)
+    # print(res)
   })
-  
+
 }
 
 
@@ -142,6 +143,7 @@ genSwathIonLib <- function(data,
     fragmentIonFUN = .defaultSwathFragmentIon, 
     iRT = specL::iRTpeptides,
     AminoAcids = protViz::AA,
+    breaks=NULL,
     file = NULL){ 
 
     # one transition is useless anyway
@@ -154,7 +156,7 @@ genSwathIonLib <- function(data,
         m <- length(2 * nchar(x$peptideSequence))
         q1 <- x$pepmass
         q3 <- x$mZ[findNN.idx]
-        fi.unlist<-sort(unlist(fi))
+        fi.unlist <- sort(unlist(fi))
         q3.in_silico <- fi.unlist[ findNN_(q3, fi.unlist) ]
         q1.in_silico <- protViz::parentIonMass(x$peptideSequence) + sum(x$varModification)
 
@@ -175,10 +177,10 @@ genSwathIonLib <- function(data,
         # group_id <- rep(paste(x$peptideSequence, ".", x$charge,";", x$pepmass, sep=''), 1)
         group_id <- rep(paste(x$peptideSequence, ".", x$charge,";", round(q1.in_silico,3), sep=''), 1)
 
-        # exspect a modification information, e.g., AAAMASATTM[+16.0]LTTK
+        # expect a modification information, e.g., AAAMASATTM[+16.0]LTTK
         if ("peptideModSeq" %in% names(x)){
             if (nchar(x$peptideModSeq) > nchar(x$peptideSequenc)){
-                #group_id <- rep(paste(x$peptideModSeq, ".", x$charge,";", x$pepmass, sep=''), 1)
+                
                 group_id <- rep(paste(x$peptideModSeq, ".", x$charge,";", round(q1.in_silico,3), sep=''), 1)
             }
         } else{
@@ -190,11 +192,24 @@ genSwathIonLib <- function(data,
         peptide_sequence <- rep(x$peptideSequence, 1)
 
         peptideModSeq <- x$peptideModSeq
-
-        massErrorFilter <- ( (mZ.error_ < max.mZ.Da.error) & (fragmentIonMzRange[1] < q3 & q3 < fragmentIonMzRange[2]) )
         
-        intensity.idx <- rev(order(intensity[massErrorFilter]))
-
+        filter_mass_error <- (mZ.error_ < max.mZ.Da.error) & (fragmentIonMzRange[1] < q3 & q3 < fragmentIonMzRange[2])
+        
+        # TODO(cp): add the SWATH window filter here
+        if (length(breaks) > 1){
+          q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
+          q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
+          
+          filter_swath_window <- (rep(q1_idx, length(q3_idx)) != q3_idx)
+          if (length(filter_mass_error) != length(filter_swath_window)){
+            warning("filter have different length!")
+          }
+          filter_mass_error <- filter_mass_error & filter_swath_window
+        }
+        
+        print (sum(filter_mass_error))
+        intensity.idx <- rev(order(intensity[filter_mass_error]))
+        
         if (length(intensity.idx) < topN){
             topN <- length(intensity.idx)
         }
@@ -206,17 +221,17 @@ genSwathIonLib <- function(data,
                       proteinInformation=x$proteinInformation,
                       q1=x$pepmass, 
                       q1.in_silico = q1.in_silico,
-                      q3=as.numeric(q3[massErrorFilter])[idx], 
-                      q3.in_silico=as.numeric(q3.in_silico[massErrorFilter])[idx], 
+                      q3=as.numeric(q3[filter_mass_error])[idx], 
+                      q3.in_silico=as.numeric(q3.in_silico[filter_mass_error])[idx], 
                       decoy=as.character(decoy)[idx], 
                       prec_z=x$charge, 
-                      frg_type=frg_type[massErrorFilter][idx], 
-                      frg_nr=as.numeric(frg_nr[massErrorFilter])[idx], 
-                      frg_z=as.numeric(frg_z[massErrorFilter])[idx], 
-                      relativeFragmentIntensity=as.numeric(intensity[massErrorFilter])[idx], 
+                      frg_type=frg_type[filter_mass_error][idx], 
+                      frg_nr=as.numeric(frg_nr[filter_mass_error])[idx], 
+                      frg_z=as.numeric(frg_z[filter_mass_error])[idx], 
+                      relativeFragmentIntensity=as.numeric(intensity[filter_mass_error])[idx], 
                       irt=as.numeric(irt), 
                       peptideModSeq=as.character(peptideModSeq), 
-                      mZ.error=as.numeric(mZ.error_[massErrorFilter])[idx], 
+                      mZ.error=as.numeric(mZ.error_[filter_mass_error])[idx], 
                       filename=x$fileName)
         
 } # .genSwathIonLibSpecL
@@ -242,8 +257,9 @@ genSwathIonLib <- function(data,
     }
 
     message("generating ion library ...")
-    # determine b and y fragment ions while considering the var mods
+    # determine fragment ions while considering the var mods
     fi <- lapply(x.AAmodifiedMass, function(x){fragmentIon(x, fragmentIonFUN)[[1]]})
+
     fragmentIonTyp = names(fi[[1]]) 
     
     # find NN peak
