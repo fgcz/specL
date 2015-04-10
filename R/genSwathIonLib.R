@@ -7,6 +7,7 @@
 # .swath_plot_(peptideStd[[136]])
 .swath_plot_ <- function(x){
   
+  
   x.AAmass <- protViz::aa2mass(x$peptideSequence, protViz::AA$Monoisotopic, protViz::AA$letter1)
   
   x.AAmodifiedMass <- mapply( function(x, y){ x + y }, x$varModification, x.AAmass, SIMPLIFY = FALSE)

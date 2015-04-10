@@ -1,13 +1,18 @@
+
+CHANGES IN VERSION 1.1.16
+-------------------------
+USER UNVISIBLE CHANGES
+
+    o added unit test for genSwathIonLib
+
+
+
 CHANGES IN VERSION 1.1.15
 -------------------------
 USER UNVISIBLE CHANGES
 
     o added circle plots to specLSet plot method
     o added breaks argument in genSwathIonLib methode
-
-USER UNVISIBLE CHANGES
-
-    o added unit test for genSwathIonLib
 
 
 CHANGES IN VERSION 1.1.14
