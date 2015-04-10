@@ -32,8 +32,7 @@
         fragmentIonFUN = .defaultSwathFragmentIon,
         iRT = specL::iRTpeptides,
         AminoAcids = protViz::AA,
-        breaks=NULL,
-        file = NULL)
+        breaks=NULL)
 }
 
 \arguments{
@@ -43,8 +42,6 @@
   \item{mascotIonScoreCutOFF}{a value for filtering the specs.}
 
   \item{proteinIDPattern}{a filter for protein.}
-
-  \item{file}{the output file name.}
 
   \item{max.mZ.Da.error}{the mZ error in Dalton on ms2 level.}
 
@@ -78,7 +75,7 @@
   \code{lm(formula = rt ~ aggregateInputRT * fileName, data)}. 
   The rt aggregation for the model uses \code{median}.}
 
-  \item{breaks}{provides a vector of SWATH windows. If q1 (precursor mass) and q3 (fragment ion) fall into the same SWATH window the fragment ion is ignored in the resulting ion library. The follwing code shows an example \code{breaks=seq(400,2000,by=25)}.}
+  \item{breaks}{provides a vector of SWATH windows. If q1 (precursor mass) and q3 (fragment ion) fall into the same SWATH window the fragment ion is ignored in the resulting ion library. The follwing code shows an example \code{breaks=seq(400, 2000, by=25)}.}
 
 }
 

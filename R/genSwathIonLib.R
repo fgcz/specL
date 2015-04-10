@@ -144,8 +144,7 @@ genSwathIonLib <- function(data,
     fragmentIonFUN = .defaultSwathFragmentIon, 
     iRT = specL::iRTpeptides,
     AminoAcids = protViz::AA,
-    breaks=NULL,
-    file = NULL){ 
+    breaks=NULL){ 
 
     # one transition is useless anyway
     if (fragmentIonRange[1] < 2){
