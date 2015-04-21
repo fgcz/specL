@@ -23,6 +23,7 @@ export("plot.psm")
 
 export("annotate.protein_id")
 export("genSwathIonLib")
+export("cdsw")
 
 exportClasses("specL", "specLSet")
 

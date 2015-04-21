@@ -15,7 +15,6 @@
     The R data object can be generated using the 
     \code{read.bibliospec} function.
     
-
 }
 
 \usage{

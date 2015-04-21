@@ -4,6 +4,32 @@
 # $Id$
 # $Date$
 
+
+
+.plot_ptm_ion <- function(psm){
+  # find all spec idxs having at least one modification
+  psm.mod_idx <- which(lapply(psm, function(x){sum(x$varModification != 0.0)}) > 0)
+ 
+  message(psm.mod_idx)
+  # draw all spec with index psm.mod_idx
+  lapply(psm.mod_idx, function(idx){
+    pp <- plot(psm[[idx]], sub=psm[[idx]]$peptideModSeq)
+    
+    b_idxs <- which(psm[[idx]]$varModification != 0.0)
+
+    nAA <- length(psm[[idx]]$varModification)
+ 
+    y_idxs <- nAA - b_idxs + 1
+
+    abline(v=pp$fragmentIon$b1_[b_idxs], col='purple')
+    abline(v=pp$fragmentIon$y1_[y_idxs], col='cyan')
+    
+    abline(v=pp$fragmentIon$b2_[b_idxs], col='purple', lwd=2)
+    abline(v=pp$fragmentIon$y2_[y_idxs], col='cyan', lwd=2)
+  })
+}
+
+
 # .swath_plot_(peptideStd[[136]])
 .swath_plot_ <- function(x){
   
@@ -207,7 +233,7 @@ genSwathIonLib <- function(data,
           filter_mass_error <- filter_mass_error & filter_swath_window
         }
         
-        print (sum(filter_mass_error))
+        #print (sum(filter_mass_error))
         intensity.idx <- rev(order(intensity[filter_mass_error]))
         
         if (length(intensity.idx) < topN){

@@ -3,10 +3,7 @@
 # $HeadURL$
 # $Id$
 # $Date$
-
-# this function is for normalizing the rt on data
-# for building the model data.fit  is used
-
+#
 #' An S4 class to represent a specLSet result
 #'
 #' @slot contains single elements or vectors
@@ -27,7 +24,6 @@ setMethod(f="show", signature="specLSet", function(object){
     cat("\nsize:\n")
     memsize <-  format(object.size(object), units = "b")
     cat("Memory usage:", memsize, "\n")
-
 })
 
 setMethod(f="merge.specLSet", signature="specLSet", 
@@ -144,7 +140,6 @@ setMethod(f="plot", signature="specLSet",
                      title='input file names',
                      cex=1.0)
               
-              
               frg <- unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z, "+",sep='')}))
               frg.table <- table(frg)
               cm<-rainbow(length(frg.table))
@@ -156,6 +151,7 @@ setMethod(f="plot", signature="specLSet",
               #       paste(names(frg.table), frg.table, sep'='),
               #       pch=22, col=cm, cex=0.5)
                      
+              # todo(cp): make a 2nd use case if to many data items are avalable
               if (require(plotrix)){
               cm_alpha<-rainbow(length(frg.table), alpha=0.25)
               plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})), 
@@ -174,7 +170,6 @@ setMethod(f="plot", signature="specLSet",
                 col=cm_alpha[as.factor(frg)], border=cm_alpha[as.factor(frg)])
               legend('topleft', names(frg.table), pch=22, col=cm, cex=0.75)
 
-
               plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})), 
                    unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
                    col=cm[as.factor(frg)],
@@ -190,8 +185,6 @@ setMethod(f="plot", signature="specLSet",
                 col=cm_alpha[as.factor(frg)], border=cm_alpha[as.factor(frg)])
               legend('topleft', names(frg.table), pch=22, col=cm, cex=0.75)
               }
-
-             
           })
             
 

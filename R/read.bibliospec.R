@@ -27,7 +27,7 @@ read.bibliospec <- function(file){
         stop(msg$errorMsg)
     }
 
-    data <- fetch(SQLQuery0, n = -1)
+    data <- DBI::fetch(SQLQuery0, n = -1)
 
     if (msg<-dbGetException(con)$errorNum != 0){
         stop(msg$errorMsg)
@@ -40,7 +40,7 @@ read.bibliospec <- function(file){
         stop(msg$errorMsg)
     }
 
-    data.modifications <- fetch(SQLQuery1, n = -1)
+    data.modifications <- DBI::fetch(SQLQuery1, n = -1)
 
     if (msg<-dbGetException(con)$errorNum != 0){
         stop(msg$errorMsg)
