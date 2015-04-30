@@ -1,0 +1,15 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Article",
+         title = "{spec{L} - {A}n {R}/{B}ioconductor package to prepare peptide spectrum matches for use in targeted proteomics}",
+         author = c(person("Christian", "Panse"),
+                    person("Christian", "Trachsel"),
+                    person("Jonas", "Grossmann"),
+                    person("Ralph", "Schlapbach")),
+         journal="Bioinformatics",
+         pages = "",
+         month = "Feb",
+         year = 2015,
+         note = "DOI:10.1093/bioinformatics/btv105, PMID: 25712692",
+         url = "http://dx.doi.org/10.1093/bioinformatics/btv105")

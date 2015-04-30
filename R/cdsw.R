@@ -25,7 +25,7 @@ cdsw <- function(x, n=20, overlap=1.0){
   to <- q[idx+1] + overlap * 0.5
   width <- 0.5 * (to - from)
   mid <- from + width 
-  h <- hist(x, breaks=q, plot=FALSE)
+  h <- hist(x, breaks=q, plot=TRUE, freq=TRUE)
   res <- cbind(from, to, mid, width, counts=h$counts)
   return(res)
 }
