@@ -113,7 +113,7 @@ setMethod(f="summary", signature="specLSet", function(object){
 })
 
 setMethod(f="plot", signature="specLSet", 
-          definition=function(x, iRTpeptides=specL::iRTpeptides, ...){
+          definition=function(x, iRTpeptides=specL::iRTpeptides, art=FALSE, ...){
               file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
               peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             
@@ -152,7 +152,7 @@ setMethod(f="plot", signature="specLSet",
               #       pch=22, col=cm, cex=0.5)
                      
               # todo(cp): make a 2nd use case if to many data items are avalable
-              if (require(plotrix)){
+              if (art==TRUE && require(plotrix)){
               cm_alpha<-rainbow(length(frg.table), alpha=0.25)
               plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})), 
                    unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 

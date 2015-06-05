@@ -176,11 +176,18 @@ plot.psm <- function (x, ...){
 .mascot2psmSet <-
   function(dat, mod, mascotScoreCutOff=40){
     res <- lapply(dat, function(x){
+      x$MonoisotopicAAmass <- protViz::aa2mass(x$peptideSequence)[[1]]#, protViz::AA$Monoisotopic, protViz::AA$letter1)
+      
       modString <- as.numeric(strsplit(x$modification, '')[[1]])
+      modIdx <- which(modString > 0.0) - 1
       modString.length <- length(modString)
       
-      x$varModification <- mod[modString [c(-1, -modString.length)] + 1 ]
-      rt<-x$rtinseconds
+      x$varModification <- mod[modString [c(-1, -modString.length)] + 1 ] 
+      if (length(modIdx) > 0){
+        warning("modified varModification caused.")
+        x$varModification[modIdx] <- x$varModification[modIdx] - x$MonoisotopicAAmass[modIdx]
+      }
+        rt<-x$rtinseconds
       x<-c(x, rt=rt, fileName="mascot")
       
       class(x) <- "psm"

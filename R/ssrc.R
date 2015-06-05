@@ -1,5 +1,11 @@
 #R
 
+
+# $HeadURL$
+# $Id$
+# $Date$
+
+
 # Sequence Specific Retention Calculator
 # http://www.ncbi.nlm.nih.gov/pubmed/15238601
 # http://hs2.proteome.ca/SSRCalc/SSRCalcX.html
