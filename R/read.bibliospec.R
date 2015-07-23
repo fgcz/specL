@@ -9,6 +9,117 @@
 # o list the number of files
 # o list the number of specs
 
+# usage:
+# mZlist <- mcmapply(.decompose_peakMZ, data$peakMZ, data$numPeaks)
+# maps base64 blob to human readable numbers
+.decompose_peakMZ <- function(peakMZ, numPeaks) {
+        mZ <- try(readBin(memDecompress(as.raw(peakMZ),'g'), double(), numPeaks), TRUE)
+
+        if (!is.numeric(mZ)){
+            mZ<-try(readBin(as.raw(peakMZ), double(),numPeaks), FALSE)
+        }
+}
+
+# usage:
+# intentityList <- mcmapply(.decompose_intensities, data$peakMZ, data$numPeaks)
+# maps base64 blob to human readable numbers
+.decompose_intensity <- function(peakIntensity, numPeaks) {
+        intensity <- try(readBin(memDecompress(as.raw(peakIntensity),'g'), 
+            numeric(), n=numPeaks, size = 4), TRUE)
+
+        if (!is.numeric(intensity) || length(intensity) != numPeaks){
+            intensity <- try(readBin(as.raw(peakIntensity), 
+                numeric(), n=numPeaks, size = 4), FALSE)
+        }
+}
+
+.convert_blib2psm_parallel <- function(data){
+  
+  ncores <- parallel::detectCores()
+  message(paste("converting blib blobs to psm using", ncores, " cores ..."))
+
+  mZ_list <- mcmapply(specL:::.decompose_peakMZ, data$peakMZ, data$numPeaks)
+  intentity_list <- mcmapply(specL:::.decompose_intensity, data$peakMZ, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
+  
+  res <- mcmapply(function(peaks, mZ, intensity, peptideSequence, peptideModSeq, 
+                         charge, pepmass, fileName, rt, score){
+ 
+    psm <-list(peaks=peaks, 
+               mZ=mZ, 
+               intensity=intensity,
+               peptideSequence=peptideSequence,
+               peptideModSeq=peptideModSeq,
+               charge=charge, 
+               pepmass=pepmass,
+               fileName = fileName,
+               proteinInformation='',
+               rt=rt,
+               varModification=rep(0.0, nchar(peptideSequence)),
+               mascotScore = -10 * log((1E-6 + score)) / log(10)
+               );
+    
+    class(psm) <- "psm"
+    return(psm)
+    },
+    data$numPeaks,
+    mZ_list, 
+    intentity_list,
+    data$peptideSeq,
+    data$peptideModSeq,
+    data$precursorCharge,
+    data$precursorMZ,
+    data$fileName,
+    data$retentionTime,
+    data$score,
+    SIMPLIFY = FALSE, mc.cores=ncores, mc.preschedule=TRUE)
+  
+  class(res) <- 'psmSet'
+  return(res)
+}
+
+.convert_blib2psm <- function(data){
+    res <- list()
+
+      
+     for (i in 1:nrow(data)){
+        x <- data[i, ]
+
+        mZ <- try(readBin(memDecompress(as.raw(x$peakMZ[[1]]),'g'), double(), x$numPeaks), TRUE)
+
+        if (!is.numeric(mZ)){
+            mZ<-try(readBin(as.raw(x$peakMZ[[1]]), double(),x$numPeaks), FALSE)
+        }
+
+        intensity <- try(readBin(memDecompress(as.raw(x$peakIntensity[[1]]),'g'), 
+            numeric(), n=x$numPeaks, size = 4), TRUE)
+
+        if (!is.numeric(intensity) || length(intensity) != length(mZ)){
+            intensity <- try(readBin(as.raw(x$peakIntensity[[1]]), 
+                numeric(), n=x$numPeaks, size = 4), FALSE)
+        }
+
+        if ( length(intensity) != length(mZ)  ){
+            warning(" length(intensity) != length(mZ) ")
+        }
+
+        res[[i]] <- list(
+            peaks=x$numPeaks,
+            mZ=mZ, 
+            intensity=intensity, 
+            peptideSequence=x$peptideSeq,
+            peptideModSeq=x$peptideModSeq,
+            charge=x$precursorCharge, 
+            pepmass=x$precursorMZ,
+            fileName = x$fileName,
+            proteinInformation='',
+            rt=x$retentionTime,
+            varModification=rep(0.0, nchar(x$peptideSeq)),
+            mascotScore = -10 * log((1E-6 + x$score)) / log(10))
+        class(res[[i]]) = "psm"
+    }
+	return(res)
+}
+
 read.bibliospec <- function(file){
     m <- dbDriver("SQLite", max.con=25)       
     con <- dbConnect(m , dbname=file, flags = SQLITE_RO)
@@ -48,44 +159,13 @@ read.bibliospec <- function(file){
 
 
     message(paste("fetched", nrow(data), "rows."))
-    res <- list()
-
-     for (i in 1:nrow(data)){
-
-        x <- data[i, ]
-
-        mZ <- try(readBin(memDecompress(as.raw(x$peakMZ[[1]]),'g'), double(), x$numPeaks), TRUE)
-
-        if (!is.numeric(mZ)){
-            mZ<-try(readBin(as.raw(x$peakMZ[[1]]), double(),x$numPeaks), FALSE)
-        }
-
-        intensity<-try(readBin(memDecompress(as.raw(x$peakIntensity[[1]]),'g'), 
-            numeric(), n=x$numPeaks, size = 4), TRUE)
-
-        if (!is.numeric(intensity) || length(intensity) != length(mZ)){
-            intensity <- try(readBin(as.raw(x$peakIntensity[[1]]), 
-                numeric(), n=x$numPeaks, size = 4), FALSE)
-        }
-
-        if ( length(intensity) != length(mZ)  ){
-            warning(" length(intensity) != length(mZ) ")
-        }
-
-        res[[i]] <- list(
-            peaks=x$numPeaks,
-            mZ=mZ, 
-            intensity=intensity, 
-            peptideSequence=x$peptideSeq,
-            peptideModSeq=x$peptideModSeq,
-            charge=x$precursorCharge, 
-            pepmass=x$precursorMZ,
-            fileName = x$fileName,
-            proteinInformation='',
-            rt=x$retentionTime,
-            varModification=rep(0.0, nchar(x$peptideSeq)),
-            mascotScore = -10 * log((1E-6 + x$score)) / log(10))
-        class(res[[i]]) = "psm"
+    
+    res<-list()
+    if (require(parallel)){
+      res <- .convert_blib2psm_parallel(data)
+      
+    }else{
+      res <- .convert_blib2psm(data)
     }
 
     message(paste("assigning", nrow(data.modifications), "modifications ..."))

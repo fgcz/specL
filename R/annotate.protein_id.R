@@ -57,6 +57,7 @@ annotate.protein_id <- function(data,
         data <- parallel::mclapply(data, 
             .annotateProteinIDGrep, 
             mc.cores=ncores, mc.preschedule=TRUE)
+       # parallel::detectCores()
 
     } else {
 
