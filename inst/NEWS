@@ -6,6 +6,7 @@ USER VISIBLE CHANGES
 
 USER UNVISIBLE CHANGES
   o read.bibliospec - replaced old code (for loop) by using mcmapply
+  o added time meassurements to read.bibliospec
 
 CHANGES IN VERSION 1.3.3
 -------------------------

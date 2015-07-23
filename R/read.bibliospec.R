@@ -33,13 +33,14 @@
         }
 }
 
-.convert_blib2psm_parallel <- function(data){
+.convert_blib2psm_parallel <- function(data, ncores=1){
   
-  ncores <- parallel::detectCores()
-  message(paste("converting blib blobs to psm using", ncores, " cores ..."))
-
-  mZ_list <- mcmapply(specL:::.decompose_peakMZ, data$peakMZ, data$numPeaks)
+  
+  
+  mZ_list <- mcmapply(specL:::.decompose_peakMZ, data$peakMZ, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
+  message(paste("decomposed mZ values"))
   intentity_list <- mcmapply(specL:::.decompose_intensity, data$peakMZ, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
+  message(paste("decomposed intensity values"))
   
   res <- mcmapply(function(peaks, mZ, intensity, peptideSequence, peptideModSeq, 
                          charge, pepmass, fileName, rt, score){
@@ -162,9 +163,16 @@ read.bibliospec <- function(file){
     
     res<-list()
     if (require(parallel)){
-      res <- .convert_blib2psm_parallel(data)
+      ncores <- parallel::detectCores()
+      message(paste("start converting blib blobs to psm using", ncores, " cores ..."))
+      time.start <- Sys.time(); 
+      res <- .convert_blib2psm_parallel(data, ncores)
+      time.end <- Sys.time();
+      message(paste("time taken: ", round(difftime(time.end, time.start, units='mins'),2),  "minutes"))
       
     }else{
+      # TODO(cp): replace it after testing if the result of the methode used in the
+      # block above is the same
       res <- .convert_blib2psm(data)
     }
 
