@@ -12,34 +12,34 @@
 # usage:
 # mZlist <- mcmapply(.decompose_peakMZ, data$peakMZ, data$numPeaks)
 # maps base64 blob to human readable numbers
-.decompose_peakMZ <- function(peakMZ, numPeaks) {
-        mZ <- try(readBin(memDecompress(as.raw(peakMZ),'g'), double(), numPeaks), TRUE)
-
+.decompose_peakMZ <- function(peakMZBlob, numPeaks) {
+        mZ <- try(readBin(memDecompress(as.raw(peakMZBlob),'g'), double(), numPeaks), TRUE)
         if (!is.numeric(mZ)){
-            mZ<-try(readBin(as.raw(peakMZ), double(),numPeaks), FALSE)
+            mZ<-try(readBin(as.raw(peakMZBlob), double(),numPeaks), FALSE)
         }
+        return(mZ)
 }
 
 # usage:
 # intentityList <- mcmapply(.decompose_intensities, data$peakMZ, data$numPeaks)
 # maps base64 blob to human readable numbers
-.decompose_intensity <- function(peakIntensity, numPeaks) {
-        intensity <- try(readBin(memDecompress(as.raw(peakIntensity),'g'), 
-            numeric(), n=numPeaks, size = 4), TRUE)
-
+.decompose_intensity <- function(peakIntensityBlob, numPeaks) {
+        print (peakIntensityBlob)
+        intensity <- try(readBin(memDecompress(as.raw(peakIntensityBlob),'g'), numeric(), n=numPeaks, size = 4), TRUE)
+       
         if (!is.numeric(intensity) || length(intensity) != numPeaks){
-            intensity <- try(readBin(as.raw(peakIntensity), 
+            intensity <- try(readBin(as.raw(peakIntensityBlob), 
                 numeric(), n=numPeaks, size = 4), FALSE)
-        }
+        }  
+        return (intensity)
 }
 
 .convert_blib2psm_parallel <- function(data, ncores=1){
   
-  
-  
   mZ_list <- mcmapply(specL:::.decompose_peakMZ, data$peakMZ, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
   message(paste("decomposed mZ values"))
-  intentity_list <- mcmapply(specL:::.decompose_intensity, data$peakMZ, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
+  
+  intentity_list <- mcmapply(specL:::.decompose_intensity, data$peakIntensity, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
   message(paste("decomposed intensity values"))
   
   res <- mcmapply(function(peaks, mZ, intensity, peptideSequence, peptideModSeq, 
@@ -164,7 +164,7 @@ read.bibliospec <- function(file){
     res<-list()
     if (require(parallel)){
       ncores <- parallel::detectCores()
-      message(paste("start converting blib blobs to psm using", ncores, " cores ..."))
+      message(paste("start converting blib blobs to psm using", ncores, "cores ..."))
       time.start <- Sys.time(); 
       res <- .convert_blib2psm_parallel(data, ncores)
       time.end <- Sys.time();
