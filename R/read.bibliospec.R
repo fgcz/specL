@@ -24,7 +24,6 @@
 # intentityList <- mcmapply(.decompose_intensities, data$peakMZ, data$numPeaks)
 # maps base64 blob to human readable numbers
 .decompose_intensity <- function(peakIntensityBlob, numPeaks) {
-        print (peakIntensityBlob)
         intensity <- try(readBin(memDecompress(as.raw(peakIntensityBlob),'g'), numeric(), n=numPeaks, size = 4), TRUE)
        
         if (!is.numeric(intensity) || length(intensity) != numPeaks){
