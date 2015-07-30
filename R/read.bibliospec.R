@@ -4,7 +4,6 @@
 # $Id$
 # $Date$
 
-
 # TODO(cp): write a summery methide for read.bibliospec
 # o list the number of files
 # o list the number of specs
@@ -162,7 +161,7 @@ read.bibliospec <- function(file){
     
     res<-list()
     if (require(parallel)){
-      ncores <- parallel::detectCores()
+      ncores <- max(1,parallel::detectCores()/2)
       message(paste("start converting blib blobs to psm using", ncores, "cores ..."))
       time.start <- Sys.time(); 
       res <- .convert_blib2psm_parallel(data, ncores)
