@@ -114,7 +114,7 @@ setMethod(f="summary", signature="specLSet", function(object){
 
 
 
-.retentiontimePlot <- function(x, file, peptide,...){
+.retentiontimePlot <- function(x, file, peptide, ...){
   plot(x@rt.normalized ~ x@rt.input,
        main='specLSet iRT normalization',
        xlab="input retention time",
@@ -150,10 +150,11 @@ setMethod(f="summary", signature="specLSet", function(object){
 
 setMethod(f="plot", signature="specLSet", 
           definition=function(x, iRTpeptides=specL::iRTpeptides, art=FALSE, ...){
+            
             file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
             peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             
-            .retentiontimePlot(x, file, peptide,...)
+            .retentiontimePlot(x, file, peptide, ...)
             
             frg <- unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z, "+",sep='')}))
             frgTable <- table(frg)
@@ -168,10 +169,10 @@ setMethod(f="plot", signature="specLSet",
             
             # todo(cp): make a 2nd use case if to many data items are avalable
             if (art==TRUE && require(plotrix)){
-              cm_alpha<-rainbow(length(frgTable), alpha=0.25)
+              colorMapAlpha<-rainbow(length(frgTable), alpha=0.25)
               plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})), 
                    unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
-                   col=cm[as.factor(frg)],
+                   col=colorMapAlpha[as.factor(frg)],
                    xlab='q1',
                    ylab='q3',
                    main='Relative Fragment Intensity ~ q1 * q3',
@@ -182,12 +183,12 @@ setMethod(f="plot", signature="specLSet",
               draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})),
                           unlist(lapply(x@ionlibrary, function(xx){xx@q3})),
                           unlist(lapply(x@ionlibrary, function(xx){sqrt(xx@relativeFragmentIntensity)})),
-                          col=cm_alpha[as.factor(frg)], border=cm_alpha[as.factor(frg)])
-              legend('topleft', names(frgTable), pch=22, col=cm, cex=0.75)
+                          col=colorMapAlpha[as.factor(frg)], border=colorMapAlpha[as.factor(frg)])
+              legend('topleft', names(frgTable), pch=22, col=colorMapAlpha, cex=0.75)
               
               plot(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})), 
                    unlist(lapply(x@ionlibrary, function(xx){xx@q3})), 
-                   col=cm[as.factor(frg)],
+                   col=colorMapAlpha[as.factor(frg)],
                    xlab='rt.normalized',
                    ylab='fragment ion mass',
                    type='n',
@@ -197,19 +198,14 @@ setMethod(f="plot", signature="specLSet",
               draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})),
                           unlist(lapply(x@ionlibrary, function(xx){xx@q3})),
                           unlist(lapply(x@ionlibrary, function(xx){sqrt(xx@relativeFragmentIntensity)}))/10,
-                          col=cm_alpha[as.factor(frg)], border=cm_alpha[as.factor(frg)])
-              legend('topleft', names(frgTable), pch=22, col=cm, cex=0.75)
+                          col=colorMapAlpha[as.factor(frg)], border=colorMapAlpha[as.factor(frg)])
+              legend('topleft', names(frgTable), pch=22, col=colorMapAlpha, cex=0.75)
             }
           })
 
 
 setMethod(f="write.spectronaut", signature="specLSet", 
           definition=function(x, file="specL.txt", ...){
-            if (file.exists(file)){
-              warning("file already exists. not writting!")
-              return()
-            }
-            
             res <- lapply(x@ionlibrary, function(xx){write.spectronaut(xx, file=file)})
           }) 
 
