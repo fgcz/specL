@@ -53,8 +53,6 @@ setMethod(f="plot", signature="specL",
   
   q3<-slot(x, "q3")
   relativeFragmentIntensity <- slot(x, "relativeFragmentIntensity")
-  
-  
   #n<-nchar(as.character(unique(file)))
   #filename.short <- substr(as.character(unique(x@filename)), n - 25, n)
   

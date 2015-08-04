@@ -33,7 +33,6 @@
 }
 
 .convert_blib2psm_parallel <- function(data, ncores=1){
-  
   mZ_list <- mcmapply(specL:::.decompose_peakMZ, data$peakMZ, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
   message(paste("decomposed mZ values"))
   
@@ -119,7 +118,9 @@
 	return(res)
 }
 
-read.bibliospec <- function(file){
+
+
+read.bibliospec <- function(file,ncores=NULL){
     m <- dbDriver("SQLite", max.con=25)       
     con <- dbConnect(m , dbname=file, flags = SQLITE_RO)
 
@@ -161,7 +162,9 @@ read.bibliospec <- function(file){
     
     res<-list()
     if (require(parallel)){
-      ncores <- max(1,parallel::detectCores()/2)
+      if(is.null(ncores)){
+        ncores <- max(1,parallel::detectCores()/2)
+      }
       message(paste("start converting blib blobs to psm using", ncores, "cores ..."))
       time.start <- Sys.time(); 
       res <- .convert_blib2psm_parallel(data, ncores)
@@ -259,8 +262,7 @@ plot.psm <- function (x, ...){
   return(protViz::peakplot(peptideSequence=x$peptideSequence, spec=spec, fi=fi, ...))
 }
 
-.mascot2psmSet <-
-  function(dat, mod, mascotScoreCutOff=40){
+.mascot2psmSet <-  function(dat, mod, mascotScoreCutOff=40){
     res <- lapply(dat, function(x){
       x$MonoisotopicAAmass <- protViz::aa2mass(x$peptideSequence)[[1]]#, protViz::AA$Monoisotopic, protViz::AA$letter1)
       
