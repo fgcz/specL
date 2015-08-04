@@ -23,3 +23,5 @@ Collate: read.bibliospec.R genSwathIonLib.R annotate.protein_id.R
         AllGenerics.R specL.R specLSet.R cdsw.R ssrc.R
 biocViews: MassSpectrometry, Proteomics
 LazyData: true
+URL: https://github.com/fgcz/specL
+BugReports: https://github.com/fgcz/specL/issues
