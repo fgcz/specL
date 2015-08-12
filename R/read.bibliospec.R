@@ -41,7 +41,6 @@
   
   res <- mcmapply(function(peaks, mZ, intensity, peptideSequence, peptideModSeq, 
                          charge, pepmass, fileName, rt, score, mc.cores=ncores, mc.preschedule=TRUE){
- 
     psm <-list(peaks=peaks, 
                mZ=mZ, 
                intensity=intensity,

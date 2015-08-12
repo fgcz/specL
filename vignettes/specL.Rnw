@@ -12,6 +12,7 @@ BiocStyle::latex()
     Christian Panse\thanks{\email{cp@fgcz.ethz.ch}}\\
     Christian Trachsel\thanks{\email{christian.trachsel@fgcz.ethz.ch}}\\
     Jonas Grossmann\thanks{\email{jg@fgcz.ethz.ch}}\\
+    Witold Wolski\thanks{\email{wewolski@gmail.com}}\\
 }
 
 \begin{document}
@@ -73,6 +74,7 @@ The first step which has to be performed on the R shell is loading
 \Biocpkg{specL} library.
 
 <<keep.source = FALSE, eval = TRUE, fig = FALSE, echo=FALSE>>=
+rm(list=ls())
 options(width = 80)
 @
 
