@@ -1,5 +1,3 @@
-#R
-
 # $HeadURL$
 # $Id$
 # $Date$
@@ -11,118 +9,56 @@
 # usage:
 # mZlist <- mcmapply(.decompose_peakMZ, data$peakMZ, data$numPeaks)
 # maps base64 blob to human readable numbers
-.decompose_peakMZ <- function(peakMZBlob, numPeaks) {
-        mZ <- try(readBin(memDecompress(as.raw(peakMZBlob),'g'), double(), numPeaks), TRUE)
-        if (!is.numeric(mZ)){
-            mZ<-try(readBin(as.raw(peakMZBlob), double(),numPeaks), FALSE)
-        }
-        return(mZ)
-}
+.convert_blib2psmInternal <- function(x){
+  mZ <- try(readBin(memDecompress(as.raw(x$peakMZ[[1]]),'g'), double(), x$numPeaks), TRUE)
+  
+  if (!is.numeric(mZ)){
+    mZ <- try(readBin(as.raw(x$peakMZ[[1]]), double(),x$numPeaks), FALSE)
+  }
+  
+  intensity <- try(readBin(memDecompress(as.raw(x$peakIntensity[[1]]),'g'), 
+                           numeric(), n=x$numPeaks, size = 4), TRUE)
+  
+  if (!is.numeric(intensity) || length(intensity) != length(mZ)){
+    intensity <- try(readBin(as.raw(x$peakIntensity[[1]]), 
+                             numeric(), n=x$numPeaks, size = 4), FALSE)
+  }
+  
+  if ( length(intensity) != length(mZ)  ){
+    warning(" length(intensity) != length(mZ) ")
+  }
 
-# usage:
-# intentityList <- mcmapply(.decompose_intensities, data$peakMZ, data$numPeaks)
-# maps base64 blob to human readable numbers
-.decompose_intensity <- function(peakIntensityBlob, numPeaks) {
-        intensity <- try(readBin(memDecompress(as.raw(peakIntensityBlob),'g'), numeric(), n=numPeaks, size = 4), TRUE)
-       
-        if (!is.numeric(intensity) || length(intensity) != numPeaks){
-            intensity <- try(readBin(as.raw(peakIntensityBlob), 
-                numeric(), n=numPeaks, size = 4), FALSE)
-        }  
-        return (intensity)
-}
-
-.convert_blib2psm_parallel <- function(data, ncores=1){
-  mZ_list <- mcmapply(specL:::.decompose_peakMZ, data$peakMZ, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
-  message(paste("decomposed mZ values"))
-  
-  intentity_list <- mcmapply(specL:::.decompose_intensity, data$peakIntensity, data$numPeaks, mc.cores=ncores, mc.preschedule=TRUE)
-  message(paste("decomposed intensity values"))
-  
-  res <- mcmapply(function(peaks, mZ, intensity, peptideSequence, peptideModSeq, 
-                         charge, pepmass, fileName, rt, score, mc.cores=ncores, mc.preschedule=TRUE){
-    psm <-list(peaks=peaks, 
-               mZ=mZ, 
-               intensity=intensity,
-               peptideSequence=peptideSequence,
-               peptideModSeq=peptideModSeq,
-               charge=charge, 
-               pepmass=pepmass,
-               fileName = fileName,
-               proteinInformation='',
-               rt=rt,
-               varModification=rep(0.0, nchar(peptideSequence)),
-               mascotScore = -10 * log((1E-6 + score)) / log(10)
-               );
-    
-    class(psm) <- "psm"
-    return(psm)
-    },
-    data$numPeaks,
-    mZ_list, 
-    intentity_list,
-    data$peptideSeq,
-    data$peptideModSeq,
-    data$precursorCharge,
-    data$precursorMZ,
-    data$fileName,
-    data$retentionTime,
-    data$score,
-    SIMPLIFY = FALSE, mc.cores=ncores, mc.preschedule=TRUE)
-  
-  class(res) <- 'psmSet'
+  res <- list(
+    peaks=x$numPeaks,
+    mZ=mZ, 
+    intensity=intensity, 
+    peptideSequence=x$peptideSeq,
+    peptideModSeq=x$peptideModSeq,
+    charge=x$precursorCharge, 
+    pepmass=x$precursorMZ,
+    fileName = x$fileName,
+    proteinInformation='',
+    rt=x$retentionTime,
+    varModification=rep(0.0, nchar(x$peptideSeq)),
+    mascotScore = -10 * log((1E-6 + x$score)) / log(10))
+  class(res) = "psm"
   return(res)
 }
 
 .convert_blib2psm <- function(data){
-    res <- list()
-
-      
-     for (i in 1:nrow(data)){
+    N <- nrow(data)
+    res <- vector(N, mode="list")
+    for (i in 1:N){
         x <- data[i, ]
-
-        mZ <- try(readBin(memDecompress(as.raw(x$peakMZ[[1]]),'g'), double(), x$numPeaks), TRUE)
-
-        if (!is.numeric(mZ)){
-            mZ<-try(readBin(as.raw(x$peakMZ[[1]]), double(),x$numPeaks), FALSE)
-        }
-
-        intensity <- try(readBin(memDecompress(as.raw(x$peakIntensity[[1]]),'g'), 
-            numeric(), n=x$numPeaks, size = 4), TRUE)
-
-        if (!is.numeric(intensity) || length(intensity) != length(mZ)){
-            intensity <- try(readBin(as.raw(x$peakIntensity[[1]]), 
-                numeric(), n=x$numPeaks, size = 4), FALSE)
-        }
-
-        if ( length(intensity) != length(mZ)  ){
-            warning(" length(intensity) != length(mZ) ")
-        }
-
-        res[[i]] <- list(
-            peaks=x$numPeaks,
-            mZ=mZ, 
-            intensity=intensity, 
-            peptideSequence=x$peptideSeq,
-            peptideModSeq=x$peptideModSeq,
-            charge=x$precursorCharge, 
-            pepmass=x$precursorMZ,
-            fileName = x$fileName,
-            proteinInformation='',
-            rt=x$retentionTime,
-            varModification=rep(0.0, nchar(x$peptideSeq)),
-            mascotScore = -10 * log((1E-6 + x$score)) / log(10))
-        class(res[[i]]) = "psm"
+        res[[i]] = .convert_blib2psmInternal(x)
     }
-	return(res)
+	  return(res)
 }
 
-
-
-read.bibliospec <- function(file,ncores=NULL){
+read.bibliospec <- function(file){
     m <- dbDriver("SQLite", max.con=25)       
     con <- dbConnect(m , dbname=file, flags = SQLITE_RO)
-
+    
     SQLQuery0 <- dbSendQuery(con, statement = paste(
         "SELECT numPeaks, peakMZ, peakIntensity, peptideSeq,",
         "precursorCharge, precursorMZ, retentionTime,",
@@ -131,7 +67,6 @@ read.bibliospec <- function(file,ncores=NULL){
         "WHERE RefSpectra.id=RefSpectraPeaks.RefSpectraID",
         "and SpectrumSourceFiles.id = RefSpectra.fileID;", 
         sep=" "))
-
 
     if (msg<-dbGetException(con)$errorNum != 0){
         stop(msg$errorMsg)
@@ -150,46 +85,28 @@ read.bibliospec <- function(file,ncores=NULL){
         stop(msg$errorMsg)
     }
 
-    data.modifications <- DBI::fetch(SQLQuery1, n = -1)
+    modifications <- DBI::fetch(SQLQuery1, n = -1)
 
     if (msg<-dbGetException(con)$errorNum != 0){
         stop(msg$errorMsg)
     }
 
-
     message(paste("fetched", nrow(data), "rows."))
     
-    res<-list()
-    if (require(parallel)){
-      if(is.null(ncores)){
-        ncores <- max(1,parallel::detectCores()/2)
-      }
-      message(paste("start converting blib blobs to psm using", ncores, "cores ..."))
-      time.start <- Sys.time(); 
-      res <- .convert_blib2psm_parallel(data, ncores)
-      time.end <- Sys.time();
-      message(paste("time taken: ", round(difftime(time.end, time.start, units='mins'),2),  "minutes"))
-      
-    }else{
-      # TODO(cp): replace it after testing if the result of the methode used in the
-      # block above is the same
-      res <- .convert_blib2psm(data)
+    res <<- .convert_blib2psm(data)
+    
+    message(paste("assigning", nrow(modifications), "modifications ..."))
+    for (i in 1:nrow(modifications)){
+        res[[ modifications$RefSpectraID[i] ]]$varModification[modifications$position[i]] <- modifications$mass[i]
     }
-
-    message(paste("assigning", nrow(data.modifications), "modifications ..."))
-    for (i in 1:nrow(data.modifications)){
-        res[[data.modifications$RefSpectraID[i]]]$varModification[data.modifications$position[i]] <- data.modifications$mass[i]
-    }
-
     class(res)='psmSet'
-
     dbDisconnect(con)
     return(res)
 }
+
 #s<-read.bibliospec("/scratch/specL_revisions_201412/p1000_testBelowFour.redundant.blib")
 
 summary.psmSet <- function (object, ...){
-  
     cat("Summary of a \"psmSet\" object.")
 
     cat("\nNumber of precursor:\n\t")
@@ -249,15 +166,10 @@ plot.psmSet <- function (x, iRTpeptides=specL::iRTpeptides, ...){
 }
 
 plot.psm <- function (x, ...){
-  
   AAmass <- protViz::aa2mass(x$peptideSequence)[[1]]#, protViz::AA$Monoisotopic, protViz::AA$letter1)
-  
   AAmodifiedMass <- AAmass + x$varModification
-
   fi <- protViz::fragmentIon(AAmodifiedMass, FUN=.defaultSwathFragmentIon)[[1]]
-  
   spec <- list(mZ=x$mZ, intensity=x$intensity)
-  
   return(protViz::peakplot(peptideSequence=x$peptideSequence, spec=spec, fi=fi, ...))
 }
 

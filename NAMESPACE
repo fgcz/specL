@@ -31,4 +31,4 @@ exportClasses("specL", "specLSet")
 exportMethods("show", "summary", "plot", 
     "write.spectronaut", "generate.consensus",
     "ionlibrary", "rt.input", "rt.normalized", 
-    "merge.specLSet")
+    "merge.specLSet","getProteinPeptideTable")

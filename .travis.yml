@@ -1,0 +1,21 @@
+language : r
+sudo : required
+
+r_binary_packages :
+ - Runit
+ - Rcpp
+ - DBI
+ - RSQLite
+ - seqinr
+ 
+r_packages :
+ - protViz
+ - methods
+
+bioc_packages :
+ - BiocGenerics
+ - BiocStyle
+ - BiocParallel
+ - plotrix
+
+warnings_are_errors: true

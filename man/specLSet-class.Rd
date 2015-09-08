@@ -82,6 +82,8 @@
     \item{rt.input}{\code{signature(x = "specLSet")}: returns a numeric vector of input rt values. }
 
     \item{rt.normalized}{\code{signature(x = "specLSet")}: returns a numeric vector of normalized rt values. }
+    
+    \item{getProteinPeptideTable}{\code{signature(x = "specLSet")}: returns table of peptide protein mappings. }
 	
     }
 

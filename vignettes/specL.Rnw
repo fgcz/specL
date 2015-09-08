@@ -325,6 +325,7 @@ The method genSwathIonLib uses:
 
 <<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
 fit <- lm(formula = rt ~ aggregateInputRT * fileName, data=m)
+
 @
 
 to build the linear models for each MS measurement individually. 

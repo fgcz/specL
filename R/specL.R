@@ -50,7 +50,6 @@ setMethod("show", "specL", function(object){
 
 setMethod(f="plot", signature="specL", 
           definition=function(x, y, ...){
-  
   q3<-slot(x, "q3")
   relativeFragmentIntensity <- slot(x, "relativeFragmentIntensity")
   #n<-nchar(as.character(unique(file)))
@@ -106,7 +105,7 @@ setMethod(f="plot", signature="specL",
 #)
 
 setMethod(f="write.spectronaut", signature="specL", 
-          definition=function(x, file="specL.txt", ...){
+          definition=function(x, file="specL.txt",protIDSeparator=";", ...){
             
             data=cbind(group_id=x@group_id,
                        peptide_sequence=x@peptide_sequence,
@@ -122,7 +121,7 @@ setMethod(f="write.spectronaut", signature="specL",
                        irt_or_rt=x@irt,
                        peptideModSeq=x@peptideModSeq,
                        mZ.error=x@mZ.error,
-                       proteinInformation=x@proteinInformation,
+                       proteinInformation = paste(x@proteinInformation,collapse=protIDSeparator),
                        filename=x@filename
             )
             

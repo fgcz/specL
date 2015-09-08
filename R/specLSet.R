@@ -229,6 +229,7 @@ setMethod(f="rt.input",  signature="specLSet",
 setMethod(f="rt.normalized",  signature="specLSet", 
           definition=function(object) object@rt.normalized)
 
+
 setMethod(f="generate.consensus",  signature="specLSet", 
           definition=function(object, ...){
             
@@ -295,4 +296,36 @@ setMethod(f="generate.consensus",  signature="specLSet",
                             input.parameter=list(comment='consensus specLSet object'),
                             rt.normalized=unlist(lapply(output, function(x){x@irt})), 
                             rt.input=unlist(lapply(output, function(x){x@irt}))))
+          })
+
+
+setGeneric("getProteinPeptideTable", 
+           function(object,...) standardGeneric("getProteinPeptideTable"))
+
+setMethod(f="getProteinPeptideTable",  signature="specLSet",
+          definition=function(object, ...){
+            specLibrary = object
+            extractPrecursorCharge = function(tmp){
+              peps <- c("peptideSequence"=tmp@peptide_sequence,
+                        "peptideModSequence" = tmp@peptideModSeq,
+                        "z"=tmp@prec_z,
+                        "m"=tmp@q1)
+              prots <- tmp@proteinInformation
+              tmp = NULL
+              if(length(prots) > 0){
+                for(i in 1:length(prots)){
+                  tmp = rbind(tmp, peps)
+                }
+                return(cbind(prots,tmp))
+              }else{
+                return(cbind("NA",t(peps)))
+              }
+              
+            }
+            res <- lapply(specLibrary@ionlibrary,extractPrecursorCharge)
+            res2 <- NULL
+            for(i in 1:length(res)){
+              res2 <- rbind(res2, res[[i]] )
+            }
+            return(res2)
           })
