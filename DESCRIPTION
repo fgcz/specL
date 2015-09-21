@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.3.9
+Version: 1.3.91
 Author: Christian Trachsel <christian.trachsel@fgcz.uzh.ch>, Christian
         Panse <cp@fgcz.ethz.ch>, Jonas Grossmann <jg@fgcz.ethz.ch>, 
 	Witold E. Wolski <wewolski@gmail.com>
