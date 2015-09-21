@@ -1,3 +1,4 @@
+
 [![Build Status](https://travis-ci.org/fgcz/specL.svg?branch=master)](https://travis-ci.org/fgcz/specL)
 
 # specL
