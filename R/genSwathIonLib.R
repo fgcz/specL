@@ -201,7 +201,7 @@ genSwathIonLib <- function(data,
         frg_nr  <- rep(1:nrow(fi), ncol(fi))  
 
         # group_id <- rep(paste(x$peptideSequence, ".", x$charge,";", x$pepmass, sep=''), 1)
-        #group_id <- rep(paste(x$peptideSequence, ".", x$charge,";", round(q1.in_silico,3), sep=''), 1)
+
         group_id <- rep(paste(x$peptideSequence, ".", x$charge, sep=''), 1)
         
         # expect a modification information, e.g., AAAMASATTM[+16.0]LTTK
