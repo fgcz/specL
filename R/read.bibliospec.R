@@ -18,6 +18,7 @@
   
   intensity <- try(readBin(memDecompress(as.raw(x$peakIntensity[[1]]),'g'), 
                            numeric(), n=x$numPeaks, size = 4), TRUE)
+
   
   if (!is.numeric(intensity) || length(intensity) != length(mZ)){
     intensity <- try(readBin(as.raw(x$peakIntensity[[1]]), 

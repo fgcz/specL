@@ -30,6 +30,9 @@
 \alias{ionlibrary}
 \alias{ionlibrary,specLSet-method}
 
+\alias{getProteinPeptideTable}
+\alias{getProteinPeptideTable,specLSet-method}
+
 \title{Class \code{"specLSet"}}
 
 \description{

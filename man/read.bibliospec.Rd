@@ -32,7 +32,6 @@
 \arguments{
 
   \item{file}{the name of the BiblioSpec generated SQLite file.}
-  \item{ncores}{number of cores to use}
 }
 
 \details{

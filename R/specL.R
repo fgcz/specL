@@ -17,10 +17,12 @@ specL <- setClass("specL",
     q1.in_silico="numeric",
     q3="numeric",
     q3.in_silico="numeric", 
-    decoy="character", 
+    decoy="character",
+    # precursor charge
     prec_z="numeric", 
     frg_type="character", 
     frg_nr="numeric", 
+    # charge of fragment
     frg_z="numeric", 
     relativeFragmentIntensity="numeric", 
     irt="numeric", 

@@ -300,10 +300,12 @@ setMethod(f="generate.consensus",  signature="specLSet",
 
 
 setGeneric("getProteinPeptideTable", 
+
            function(object,...) standardGeneric("getProteinPeptideTable"))
 
 setMethod(f="getProteinPeptideTable",  signature="specLSet",
           definition=function(object, ...){
+
             specLibrary = object
             extractPrecursorCharge = function(tmp){
               peps <- c("peptideSequence"=tmp@peptide_sequence,
