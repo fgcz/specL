@@ -11,7 +11,7 @@ $Id$
 
 */
 
-class MyComparator : public std::binary_function<double, double,double> {
+class MyComparator : public std::binary_function<double, double,bool> {
   public : 
     bool operator()(double a , double b){
     return (a <= b);
