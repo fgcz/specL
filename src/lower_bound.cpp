@@ -28,19 +28,14 @@ RcppExport SEXP lower_bound_(SEXP q, SEXP vec)
     MyComparator comparator;
     try {
 
-      for (int x:xq) {
+      for (int i =0; i < xq.size(); ++i) {
+      //for (int x:xq){
 	    IDX.push_back(std::distance(xvec.begin(),
 					std::lower_bound(xvec.begin(),
-							 xvec.end(), x,
+							 xvec.end(), 
+							 xq[i],
+							 //x,
 							 comparator
-							 
-							 /*[](const double
-							    &a,
-							    const double
-							    &b) {
-							 return (a <= b);
-							    }*/
-							 
 					)
 			  )
 		);
