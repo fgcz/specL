@@ -158,6 +158,36 @@
 }
 
 
+# JUST FOR DEVELOPMENT AND DEBUGING
+.generate_swath_ion_library <- function(x){
+  x<- peptideStd[[1]]
+  m <- length(2 * nchar(x$peptideSequence))
+  q1 <- x$pepmass
+  
+  mZ_sorted_fragment_ion <- sort(unlist(fragmentIon(x$peptideSequence)[[1]]))
+  
+  # step 0: determine the topN peaks
+  topN <- length(x$intensity)
+  idx_topN_peaks <- rev(order(x$intensity))[1:topN]
+  
+  
+  # step 1: for each peak find the closest in-silico fragment ion
+  NN_in_silico <- findNN_(q=x$mZ[idx_topN_peaks], vec=unlist(mZ_sorted_fragment_ion), check=TRUE)
+  
+  mZ<-x$mZ[idx_topN_peaks]
+  intensity <- x$intensity[idx_topN_peaks]
+  
+  mZ.idx<-order(mZ)
+  NN_measured <- findNN_(q=unlist(mZ_sorted_fragment_ion), vec=mZ[mZ.idx]) 
+  
+  op<-par(mfrow=c(2,1))
+  plot(x$mZ[idx_topN_peaks], x$intensity[idx_topN_peaks], type='h', log='y')
+  text(x$mZ[idx_topN_peaks], x$intensity[idx_topN_peaks], names(mZ_sorted_fragment_ion[NN_in_silico]), cex=0.5)
+
+  plot(mZ[mZ.idx], intensity[mZ.idx], type='h')
+
+}
+
 genSwathIonLib <- function(data, 
     data.fit = data,
     mascotIonScoreCutOFF=20, 
@@ -178,12 +208,18 @@ genSwathIonLib <- function(data,
         warning("min fragmentIonRange should be at least set to 2. reset fragmentIonRange = c(2,100).")
     }
 
+
+
+
 .genSwathIonLibSpecL <- function(x, fi, findNN.idx, mZ.error_, rt){
         m <- length(2 * nchar(x$peptideSequence))
         q1 <- x$pepmass
+        # mZ values 
         q3 <- x$mZ[findNN.idx]
         fi.unlist <- sort(unlist(fi))
+    
         q3.in_silico <- fi.unlist[ findNN_(q3, fi.unlist) ]
+        
         q1.in_silico <- protViz::parentIonMass(x$peptideSequence) + sum(x$varModification)
 
         if (sum(is.na(q3)) > 0){
@@ -239,8 +275,21 @@ genSwathIonLib <- function(data,
         if (length(intensity.idx) < topN){
             topN <- length(intensity.idx)
         }
-      
+       
         idx <- intensity.idx[1:topN]
+
+      tt<-table(as.numeric(q3.in_silico[filter_mass_error])[idx])
+      if ( sum(tt != 1) > 0){ 
+        
+       #print (table(as.numeric(q3.in_silico[filter_mass_error])[idx]))
+        
+        message(paste("One signal (mz=",
+                      paste(names(tt[tt>1]), collapse = ','),
+                      ") assigned to two or more than one different in-silico computed fragment ions.", sep='')
+                )
+     
+      }
+
 
         res <- specL(group_id=group_id, 
                       peptide_sequence=peptide_sequence, 
@@ -262,7 +311,7 @@ genSwathIonLib <- function(data,
         
 } # .genSwathIonLibSpecL
 
-    x.peptideSeq<-unlist(lapply(data, function(x){x$peptideSequence}))
+    x.peptideSeq <- unlist(lapply(data, function(x){x$peptideSequence}))
 
     x.varModMass<-(lapply(data, function(x){
         if (length(x$varModification) != nchar(x$peptideSequence)){
@@ -283,6 +332,7 @@ genSwathIonLib <- function(data,
     }
 
     message("generating ion library ...")
+
     # determine fragment ions while considering the var mods
     fi <- lapply(x.AAmodifiedMass, function(x){fragmentIon(x, fragmentIonFUN)[[1]]})
 
@@ -306,8 +356,7 @@ genSwathIonLib <- function(data,
     # prepare table for output
     if ( parallel::detectCores() > 1 & length(data) > 200){
         message("using BiocParallel::bpmapply( ..." )
-        output <- parallel::mcmapply (.genSwathIonLibSpecL, 
-            data, fi, findNN.idx, mZ.error, x.rt, 
+        output <- parallel::mcmapply (.genSwathIonLibSpecL, data, fi, findNN.idx, mZ.error, x.rt, 
             SIMPLIFY = FALSE)
     }else{
         output <- mapply (.genSwathIonLibSpecL, 

@@ -38,7 +38,7 @@ setMethod("show", "specL", function(object){
     lapply(slotNames(object), function(x){
       v <- slot(object, x)
       if (x == 'filename'){
-        cat (substr(v, nchar(v)-getOption("width")-1, nchar(v)))
+        cat (substr(v, nchar(v) - getOption("width") - 1, nchar(v)))
       }else{
       cat(x, '=', slot(object,x), '', fill=TRUE)}
       }
