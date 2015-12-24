@@ -196,7 +196,7 @@ genSwathIonLib <- function(data,
     ignoreMascotIonScore = TRUE, 
     topN = 10,
     fragmentIonMzRange = c(300, 1800),
-    fragmentIonRange = c(5, 100), 
+    fragmentIonRange = c(4, 100), 
     fragmentIonFUN = .defaultSwathFragmentIon, 
     iRT = specL::iRTpeptides,
     AminoAcids = protViz::AA,
@@ -218,8 +218,7 @@ genSwathIonLib <- function(data,
         q3 <- x$mZ[findNN.idx]
         fi.unlist <- sort(unlist(fi))
     
-        q3.in_silico <- fi.unlist[ findNN_(q3, fi.unlist) ]
-        
+        q3.in_silico <- unlist(fi)
         q1.in_silico <- protViz::parentIonMass(x$peptideSequence) + sum(x$varModification)
 
         if (sum(is.na(q3)) > 0){
@@ -278,18 +277,43 @@ genSwathIonLib <- function(data,
        
         idx <- intensity.idx[1:topN]
 
-      tt<-table(as.numeric(q3.in_silico[filter_mass_error])[idx])
-      if ( sum(tt != 1) > 0){ 
+        # Testing if in-silico fragment ion were assigned to the same signal peak.
+        idx.freqency <- table((findNN.idx[filter_mass_error])[idx])
+        if (sum(idx.freqency > 1) > 0){
+          mzIDX <- as.integer(names(idx.freqency[idx.freqency > 1]))
+          
+          # mZ signals assigned  more than once
+          mZ <- x$mZ[mzIDX]
+          #message(paste("At least on signal(idx=", mzIDX,",  mZ=", mZ,
+          #              ") were assigned to two or more than one different in-silico computed fragment ions.",
+          #              sep=''))
+          
+          # find all signals having two or more in-silico fragment ions.
+          # TODO: can be more than one
+          idx.tb.removed <- unlist(lapply(mZ, function(x.mZ){
+            idx.redundant <- idx[as.numeric(q3[filter_mass_error])[idx] == x.mZ]
+            
+            ## find the one having the closest distance
+            idx.redundant.dist <- (abs(as.numeric(q3[filter_mass_error])[idx.redundant] - as.numeric(q3.in_silico[filter_mass_error])[idx.redundant]))
+            
+            idx.redundant.min <- idx.redundant[idx.redundant.dist == min(idx.redundant.dist)]
+            
+            # keep only the nearest in-silico fragment ion. If dist(fi, mZ) is always the same take the first.
+            return(idx.redundant[idx.redundant != idx.redundant.min[1]])
+          }
+          ))
+          # pruning 
+          if (length(idx.tb.removed) > 0){
+            #message(paste("pruning",idx.tb.removed))
+            idx <- idx[!idx %in% idx.tb.removed]
+          }
+        }
         
-       #print (table(as.numeric(q3.in_silico[filter_mass_error])[idx]))
-        
-        message(paste("One signal (mz=",
-                      paste(names(tt[tt>1]), collapse = ','),
-                      ") assigned to two or more than one different in-silico computed fragment ions.", sep='')
-                )
-     
-      }
+   
 
+      if ( sum(table(as.numeric(q3[filter_mass_error])[idx]) != 1) > 0){ 
+        stop("ERROR; At least on signal were assigned to two or more than one different in-silico computed fragment ions.")
+      }
 
         res <- specL(group_id=group_id, 
                       peptide_sequence=peptide_sequence, 
@@ -364,11 +388,14 @@ genSwathIonLib <- function(data,
             SIMPLIFY = FALSE)
     }
 
+    message(paste("length of genSwathIonLibSpecL  ", length(output)))
     time.end <- Sys.time();
     message(paste("time taken: ",  difftime(time.end, time.start, units='secs'), "secs"))
 
+    
     output <- output[which(unlist(lapply (output, function (x) {fragmentIonRange[1] <= length(x@q3) && length(x@q3) <= fragmentIonRange[2]})))]
-   
+    message(paste("length of genSwathIonLibSpecL  after fragmentIonRange filtering", length(output)))
+    
     return(specLSet(ionlibrary=output, 
         input.parameter=list(mascotIonScoreCutOFF=mascotIonScoreCutOFF, 
                    proteinIDPattern=proteinIDPattern,

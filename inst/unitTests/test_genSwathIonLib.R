@@ -48,6 +48,7 @@ function(){
                                         data.fit=peptideStd.redundant, 
                                         iRT=myiRTpeptides)
 
+    # add cmp for idx should be always 137
     # 
     res <- lapply (1:length(peptideStd), 
         function(idx){ 
