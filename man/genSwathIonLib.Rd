@@ -27,7 +27,7 @@
         ignoreMascotIonScore = TRUE,
         topN = 10,
         fragmentIonMzRange = c(300, 1800),
-        fragmentIonRange = c(5,100),
+        fragmentIonRange = c(4, 100),
         fragmentIonFUN = .defaultSwathFragmentIon,
         iRT = specL::iRTpeptides,
         AminoAcids = protViz::AA,
