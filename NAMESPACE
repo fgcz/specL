@@ -14,6 +14,12 @@ importFrom("protViz", fragmentIon)
 
 importFrom("seqinr", read.fasta)
 
+importFrom("grDevices", "rainbow")
+importFrom("graphics", "abline", "barplot", "hist", "legend", "par",
+               "points", "text")
+importFrom("stats", "aggregate", "lm", "predict", "quantile")
+importFrom("utils", "object.size", "write.table")
+
 
 export("read.bibliospec")
 export("summary.psmSet")

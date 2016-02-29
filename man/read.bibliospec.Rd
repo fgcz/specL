@@ -26,7 +26,7 @@
 
 \usage{
 
-    read.bibliospec(file, ncores = NULL)
+    read.bibliospec(file)
 }
 
 \arguments{

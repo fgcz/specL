@@ -1,3 +1,8 @@
+CHANGES IN VERSION 1.5.4
+-------------------------
+USER UNVISIBLE CHANGES
+  o change NAMESPACES and docu to avoid warnings in 3.3 check
+
 CHANGES IN VERSION 1.5.3
 -------------------------
 USER UNVISIBLE CHANGES
