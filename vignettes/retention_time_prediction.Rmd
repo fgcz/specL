@@ -1,0 +1,133 @@
+---
+title: "On Retention Time Prediction using the ssrc Method"
+author: "Christian Panse"
+date: "`r Sys.Date()`"
+bibliography:
+  - specL.bib
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Retention Time Prediction using the ssrc Method}
+output:
+  html_document:
+    theme: united	
+    toc: true
+---
+
+<!--
+%\VignetteIndexEntry{Retention Time Prediction using the ssrc Method}
+%\VignetteEngine{knitr::rmarkdown}
+-->
+
+# Preliminaries
+
+`ssrc` (Sequence Specific Retention Calculator) is an implementation of the algorithm proposed in [@pmid15238601] to predict the Retention Time (RT) of a given peptide sequence.
+
+
+load libraries
+```{r echo=FALSE}
+library(specL)
+library(BiocStyle)
+```
+
+an basic example from the paper ...
+```{r}
+lapply(c("SCHTAVGR", "SCHTGLGR", "EDLIAYLK"), ssrc)
+```
+
+in the following paragraphs we will play with some R packages containing peptide sequence and RT information.
+
+
+define a R-helper function which derives a linear model and visualize the result
+```{r}
+.plot.rt_ssrc <- function(x, y, ...){
+  fit <- lm(y~x)
+  plot(x, y, ylab='ssrc predicted RT', xlab='RT',
+       cex=2,
+       asp=1,
+       ...)
+  
+  abline(fit)
+  
+  legend("topleft", 
+         c(paste("spearman", round(cor(x, y, method='spearman'),2)),
+           paste('R-squared', round(summary(fit)$r.squared,2)))
+         )
+} 
+```
+
+
+
+
+# Example 1 - using `r Biocpkg("specL")` 
+
+
+```{r, fig.width=5, fig.height=5, fig.retina=3, warning=FALSE, echo = FALSE, message = FALSE}
+
+ssrc <- unlist(lapply(peptideStd, function(x){ssrc(x$peptideSequence)}))
+rt <- unlist(lapply(peptideStd, function(x){x$rt}))
+type <-as.integer(as.factor(unlist(lapply(peptideStd, function(x){x$peptideSequence}))))
+.plot.rt_ssrc(ssrc, rt, col=type)
+```
+
+# Example 2 - using `r Biocpkg("msqc1")` peptides
+
+```{r}
+library(msqc1)
+```
+
+fetch the `r Biocpkg("msqc1")` 
+```{r}
+msqc1.8rep.aggregate <- msqc1:::.reshape_rt(msqc1_8rep, peptides=peptides, plot=FALSE)
+msqc1.dilution.aggregate <- msqc1:::.reshape_rt(msqc1_dil, peptides=peptides, plot=FALSE)
+```
+
+predict RT
+
+```{r}
+msqc1.peptide.ssrc <- unlist(lapply(as.character(msqc1.dilution.aggregate$Peptide.Sequence), ssrc))
+                    
+```
+
+
+## 8replicate data
+```{r fig.width=12, fig.height=3, fig.retina=3, echo=FALSE}
+op <- par(mfrow=c(1,5))
+type <- as.integer(msqc1.8rep.aggregate$Peptide.Sequence)
+.plot.rt_ssrc(msqc1.8rep.aggregate$Retention.Time.QExactive,  msqc1.peptide.ssrc, col=type, pch=type, main='QExactive')
+
+.plot.rt_ssrc(msqc1.8rep.aggregate$Retention.Time.QExactiveHF, msqc1.peptide.ssrc, col=type, pch=type, main='QExactiveHF')
+
+.plot.rt_ssrc(msqc1.8rep.aggregate$Retention.Time.QTRAP, msqc1.peptide.ssrc, col=type, pch=type, main='QTRAP')
+
+.plot.rt_ssrc(msqc1.8rep.aggregate$Retention.Time.TSQVantage, msqc1.peptide.ssrc, col=type, pch=type, main='TSQVantage')
+
+.plot.rt_ssrc(msqc1.8rep.aggregate$Retention.Time.TRIPLETOF, msqc1.peptide.ssrc, col=type, pch=type, main='TRIPLETOF')
+```
+
+## Dilution Series data
+
+```{r fig.width=12, fig.height=3, fig.retina=3, echo=FALSE}
+op <- par(mfrow=c(1,5))
+type <- as.integer(msqc1.dilution.aggregate$Peptide.Sequence)
+.plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.QExactive,  msqc1.peptide.ssrc, col=type, pch=type, main='QExactive')
+
+.plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.QExactiveHF, msqc1.peptide.ssrc, col=type, pch=type, main='QExactiveHF')
+
+.plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.QTRAP, msqc1.peptide.ssrc, col=type, pch=type, main='QTRAP')
+
+.plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.TSQVantage, msqc1.peptide.ssrc, col=type, pch=type, main='TSQVantage')
+
+.plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.TRIPLETOF, msqc1.peptide.ssrc, col=type, pch=type, main='TRIPLETOF')
+```
+
+
+
+
+# Session information
+
+```{r, cache=FALSE}
+sessionInfo()
+```
+
+# References
+

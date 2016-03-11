@@ -2,15 +2,15 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.5.4
+Version: 1.5.5
 Author: Christian Trachsel <christian.trachsel@fgcz.uzh.ch>, Christian
         Panse <cp@fgcz.ethz.ch>, Jonas Grossmann <jg@fgcz.ethz.ch>, 
 	Witold E. Wolski <wewolski@gmail.com>
 Maintainer: Christian Panse <cp@fgcz.ethz.ch>, Witold E. Wolski <wewolski@gmail.com>
-Depends: R (>= 3.2), methods, DBI, RSQLite, seqinr, protViz (>=
+Depends: R (>= 3.3), methods, DBI, RSQLite, seqinr, protViz (>=
         0.2.5), 
 LinkingTo: Rcpp (>= 0.9.9)
-Suggests: RUnit, BiocGenerics, BiocStyle, BiocParallel, plotrix
+Suggests: RUnit, BiocGenerics, BiocStyle, BiocParallel, plotrix, knitr, msqc1 (>= 0.99.7)
 Description: specL provides a function for generating spectra libraries
         which can be used for MRM SRM MS workflows in proteomics. The
         package provides a BiblioSpec reader, a function which can add
@@ -25,3 +25,4 @@ biocViews: MassSpectrometry, Proteomics
 LazyData: true
 URL: https://github.com/fgcz/specL
 BugReports: https://github.com/fgcz/specL/issues
+VignetteBuilder: knitr
