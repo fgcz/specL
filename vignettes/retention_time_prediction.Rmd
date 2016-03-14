@@ -4,6 +4,7 @@ author: "Christian Panse"
 date: "`r Sys.Date()`"
 bibliography:
   - specL.bib
+csl: ieee.csl
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Retention Time Prediction using the ssrc Method}
@@ -47,6 +48,7 @@ define a R-helper function which derives a linear model and visualize the result
        ...)
   
   abline(fit)
+  abline(a=0, b=1, col='grey', lwd=2)
   
   legend("topleft", 
          c(paste("spearman", round(cor(x, y, method='spearman'),2)),
@@ -113,11 +115,15 @@ type <- as.integer(msqc1.dilution.aggregate$Peptide.Sequence)
 
 .plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.QExactiveHF, msqc1.peptide.ssrc, col=type, pch=type, main='QExactiveHF')
 
+
 .plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.QTRAP, msqc1.peptide.ssrc, col=type, pch=type, main='QTRAP')
+
 
 .plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.TSQVantage, msqc1.peptide.ssrc, col=type, pch=type, main='TSQVantage')
 
+
 .plot.rt_ssrc(msqc1.dilution.aggregate$Retention.Time.TRIPLETOF, msqc1.peptide.ssrc, col=type, pch=type, main='TRIPLETOF')
+
 ```
 
 
