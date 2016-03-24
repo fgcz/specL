@@ -114,7 +114,7 @@ setMethod(f="summary", signature="specLSet", function(object){
 
 
 
-.retentiontimePlot <- function(x, file, peptide, ...){
+.retentiontimePlot <- function(x, file, peptide, iRTpeptides, ...){
   plot(x@rt.normalized ~ x@rt.input,
        main='specLSet iRT normalization',
        xlab="input retention time",
@@ -154,7 +154,7 @@ setMethod(f="plot", signature="specLSet",
             file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
             peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             
-            .retentiontimePlot(x, file, peptide, ...)
+            .retentiontimePlot(x, file, peptide, iRTpeptides=iRTpeptides, ...)
             
             frg <- unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z, "+",sep='')}))
             frgTable <- table(frg)

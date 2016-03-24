@@ -159,7 +159,7 @@
 
 
 # JUST FOR DEVELOPMENT AND DEBUGING
-.generate_swath_ion_library <- function(x){
+.generate_swath_ion_library <- function(x, peptideStd){
   x<- peptideStd[[1]]
   m <- length(2 * nchar(x$peptideSequence))
   q1 <- x$pepmass
