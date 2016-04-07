@@ -8,15 +8,15 @@
 
 \description{
 
-    This function generates an ion library for SWATH analysis.
-    It takes a R data object which contains a peak list.
+    This function computes dynamic SWATH windows for a given
+    vector of numeric values, an \code{psmSet} class, or an \code{specLSet} class.
     The R data object can be generated using the 
     \code{read.bibliospec} function.
     
 }
 
 \usage{
-    cdsw(x, n=20, overlap=1)
+    cdsw(x, n=20, overlap=1, ...)
 }
 
 \arguments{
@@ -37,9 +37,9 @@
 
 \value{
 
-  The output is table containing having the attributes
+  The output is \code{data.frame} having the attributes
   from, to, mid, width, and counts.
-  In the idea output all bins should contain the same number of numeric values.
+  In the ideal output all bins should contain the same number of numeric values.
 
 }
 
@@ -52,7 +52,7 @@
 
 \author{
 
-   Christian Panse, Christian Trachsel 2015
+   Christian Panse, Christian Trachsel 2015, 2016
 
 }
 
