@@ -9,7 +9,8 @@ function(){
 
     peptideStd.specLSet <- genSwathIonLib(data=peptideStd, data.fit=peptideStd.redundant)
 
-    checkEqualsNumeric(sum(cdsw(peptideStd)$to == cdsw(peptideStd.specLSet)$to) == 20, tolerance = 0.0)
+    checkEqualsNumeric(sum(cdsw(peptideStd, plot = FALSE)$to == cdsw(peptideStd.specLSet, plot = FALSE)$to), 20, tolerance = 0.0)
+    checkEqualsNumeric(sum(cdsw(peptideStd, plot = FALSE)$count == cdsw(peptideStd.specLSet, plot = FALSE)$count), 20, tolerance = 0.0)
 
 
 }
