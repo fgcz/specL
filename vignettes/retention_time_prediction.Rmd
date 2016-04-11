@@ -1,17 +1,17 @@
 ---
-title: "On Retention Time Prediction using the ssrc Method"
+title: "On Retention Time Prediction using the `specL::ssrc` Method"
 author: "Christian Panse"
-date: "`r Sys.Date()`"
+date: "`r doc_date()`"
+package: "`r pkg_ver('specL')`"
 bibliography:
   - specL.bib
 csl: ieee.csl
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Retention Time Prediction using the ssrc Method}
+  %\VignetteEncoding{UTF-8}
 output:
-  html_document:
-    theme: united	
-    toc: true
+  BiocStyle::html_document
 ---
 
 <!--
