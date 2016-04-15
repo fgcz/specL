@@ -1,0 +1,79 @@
+---
+title: "On Computing Dynamic SWATH Windows"
+author: "Witold E. Wolski, Christian Trachsel, and Christian Panse"
+date: "`r doc_date()`"
+package: "`r pkg_ver('specL')`"
+vignette: >
+  %\VignetteIndexEntry{Computing Dynamic SWATH Windows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+output: 
+  BiocStyle::html_document
+---
+
+
+
+# Prerequisites
+
+`r Biocpkg("specL")` contains a function `specL::cdsw`.
+
+```{r echo=FALSE}
+library(specL)
+```
+
+
+```{r}
+
+.cdsw_compute_breaks <- function(x, n){
+  q <- quantile(x, seq(0, 1, length = n + 1))
+  q[1] <- q[1] - 0.5
+  q[length(q)] <- q[length(q)] + 0.5
+  q <- round(q)
+}
+cdsw <-
+function(x, n = 20, overlap = 1.0, ...) {
+  if (class(x) == "psmSet") {
+    x <- unlist(lapply(x, function(x) {
+      x$pepmass
+    }))
+  } else if (class(x) == 'specLSet') {
+    x <- unlist(lapply(x@ionlibrary, function(xx) {
+      xx@q1
+    }))
+  }
+  # x should be numeric
+  if (class(x) != "numeric") {
+    warning("can not compute quantils. 'x' is not numeric.")
+    return (NULL)
+  }
+  
+  q <- .cdsw_compute_breaks(x, n)
+  
+  idx <- 1:n
+  from <- q[idx] - overlap * 0.5
+  
+  to <- q[idx + 1] + overlap * 0.5
+  width <- 0.5 * (to - from)
+  mid <- from + width
+  h <- hist(x,
+            breaks = q, ...)
+  
+  data.frame(from, to, mid, width, counts = h$counts)
+}
+```
+
+```{r fig.retina=3, warning=FALSE}
+cdsw(peptideStd, freq=TRUE, overlap = 0, main = "peptideStd", xlab='pepmass')
+```
+
+
+
+# Session info
+
+Here is the output of `sessionInfo()` on the system on which this
+document was compiled:
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
+
