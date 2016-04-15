@@ -1,6 +1,6 @@
 ---
 title: "On Computing Dynamic SWATH Windows"
-author: "Witold E. Wolski, Christian Trachsel, and Christian Panse"
+author: "Witold E. Wolski, Bernd Roschitzki, Christian Trachsel, and Christian Panse"
 date: "`r doc_date()`"
 package: "`r pkg_ver('specL')`"
 vignette: >
