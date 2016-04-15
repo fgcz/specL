@@ -11,7 +11,17 @@ output:
   BiocStyle::html_document
 ---
 
+# Introduction
 
+Function optimizes Extraction windows so we have the same number of precursor per window. To do it uses spectral library or nonredundant blib.
+
+## Requirements
+
+* Mass range can be specified
+* Maximal window size can be specified (windows should not be to large because of collision energy optimization (personal communication by Bernd R.))
+* Minimal window size can be specified
+* target number of windows can be specified.
+* boundaries between windows are placed in regions were no precursors are observed.
 
 # Prerequisites
 
