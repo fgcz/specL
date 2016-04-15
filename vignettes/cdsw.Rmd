@@ -113,26 +113,28 @@ cdsw(peptideStd.redundant,
 ## Construction Heuristic
 
 ```{r}
-.cdsw_compute_sampling_breaks <- function(xx, nbins=35, plot=TRUE){
+.cdsw_compute_sampling_breaks <- function(xx, nbins=35, maxwindow=150, plot=TRUE){
   nbins<-nbins+1
   it_count <- 0
   error <- 0
   #xx<-xx[xx >=310 & xx<1250]
-  
+  # TODO(wew): there is something insconsitent with the nbins parameter
   qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins-1)))
   
-  plot(1:nbins, qqs, type="b" , sub=".cdsw_compute_sampling_breaks")
-  
+  plot(1:nbins, qqs, type="b" , 
+       sub=".cdsw_compute_sampling_breaks")
+  legend("topleft", legend = c(paste("maxwindow = ", maxwindow),
+        paste("nbins = ", nbins) ))
   unif <- seq(min(xx),max(xx),length=(nbins))
   
   lines(1:nbins,unif,col=2,type="b")
   
-  .cdsw_hardconstrain(unif,minwindow = 5, maxwindow = 80)
-  .cdsw_hardconstrain(qqs,minwindow = 5, maxwindow = 80)
+  .cdsw_hardconstrain(unif,minwindow = 5, maxwindow)
+  .cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)
   
   bb <- xx
   
-  while(!.cdsw_hardconstrain(qqs,minwindow = 5, maxwindow = 80)){
+  while(!.cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)){
     it_count <- it_count + 1
     xx2<-runif(round(length(xx)/10), min=min(xx), max=max(xx))
     bb<-c(bb,xx2)
@@ -159,8 +161,8 @@ cdsw(peptideStd.redundant,
   round(qqs, 1)
 }
 ```
-
-## Comparizon to Classical Approach
+## Evaluation
+### Comparizon to Classical Approach
 ```{r fig.height=8, fig.width=8, fig.retina=3}
 op <-par(mfrow=c(2,2))
 
@@ -170,7 +172,7 @@ cdsw(peptideStd.redundant,
      plot=TRUE,
      overlap = 0, 
      sub='sampling based',
-     main = "peptideStd", xlab='pepmass', FUN=.cdsw_compute_sampling_breaks)
+     main = "peptideStd", xlab='pepmass', FUN=function(...){.cdsw_compute_sampling_breaks(...,maxwindow = 100)})
 
 
 cdsw(peptideStd.redundant, 
@@ -182,6 +184,35 @@ cdsw(peptideStd.redundant,
 
 ```
 
+### Comparizon using different MaxWindowSize
+```{r fig.height=10, fig.width=8, fig.retina=3, warning=FALSE}
+op <-par(mfrow=c(4,3))
+res <- lapply(c(75,150,300, 800), function(mws){
+  cdsw(peptideStd.redundant, 
+     freq=TRUE,
+     plot=TRUE,
+     overlap = 0, 
+     main = paste("max window size", mws), xlab='pepmass', 
+     FUN=function(...){
+       .cdsw_compute_sampling_breaks(...,maxwindow = mws)
+       })
+})
+```
+
+```{r fig.height=10, fig.width=8, fig.retina=3, warning=FALSE}
+op <-par(mfrow=c(4,3))
+res <- lapply(c(75,150,300, 800), function(mws){
+  cdsw(peptideStd.redundant, 
+     freq=TRUE,
+     plot=TRUE,
+     n=25,
+     overlap = 0, 
+     main = paste("max window size", mws), xlab='pepmass', 
+     FUN=function(...){
+       .cdsw_compute_sampling_breaks(...,maxwindow = mws)
+       })
+})
+```
 # Session info
 
 Here is the output of `sessionInfo()` on the system on which this
