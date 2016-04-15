@@ -80,6 +80,45 @@ cdsw(peptideStd, freq=TRUE, overlap = 0, main = "peptideStd", xlab='pepmass')
 ```
 
 
+# optimsze windows
+
+```{r}
+
+objective <- function(splits, data){
+  counts <- hist(data, breaks=splits,plot=FALSE)$counts
+  nbins<-length(splits)-1
+  optimumN <- length(data)/(length(splits)-1)
+  optimumN<-rep(optimumN,nbins)
+  
+  score2 <-sqrt(sum((counts - optimumN)^2))
+  score1 <- sum(abs(counts - round(optimumN)))
+  return(list(score1=score1,score2 = score2, counts=counts, optimumN=round(optimumN)))
+}
+
+hardconstrain <- function(splits, minwindow = 5, maxwindow=50){
+
+  difsp<-diff(splits)
+  return(sum(difsp >= minwindow) == length(difsp) & sum(difsp <= maxwindow) == length(difsp))
+}
+
+generatesplits <- function(start,end, nrbins = 10){
+  sample<-runif(nrbins-1,min=start, max=end)
+  c(start,sort(round(sample)),end)
+}
+
+main <- function(data, nrbins=50, minwindow=5, maxwindow=50){
+  start <- floor(min(data))
+  end <- ceiling(max(data))
+  start
+  end
+  set.seed(1)
+  res<-lapply(1:100, function(x){generatesplits(start, end,nrbins= nrbins)} )
+  sum(sapply(res, function(x){hardconstrain(x, minwindow=0, maxwindow=50)}))
+
+}
+
+```
+
 
 # Session info
 
@@ -89,4 +128,5 @@ document was compiled:
 ```{r sessionInfo, echo=FALSE}
 sessionInfo()
 ```
+
 
