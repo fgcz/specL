@@ -80,7 +80,7 @@ cdsw(peptideStd, freq=TRUE, overlap = 0, main = "peptideStd", xlab='pepmass')
 ```
 
 
-# optimsze windows
+# optimze windows
 
 ```{r}
 
@@ -119,6 +119,45 @@ main <- function(data, nrbins=50, minwindow=5, maxwindow=50){
 
 ```
 
+# Distribution Mixing
+
+```{r}
+
+xx <- sapply(peptideStd, function(x){x$pepmass})
+
+
+nrwindows = 30
+
+hist(xx)
+nbins=35
+
+range(xx)
+xx<-xx[xx >=310 & xx<1250]
+hist(xx)
+qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins-1)))
+plot(1:nbins,qqs,type="b")
+unif <- seq(min(xx),max(xx),length=(nbins))
+lines(1:nbins,unif,col=2,type="b")
+
+hardconstrain(unif,minwindow = 5, maxwindow = 80)
+hardconstrain(qqs,minwindow = 5, maxwindow = 80)
+
+bb <- xx
+
+while(!hardconstrain(qqs,minwindow = 5, maxwindow = 80)){
+  xx2<-runif(10, min=min(xx), max=max(xx))
+  bb<-c(bb,xx2)
+  #hist(bb)
+  qqs<-quantile(bb,probs = seq(0,1,by=1/(nbins-1)))
+  lines(1:nbins,qqs,type="l",col=3)
+}
+
+lines(1:nbins,qqs,type="b",col=4)
+diff(qqs)
+
+
+```
+
 
 # Session info
 
@@ -128,5 +167,8 @@ document was compiled:
 ```{r sessionInfo, echo=FALSE}
 sessionInfo()
 ```
+
+
+
 
 
