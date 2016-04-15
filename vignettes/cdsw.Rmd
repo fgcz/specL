@@ -18,13 +18,6 @@ __!!!Caution work in progress!!!__
 
 Function optimizes Extraction windows so we have the same number of precursor per window. To do it uses spectral library or nonredundant blib.
 
-## Requirements
-
-* Mass range can be specified (*mass\_range*)
-* Maximal window size can be specified (*max\_window\_size*). This is because windows should not be to large because of optimal collision energy (personal communication by Bernd R.).
-* Minimal window size can be specified (*min\_window\_size*).
-* target number of windows can be specified (*nr\_windows*).
-* boundaries between windows are placed in regions were no precursors are observed.
 
 # Prerequisites
 
@@ -34,17 +27,19 @@ Function optimizes Extraction windows so we have the same number of precursor pe
 library(specL)
 ```
 
-
+# Classical Method based on `quantile` 
 ```{r}
 
-.cdsw_compute_breaks <- function(x, n){
-  q <- quantile(x, seq(0, 1, length = n + 1))
+.cdsw_compute_breaks <- 
+  function(xx, nbins){
+  q <- quantile(xx, seq(0, 1, length = nbins + 1))
   q[1] <- q[1] - 0.5
   q[length(q)] <- q[length(q)] + 0.5
   q <- round(q)
 }
+
 cdsw <-
-function(x, n = 20, overlap = 1.0, ...) {
+  function(x, n = 20, overlap = 1.0, FUN, ...) {
   if (class(x) == "psmSet") {
     x <- unlist(lapply(x, function(x) {
       x$pepmass
@@ -60,7 +55,7 @@ function(x, n = 20, overlap = 1.0, ...) {
     return (NULL)
   }
   
-  q <- .cdsw_compute_breaks(x, n)
+  q <- FUN(xx=x, nbins=n)
   
   idx <- 1:n
   from <- q[idx] - overlap * 0.5
@@ -68,23 +63,35 @@ function(x, n = 20, overlap = 1.0, ...) {
   to <- q[idx + 1] + overlap * 0.5
   width <- 0.5 * (to - from)
   mid <- from + width
-  h <- hist(x,
-            breaks = q, ...)
+  h <- hist(x, breaks = q, ...)
   
   data.frame(from, to, mid, width, counts = h$counts)
 }
 ```
 
 ```{r fig.retina=3, warning=FALSE}
-cdsw(peptideStd, freq=TRUE, overlap = 0, main = "peptideStd", xlab='pepmass')
+cdsw(peptideStd.redundant, 
+     freq=TRUE, 
+     overlap = 0, 
+     main = "peptideStd", xlab='pepmass', FUN=.cdsw_compute_breaks)
 ```
 
+# Iterative Distribution Mixing based cdsw
 
-# optimze windows
+## Requirements
+
+* Mass range can be specified (*mass\_range*)
+* Maximal window size can be specified (*max\_window\_size*). This is because windows should not be to large because of optimal collision energy (personal communication by Bernd R.).
+* Minimal window size can be specified (*min\_window\_size*).
+* target number of windows can be specified (*nr\_windows*).
+* boundaries between windows are placed in regions were no precursors are observed.
+
+
+## Contrains and Objective Function
 
 ```{r}
 
-objective <- function(splits, data){
+.cdsw_objective <- function(splits, data){
   counts <- hist(data, breaks=splits,plot=FALSE)$counts
   nbins<-length(splits)-1
   optimumN <- length(data)/(length(splits)-1)
@@ -95,69 +102,85 @@ objective <- function(splits, data){
   return(list(score1=score1,score2 = score2, counts=counts, optimumN=round(optimumN)))
 }
 
-hardconstrain <- function(splits, minwindow = 5, maxwindow=50){
+.cdsw_hardconstrain <- function(splits, minwindow = 5, maxwindow=50){
 
   difsp<-diff(splits)
   return(sum(difsp >= minwindow) == length(difsp) & sum(difsp <= maxwindow) == length(difsp))
 }
 
-generatesplits <- function(start,end, nrbins = 10){
-  sample<-runif(nrbins-1,min=start, max=end)
-  c(start,sort(round(sample)),end)
-}
-
-main <- function(data, nrbins=50, minwindow=5, maxwindow=50){
-  start <- floor(min(data))
-  end <- ceiling(max(data))
-  start
-  end
-  set.seed(1)
-  res<-lapply(1:100, function(x){generatesplits(start, end,nrbins= nrbins)} )
-  sum(sapply(res, function(x){hardconstrain(x, minwindow=0, maxwindow=50)}))
-
-}
-
 ```
 
-# Distribution Mixing
+## Construction Heuristic
 
 ```{r}
+.cdsw_compute_sampling_breaks <- function(xx, nbins=35, plot=TRUE){
+  nbins<-nbins+1
+  it_count <- 0
+  error <- 0
+  #xx<-xx[xx >=310 & xx<1250]
+  
+  qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins-1)))
+  
+  plot(1:nbins, qqs, type="b" , sub=".cdsw_compute_sampling_breaks")
+  
+  unif <- seq(min(xx),max(xx),length=(nbins))
+  
+  lines(1:nbins,unif,col=2,type="b")
+  
+  .cdsw_hardconstrain(unif,minwindow = 5, maxwindow = 80)
+  .cdsw_hardconstrain(qqs,minwindow = 5, maxwindow = 80)
+  
+  bb <- xx
+  
+  while(!.cdsw_hardconstrain(qqs,minwindow = 5, maxwindow = 80)){
+    it_count <- it_count + 1
+    xx2<-runif(round(length(xx)/10), min=min(xx), max=max(xx))
+    bb<-c(bb,xx2)
+   
+    qqs<-quantile(bb,probs = seq(0,1,by=1/(nbins-1)))
+    lines(1:nbins,qqs,type="l", col="#00DD00AA")
+    
+    error[it_count] <-.cdsw_objective(qqs, xx)$score1
+    
+  }
+  
+  lines(1:nbins,qqs,type="b", col="#FF1111AA")
+  
+  plot(error, xlab="number of iteration", sub=".cdsw_compute_sampling_breaks")
+  #list(qqs=qqs, error=error)
 
-xx <- sapply(peptideStd, function(x){x$pepmass})
-
-
-nrwindows = 30
-
-hist(xx)
-nbins=35
-
-range(xx)
-xx<-xx[xx >=310 & xx<1250]
-hist(xx)
-qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins-1)))
-plot(1:nbins,qqs,type="b")
-unif <- seq(min(xx),max(xx),length=(nbins))
-lines(1:nbins,unif,col=2,type="b")
-
-hardconstrain(unif,minwindow = 5, maxwindow = 80)
-hardconstrain(qqs,minwindow = 5, maxwindow = 80)
-
-bb <- xx
-
-while(!hardconstrain(qqs,minwindow = 5, maxwindow = 80)){
-  xx2<-runif(10, min=min(xx), max=max(xx))
-  bb<-c(bb,xx2)
-  #hist(bb)
-  qqs<-quantile(bb,probs = seq(0,1,by=1/(nbins-1)))
-  lines(1:nbins,qqs,type="l",col=3)
+  #qqs[length(qqs)] <- round(max(xx)+10)
+  
+  qqs <- as.numeric(sort(round(qqs)))
+  qqs[1]  <- qqs[1] - 0.5
+  
+  qqs[length(qqs)]  <- qqs[length(qqs)] + 0.5
+ 
+  round(qqs, 1)
 }
-
-lines(1:nbins,qqs,type="b",col=4)
-diff(qqs)
-
-
 ```
 
+## Comparizon to Classical Approach
+```{r fig.height=8, fig.width=8, fig.retina=3}
+op <-par(mfrow=c(2,2))
+
+
+cdsw(peptideStd.redundant, 
+     freq=TRUE,
+     plot=TRUE,
+     overlap = 0, 
+     sub='sampling based',
+     main = "peptideStd", xlab='pepmass', FUN=.cdsw_compute_sampling_breaks)
+
+
+cdsw(peptideStd.redundant, 
+     freq=TRUE,
+     plot=TRUE,
+     overlap = 0, 
+      sub='quantile based',
+     main = "peptideStd", xlab='pepmass', FUN=.cdsw_compute_breaks)
+
+```
 
 # Session info
 
