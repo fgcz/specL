@@ -25,6 +25,18 @@ Function optimizes Extraction windows so we have the same number of precursor pe
 
 ```{r echo=FALSE}
 library(specL)
+load("d:/projects/p2069/data/LibraryGeneration/218013/scratch/wolski/specL/res.49562/specLLibrary.RData")
+
+x <- unlist(lapply(specLibrary@ionlibrary, function(xx) {
+      xx@q1
+    }))
+
+ms1.p2069 <- sample(x, length(x)/10)
+
+save(ms1.p2069,file="ms1.p2069.Rdata", compress = TRUE)
+
+exampledata <- ms1.p2069
+
 ```
 
 # Classical Method based on `quantile` 
@@ -70,7 +82,9 @@ cdsw <-
 ```
 
 ```{r fig.retina=3, warning=FALSE}
-cdsw(peptideStd.redundant, 
+
+
+cdsw(exampledata, 
      freq=TRUE, 
      overlap = 0, 
      main = "peptideStd", xlab='pepmass', FUN=.cdsw_compute_breaks)
@@ -161,13 +175,15 @@ cdsw(peptideStd.redundant,
   round(qqs, 1)
 }
 ```
+
+
 ## Evaluation
 ### Comparizon to Classical Approach
 ```{r fig.height=8, fig.width=8, fig.retina=3}
 op <-par(mfrow=c(2,2))
 
 
-cdsw(peptideStd.redundant, 
+cdsw(exampledata, 
      freq=TRUE,
      plot=TRUE,
      overlap = 0, 
@@ -175,7 +191,7 @@ cdsw(peptideStd.redundant,
      main = "peptideStd", xlab='pepmass', FUN=function(...){.cdsw_compute_sampling_breaks(...,maxwindow = 100)})
 
 
-cdsw(peptideStd.redundant, 
+cdsw(exampledata, 
      freq=TRUE,
      plot=TRUE,
      overlap = 0, 
@@ -188,7 +204,7 @@ cdsw(peptideStd.redundant,
 ```{r fig.height=10, fig.width=8, fig.retina=3, warning=FALSE}
 op <-par(mfrow=c(4,3))
 res <- lapply(c(75,150,300, 800), function(mws){
-  cdsw(peptideStd.redundant, 
+  cdsw(exampledata, 
      freq=TRUE,
      plot=TRUE,
      overlap = 0, 
@@ -199,17 +215,19 @@ res <- lapply(c(75,150,300, 800), function(mws){
 })
 ```
 
+# Chaning nr bins
+
 ```{r fig.height=10, fig.width=8, fig.retina=3, warning=FALSE}
 op <-par(mfrow=c(4,3))
-res <- lapply(c(75,150,300, 800), function(mws){
-  cdsw(peptideStd.redundant, 
+res <- lapply(c(20,25,30, 40), function(nbins){
+  cdsw(exampledata, 
      freq=TRUE,
      plot=TRUE,
-     n=25,
+     n=nbins,
      overlap = 0, 
-     main = paste("max window size", mws), xlab='pepmass', 
+     main = paste("nr bins", nbins), xlab='pepmass', 
      FUN=function(...){
-       .cdsw_compute_sampling_breaks(...,maxwindow = mws)
+       .cdsw_compute_sampling_breaks(...,maxwindow = 100)
        })
 })
 ```
