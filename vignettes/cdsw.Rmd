@@ -80,11 +80,11 @@ cdsw(peptideStd.redundant,
 
 ## Requirements
 
-* Mass range can be specified (*mass\_range*)
-* Maximal window size can be specified (*max\_window\_size*). This is because windows should not be to large because of optimal collision energy (personal communication by Bernd R.).
-* Minimal window size can be specified (*min\_window\_size*).
-* target number of windows can be specified (*nr\_windows*).
-* boundaries between windows are placed in regions were no precursors are observed.
+- Mass range can be specified (*mass\_range*)
+- Maximal window size can be specified (*max\_window\_size*). This is because windows should not be to large because of optimal collision energy (personal communication by Bernd R.).
+- Minimal window size can be specified (*min\_window\_size*).
+- target number of windows can be specified (*nr\_windows*).
+- boundaries between windows are placed in regions were no precursors are observed.
 
 
 ## Contrains and Objective Function
@@ -213,6 +213,7 @@ res <- lapply(c(75,150,300, 800), function(mws){
        })
 })
 ```
+
 # Session info
 
 Here is the output of `sessionInfo()` on the system on which this
