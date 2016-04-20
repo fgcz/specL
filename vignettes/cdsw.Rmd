@@ -25,6 +25,16 @@ Function optimizes Extraction windows so we have the same number of precursor pe
 
 ```{r echo=FALSE}
 library(specL)
+load("d:/projects/p2069/data/LibraryGeneration/218013/scratch/wolski/specL/res.49562/specLLibrary.RData")
+
+x <- unlist(lapply(specLibrary@ionlibrary, function(xx) {
+  xx@q1
+}))
+
+ms1.p2069 <- x
+#ms1.p2069 <- sample(x, length(x)/10)
+
+save(ms1.p2069,file="ms1.p2069.Rdata", compress = TRUE)
 
 exampledata <- ms1.p2069
 
@@ -33,44 +43,73 @@ exampledata <- ms1.p2069
 # Classical Method based on `quantile` 
 ```{r}
 
-.cdsw_compute_breaks <- 
-  function(xx, nbins){
-  q <- quantile(xx, seq(0, 1, length = nbins + 1))
-  q[1] <- q[1] - 0.5
-  q[length(q)] <- q[length(q)] + 0.5
-  q <- round(q)
+# moves the windows start and end to regions where no peaks are observed
+.makenewfromto <- function( windfrom, empty , isfrom=TRUE){
+  newfrom <- NULL
+  for(from in windfrom){
+    idx <- which.min(abs(from - empty))
+    startmass <- 0
+    if(isfrom){
+      if(empty[idx] < from) {
+        startmass <- empty[idx]
+      } else {
+        startmass <- empty[idx-1]
+      }
+    }else{
+      if(empty[idx] > from) {
+        startmass <- empty[idx]
+      } else {
+        startmass <- empty[idx+1]
+      }
+    }
+    newfrom <- c(newfrom, round(startmass,digits=1))
+  }
+  return(newfrom)
 }
 
+.cdsw_compute_breaks <- 
+  function(xx, nbins){
+    q <- quantile(xx, seq(0, 1, length = nbins + 1))
+    q[1] <- q[1] - 0.5
+    q[length(q)] <- q[length(q)] + 0.5
+    q <- round(q)
+  }
+
+
 cdsw <-
-  function(x, n = 20, overlap = 1.0, FUN, ...) {
-  if (class(x) == "psmSet") {
-    x <- unlist(lapply(x, function(x) {
-      x$pepmass
-    }))
-  } else if (class(x) == 'specLSet') {
-    x <- unlist(lapply(x@ionlibrary, function(xx) {
-      xx@q1
-    }))
+  function(x, massrange = c(300,1250), n = 20, overlap = 1.0, FUN, ...) {
+    if (class(x) == "psmSet") {
+      x <- unlist(lapply(x, function(x) {
+        x$pepmass
+      }))
+    } else if (class(x) == 'specLSet') {
+      x <- unlist(lapply(x@ionlibrary, function(xx) {
+        xx@q1
+      }))
+    }
+    # x should be numeric
+    if (class(x) != "numeric") {
+      warning("can not compute quantils. 'x' is not numeric.")
+      return (NULL)
+    }
+    
+    x <- x[x > massrange[1] & x < massrange[2]]
+    
+    q <- FUN(xx=x, nbins=n)
+    
+    idx <- 1:n
+    from <- q[idx] - overlap * 0.5
+    to <- q[idx + 1] + overlap * 0.5
+    width <- 0.5 * (to - from)
+    mid <- from + width
+    h <- hist(x, breaks = q, ...)
+    data.frame(from, to, mid, width, counts = h$counts)
+    
+    
   }
-  # x should be numeric
-  if (class(x) != "numeric") {
-    warning("can not compute quantils. 'x' is not numeric.")
-    return (NULL)
-  }
-  
-  q <- FUN(xx=x, nbins=n)
-  
-  idx <- 1:n
-  from <- q[idx] - overlap * 0.5
-  
-  to <- q[idx + 1] + overlap * 0.5
-  width <- 0.5 * (to - from)
-  mid <- from + width
-  h <- hist(x, breaks = q, ...)
-  
-  data.frame(from, to, mid, width, counts = h$counts)
-}
 ```
+
+
 
 ```{r fig.retina=3, warning=FALSE}
 
@@ -108,7 +147,7 @@ cdsw(exampledata,
 }
 
 .cdsw_hardconstrain <- function(splits, minwindow = 5, maxwindow=50){
-
+  
   difsp<-diff(splits)
   return(sum(difsp >= minwindow) == length(difsp) & sum(difsp <= maxwindow) == length(difsp))
 }
@@ -118,51 +157,56 @@ cdsw(exampledata,
 ## Construction Heuristic
 
 ```{r}
-.cdsw_compute_sampling_breaks <- function(xx, nbins=35, maxwindow=150, plot=TRUE){
-  nbins<-nbins+1
-  it_count <- 0
-  error <- 0
+
+
+
+.cdsw_compute_sampling_breaks <- function(xx, nbins=35, maxwindow=150, minwindow = 5, plot=TRUE){
+  breaks <- nbins+1
+  #xx <- x
+  
   #xx<-xx[xx >=310 & xx<1250]
   # TODO(wew): there is something insconsitent with the nbins parameter
-  qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins-1)))
+  qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins)))
   
-  plot(1:nbins, qqs, type="b" , 
+  plot(1:breaks, qqs, type="b" , 
        sub=".cdsw_compute_sampling_breaks")
   legend("topleft", legend = c(paste("maxwindow = ", maxwindow),
-        paste("nbins = ", nbins) ))
-  unif <- seq(min(xx),max(xx),length=(nbins))
+                               paste("nbins = ", breaks) ))
   
-  lines(1:nbins,unif,col=2,type="b")
   
-  .cdsw_hardconstrain(unif,minwindow = 5, maxwindow)
-  .cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)
+  # equidistant spaced bins
+  unif <- seq(min(xx),max(xx),length=(breaks))
+  lines(1:breaks,unif,col=2,type="b")
   
-  bb <- xx
+  if(!.cdsw_hardconstrain(unif,minwindow = 5, maxwindow)){
+    warning("there is no way to generate bins given minwindow " , minwindow, "maxwindow", maxwindow, " breaks" , breaks, "\n")
+  }else{
+    .cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)
+  }
+  
+  mixeddata <- xx
+  it_count <- 0
+  error <- 0
   
   while(!.cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)){
     it_count <- it_count + 1
-    xx2<-runif(round(length(xx)/10), min=min(xx), max=max(xx))
-    bb<-c(bb,xx2)
-   
-    qqs<-quantile(bb,probs = seq(0,1,by=1/(nbins-1)))
-    lines(1:nbins,qqs,type="l", col="#00DD00AA")
+    uniformdata<-runif(round(length(xx)/20), min=min(xx), max=max(xx))
+    mixeddata<-c(mixeddata,uniformdata)
     
+    qqs <- quantile(mixeddata,probs = seq(0,1,by=1/(nbins)))
+    lines(1:breaks,qqs,type="l", col="#00DD00AA")
     error[it_count] <-.cdsw_objective(qqs, xx)$score1
     
   }
   
-  lines(1:nbins,qqs,type="b", col="#FF1111AA")
-  
+  lines(1:breaks,qqs,type="b", col="#FF1111AA")
   plot(error, xlab="number of iteration", sub=".cdsw_compute_sampling_breaks")
-  #list(qqs=qqs, error=error)
-
-  #qqs[length(qqs)] <- round(max(xx)+10)
+  
   
   qqs <- as.numeric(sort(round(qqs)))
   qqs[1]  <- qqs[1] - 0.5
-  
   qqs[length(qqs)]  <- qqs[length(qqs)] + 0.5
- 
+  
   round(qqs, 1)
 }
 ```
@@ -171,22 +215,56 @@ cdsw(exampledata,
 ## Evaluation
 ### Comparizon to Classical Approach
 ```{r fig.height=8, fig.width=8, fig.retina=3}
-op <-par(mfrow=c(2,2))
 
+op <- par(mfrow=c(2,2))
+par(mfrow=c(3,1))
+wind <- cdsw(exampledata, 
+             freq=TRUE,
+             plot=TRUE,
+             overlap = 0, 
+             n=35,
+             massrange = c(350,1250),
+             sub='sampling based',
+             main = "peptideStd", xlab='pepmass', FUN=function(...){.cdsw_compute_sampling_breaks(...,maxwindow = 50)})
+
+readjustWindows <- function(wind ,ms1data, breaks=10000, maxbin = 5){
+  res <- hist(ms1data, breaks=breaks)
+  abline(v=wind$from,col=2,lty=2)
+  abline(v=wind$to,col=3,lty=2)
+  
+  empty <- res$mids[which(res$counts < maxbin )]
+  newfrom <- .makenewfromto(wind$from , empty)
+  newto <- .makenewfromto(wind$to , empty , isfrom=FALSE )
+  
+  plot(res,xlim=c(1060,1065))
+  abline(v = newfrom,lwd=0.5,col="red")
+  abline(v = newto , lwd=0.5,col="green")
+  plot(res,xlim=c(520,550))
+  abline(v = newfrom,lwd=0.5,col="red")
+  abline(v = newto , lwd=0.5,col="green")
+  
+  width <- (newto - newfrom)
+  mid <- (newfrom + newto)*0.5
+  newCounts <- NULL
+  for(i in 1:length(newfrom))
+  {
+    newCounts <- c(newCounts,sum(ms1data >= newfrom[i] & ms1data <= newto[i]))
+  }
+  data.frame(newfrom, newto, mid, width, counts =newCounts)
+
+}
+readjustWindows(wind,exampledata)
+
+```
+
+```{r fig.height=8, fig.width=8, fig.retina=3}
 
 cdsw(exampledata, 
      freq=TRUE,
      plot=TRUE,
+     n=35,
      overlap = 0, 
-     sub='sampling based',
-     main = "peptideStd", xlab='pepmass', FUN=function(...){.cdsw_compute_sampling_breaks(...,maxwindow = 100)})
-
-
-cdsw(exampledata, 
-     freq=TRUE,
-     plot=TRUE,
-     overlap = 0, 
-      sub='quantile based',
+     sub='quantile based',
      main = "peptideStd", xlab='pepmass', FUN=.cdsw_compute_breaks)
 
 ```
@@ -196,12 +274,12 @@ cdsw(exampledata,
 op <-par(mfrow=c(4,3))
 res <- lapply(c(75,150,300, 800), function(mws){
   cdsw(exampledata, 
-     freq=TRUE,
-     plot=TRUE,
-     overlap = 0, 
-     main = paste("max window size", mws), xlab='pepmass', 
-     FUN=function(...){
-       .cdsw_compute_sampling_breaks(...,maxwindow = mws)
+       freq=TRUE,
+       plot=TRUE,
+       overlap = 0, 
+       main = paste("max window size", mws), xlab='pepmass', 
+       FUN=function(...){
+         .cdsw_compute_sampling_breaks(...,maxwindow = mws)
        })
 })
 ```
@@ -212,13 +290,13 @@ res <- lapply(c(75,150,300, 800), function(mws){
 op <-par(mfrow=c(4,3))
 res <- lapply(c(20,25,30, 40), function(nbins){
   cdsw(exampledata, 
-     freq=TRUE,
-     plot=TRUE,
-     n=nbins,
-     overlap = 0, 
-     main = paste("nr bins", nbins), xlab='pepmass', 
-     FUN=function(...){
-       .cdsw_compute_sampling_breaks(...,maxwindow = 100)
+       freq=TRUE,
+       plot=TRUE,
+       n=nbins,
+       overlap = 0, 
+       main = paste("nr bins", nbins), xlab='pepmass', 
+       FUN=function(...){
+         .cdsw_compute_sampling_breaks(...,maxwindow = 100)
        })
 })
 ```
@@ -232,6 +310,73 @@ document was compiled:
 sessionInfo()
 ```
 
+# Iterative breaks
+
+
+```{r, eval=FALSE}
+# Iterative
+.cdsw_compute_iterative_breaks <- function(xx, nbins=35, maxwindow=150, minwindow = 5, plot=TRUE){
+  nbins <- 30
+  breaks <- nbins+1
+  xx <- x
+  range(xx)
+  
+  
+  #xx<-xx[xx >=310 & xx<1250]
+  # TODO(wew): there is something insconsitent with the nbins parameter
+  qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins-1)))
+  length(qqs)
+  diff(qqs)
+  tmp <- hist(xx,breaks=qqs)
+  names(tmp)
+  tmp$counts
+  
+  tmp <- length(xx)/(nbins-1)
+  
+  
+  plot(1:nbins, qqs, type="b" , 
+       sub=".cdsw_compute_sampling_breaks")
+  legend("topleft", legend = c(paste("maxwindow = ", maxwindow),
+                               paste("nbins = ", breaks) ))
+  
+  
+  # equidistant spaced bins
+  unif <- seq(min(xx),max(xx),length=(breaks))
+  lines(1:breaks,unif,col=2,type="b")
+  
+  if(!.cdsw_hardconstrain(unif,minwindow = 5, maxwindow)){
+    warning("there is no way to generate bins given minwindow " , minwindow, "maxwindow", maxwindow, " nrbins" , nrbins, "\n")
+  }else{
+    .cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)
+  }
+  
+  mixeddata <- xx
+  it_count <- 0
+  error <- 0
+  
+  while(!.cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)){
+    it_count <- it_count + 1
+    uniformdata<-runif(round(length(xx)/20), min=min(xx), max=max(xx))
+    mixeddata<-c(mixeddata,uniformdata)
+    
+    qqs <- quantile(mixeddata,probs = seq(0,1,by=1/(nbins)))
+    lines(1:breaks,qqs,type="l", col="#00DD00AA")
+    error[it_count] <-.cdsw_objective(qqs, xx)$score1
+    
+  }
+  
+  lines(1:breaks,qqs,type="b", col="#FF1111AA")
+  plot(error, xlab="number of iteration", sub=".cdsw_compute_sampling_breaks")
+  
+  
+  qqs <- as.numeric(sort(round(qqs)))
+  qqs[1]  <- qqs[1] - 0.5
+  qqs[length(qqs)]  <- qqs[length(qqs)] + 0.5
+  
+  round(qqs, 1)
+}
+
+```
 
 
 
