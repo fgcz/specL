@@ -25,15 +25,6 @@ Function optimizes Extraction windows so we have the same number of precursor pe
 
 ```{r echo=FALSE}
 library(specL)
-load("d:/projects/p2069/data/LibraryGeneration/218013/scratch/wolski/specL/res.49562/specLLibrary.RData")
-
-x <- unlist(lapply(specLibrary@ionlibrary, function(xx) {
-      xx@q1
-    }))
-
-ms1.p2069 <- sample(x, length(x)/10)
-
-save(ms1.p2069,file="ms1.p2069.Rdata", compress = TRUE)
 
 exampledata <- ms1.p2069
 
