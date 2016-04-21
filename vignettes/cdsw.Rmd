@@ -243,7 +243,7 @@ readjustWindows <- function(wind ,ms1data, breaks=10000, maxbin = 5){
   abline(v = newfrom,lwd=0.5,col="red")
   abline(v = newto , lwd=0.5,col="green")
   
-  width <- (newto - newfrom)
+  width <- (newto - newfrom) * 0.5
   mid <- (newfrom + newto)*0.5
   newCounts <- NULL
   for(i in 1:length(newfrom))
@@ -310,73 +310,6 @@ document was compiled:
 sessionInfo()
 ```
 
-# Iterative breaks
-
-
-```{r, eval=FALSE}
-# Iterative
-.cdsw_compute_iterative_breaks <- function(xx, nbins=35, maxwindow=150, minwindow = 5, plot=TRUE){
-  nbins <- 30
-  breaks <- nbins+1
-  xx <- x
-  range(xx)
-  
-  
-  #xx<-xx[xx >=310 & xx<1250]
-  # TODO(wew): there is something insconsitent with the nbins parameter
-  qqs <- quantile(xx,probs = seq(0,1,by=1/(nbins-1)))
-  length(qqs)
-  diff(qqs)
-  tmp <- hist(xx,breaks=qqs)
-  names(tmp)
-  tmp$counts
-  
-  tmp <- length(xx)/(nbins-1)
-  
-  
-  plot(1:nbins, qqs, type="b" , 
-       sub=".cdsw_compute_sampling_breaks")
-  legend("topleft", legend = c(paste("maxwindow = ", maxwindow),
-                               paste("nbins = ", breaks) ))
-  
-  
-  # equidistant spaced bins
-  unif <- seq(min(xx),max(xx),length=(breaks))
-  lines(1:breaks,unif,col=2,type="b")
-  
-  if(!.cdsw_hardconstrain(unif,minwindow = 5, maxwindow)){
-    warning("there is no way to generate bins given minwindow " , minwindow, "maxwindow", maxwindow, " nrbins" , nrbins, "\n")
-  }else{
-    .cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)
-  }
-  
-  mixeddata <- xx
-  it_count <- 0
-  error <- 0
-  
-  while(!.cdsw_hardconstrain(qqs,minwindow = 5, maxwindow)){
-    it_count <- it_count + 1
-    uniformdata<-runif(round(length(xx)/20), min=min(xx), max=max(xx))
-    mixeddata<-c(mixeddata,uniformdata)
-    
-    qqs <- quantile(mixeddata,probs = seq(0,1,by=1/(nbins)))
-    lines(1:breaks,qqs,type="l", col="#00DD00AA")
-    error[it_count] <-.cdsw_objective(qqs, xx)$score1
-    
-  }
-  
-  lines(1:breaks,qqs,type="b", col="#FF1111AA")
-  plot(error, xlab="number of iteration", sub=".cdsw_compute_sampling_breaks")
-  
-  
-  qqs <- as.numeric(sort(round(qqs)))
-  qqs[1]  <- qqs[1] - 0.5
-  qqs[length(qqs)]  <- qqs[length(qqs)] + 0.5
-  
-  round(qqs, 1)
-}
-
-```
 
 
 
