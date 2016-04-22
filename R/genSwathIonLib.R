@@ -379,7 +379,7 @@ genSwathIonLib <- function(data,
 
     # prepare table for output
     if ( parallel::detectCores() > 1 & length(data) > 200){
-        message("using BiocParallel::bpmapply( ..." )
+        message("using parallel::mcmapply( ..." )
         output <- parallel::mcmapply (.genSwathIonLibSpecL, data, fi, findNN.idx, mZ.error, x.rt, 
             SIMPLIFY = FALSE)
     }else{
