@@ -17,7 +17,7 @@ specL <- setClass("specL",
     q1.in_silico="numeric",
     q3="numeric",
     q3.in_silico="numeric", 
-    decoy="character",
+    #decoy="character",
     # precursor charge
     prec_z="numeric", 
     frg_type="character", 
@@ -28,7 +28,8 @@ specL <- setClass("specL",
     irt="numeric", 
     peptideModSeq="character", 
     mZ.error="numeric",
-    filename="character")
+    filename="character",
+    score="numeric")
 )
 #TODO include varMods also in the specL class
 
@@ -38,9 +39,9 @@ setMethod("show", "specL", function(object){
     lapply(slotNames(object), function(x){
       v <- slot(object, x)
       if (x == 'filename'){
-        cat (substr(v, nchar(v) - getOption("width") - 1, nchar(v)))
+        cat (substr(v, nchar(v) - getOption("width") - 1, nchar(v)),fill=TRUE)
       }else{
-      cat(x, '=', slot(object,x), '', fill=TRUE)}
+        cat(x, '=', slot(object,x), '', fill=TRUE)}
       }
       )
 
@@ -114,7 +115,7 @@ setMethod(f="write.spectronaut", signature="specL",
                        q1=x@q1,
                        q3=x@q3,
                        q3.in_silico=x@q3.in_silico,
-                       decoy=x@decoy,
+                       #decoy=x@decoy,
                        prec_z=x@prec_z,
                        frg_type=x@frg_type,
                        frg_nr=x@frg_nr,
@@ -124,7 +125,8 @@ setMethod(f="write.spectronaut", signature="specL",
                        peptideModSeq=x@peptideModSeq,
                        mZ.error=x@mZ.error,
                        proteinInformation = paste(x@proteinInformation,collapse=protIDSeparator),
-                       filename=x@filename
+                       filename=x@filename,
+                       score = x@score
             )
             
             if (file.exists(file) == FALSE){
