@@ -42,8 +42,7 @@
     \item{\code{q3.in_silico}:}{Object of class \code{"numeric"} in-silico 
     derived fragment ions. }
     
-    \item{\code{decoy}:}{Object of class \code{"character"} is this  a decoy 
-    hit? 1 or 0. }
+    \item{\code{score}:}{Object of class \code{"numeric"} taken from bibliospec - psm score}
     
     \item{\code{prec_z}:}{Object of class \code{"numeric"} pre-cursor charge. }
     \item{\code{frg_type}:}{Object of class \code{"character"} fragmenbt ion 
