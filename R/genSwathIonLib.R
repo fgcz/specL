@@ -207,10 +207,7 @@ genSwathIonLib <- function(data,
     fragmentIonRange = c(2,100)
     warning("min fragmentIonRange should be at least set to 2. reset fragmentIonRange = c(2,100).")
   }
-  
-  
-  
-  
+
   .genSwathIonLibSpecL <- function(x, fi, findNN.idx, mZ.error_, rt){
     m <- length(2 * nchar(x$peptideSequence))
     q1 <- x$pepmass
