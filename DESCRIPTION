@@ -7,10 +7,10 @@ Author: Christian Trachsel <christian.trachsel@fgcz.uzh.ch>, Christian
         Panse <cp@fgcz.ethz.ch>, Jonas Grossmann <jg@fgcz.ethz.ch>, 
 	Witold E. Wolski <wewolski@gmail.com>
 Maintainer: Christian Panse <cp@fgcz.ethz.ch>, Witold E. Wolski <wewolski@gmail.com>
-Depends: R (>= 3.3), methods, DBI, RSQLite, seqinr, protViz (>=
-        0.2.5), 
-LinkingTo: Rcpp (>= 0.9.9)
-Suggests: RUnit, BiocGenerics, BiocStyle, plotrix, knitr, msqc1 (>= 0.99.7)
+Depends: R (>= 3.3), methods, DBI, RSQLite, seqinr, 
+	protViz (>= 0.2.15), 
+LinkingTo: Rcpp (>= 0.12.4)
+Suggests: RUnit, BiocGenerics, BiocStyle, plotrix, knitr, msqc1 (>= 1.0.0)
 Description: specL provides a function for generating spectra libraries
         which can be used for MRM SRM MS workflows in proteomics. The
         package provides a BiblioSpec reader, a function which can add
