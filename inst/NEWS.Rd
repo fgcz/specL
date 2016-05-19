@@ -3,6 +3,16 @@
 \newcommand{\ghpr}{\href{https://github.com/protViz/specL/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/protViz/specL/issues/#1}{##1}}
 
+\section{CHANGES IN VERSION 1.7.4 (2016-05-19)}{
+  \itemize{
+  \item USER VISIBLE CHANGES
+    \itemize{
+    \item added to \code{specLSet} summary "which std peptides (iRTs) where found in which raw files"
+    \item one plot per raw file in plot methode of specLSet object
+    }
+  }
+}
+
 \section{CHANGES IN VERSION 1.7.1 (2016-05-13)}{
   \itemize{
   \item USER VISIBLE CHANGES

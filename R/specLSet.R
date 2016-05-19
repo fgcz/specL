@@ -70,8 +70,19 @@ setMethod(f="summary", signature="specLSet", function(object){
   cat(length(unique(unlist(lapply(slot(object,"ionlibrary"), function(x){paste(x@q1.in_silico, x@peptideModSeq, sep='_')})))))
   
   cat("\nNumber of iRT peptide(s) = ")
-  cat(sum(unlist(lapply(slot(object,"ionlibrary"), function(x){
-    if (x@peptide_sequence %in% iRTpeptides$peptide){1}else{0}}))))
+  n.iRTs <- sum(unlist(lapply(slot(object,"ionlibrary"), function(x){
+    if (x@peptide_sequence %in% iRTpeptides$peptide){1}else{0}})))
+
+  cat(n.iRTs)
+
+  if (n.iRTs > 0){
+  cat("\nWhich std peptides (iRTs) where found in which raw files:\n")
+  cat(unique(sort(unlist(lapply(object@ionlibrary, function(x){
+	  if (x@peptide_sequence %in% iRTpeptides$peptide){
+		  w<-round(getOption("width") / 2); n<-nchar(x@filename);paste("\t",substr(x@filename, n-w,n), x@peptide_sequence, "\n")
+		  }
+	})))))
+  }
   
   cat("\nNumber of transitions frequency:\n")
   t<-table(unlist((lapply(slot(object,"ionlibrary"), function(x){length(paste(x@q1, x@q3, x@peptideModSeq))}))))
@@ -119,6 +130,7 @@ setMethod(f="summary", signature="specLSet", function(object){
        main='specLSet iRT normalization',
        xlab="input retention time",
        ylab="independent retention time",
+       cex=0.5,
        col=file, ...)
   
   idx <- which(peptide %in% iRTpeptides$peptide)
@@ -126,18 +138,44 @@ setMethod(f="summary", signature="specLSet", function(object){
   points(x@rt.input[idx], 
          x@rt.normalized[idx], 
          col=file[idx], 
-         lwd=4, pch="x", cex=1.5)
+         lwd=4, pch="x", cex=1.0)
   
   legend('topleft', 'iRT peptides', pch='x')
   
   n<-nchar(as.character(unique(file)))
   legend('bottomright', 
-         substr(as.character(unique(file)), n - 25, n),
+         substr(as.character(unique(file)), n - 45, n),
          pch=22, 
          col=unique(file),
          title='input file names',
-         cex=1.0)
+         cex=0.5)
 }
+
+.retentiontimePlotFile <- function(x, file, peptide, iRTpeptides, ...){
+
+	lapply(unique(file), function(f){
+
+  plot(x@rt.normalized[f==file] ~ x@rt.input[f==file],
+       main='specLSet iRT normalization',
+       xlab="input retention time",
+       ylab="independent retention time",
+       cex=0.5,
+       sub=f, 
+       cex.sub=0.5,
+       ...)
+  
+  idx <- which(peptide %in% iRTpeptides$peptide & f == file)
+  # mark the iRT peptides 
+  points(x@rt.input[idx], 
+         x@rt.normalized[idx], 
+         lwd=4, pch="X", cex=1.0, col='darkgreen')
+  
+  legend('topleft', 'iRT peptides', pch='X', col='darkgreen')
+  
+  n<-nchar(as.character(unique(file)))
+	})
+}
+
 
 .ionChargeState <- function(x, frg, frgTable){
   cm<-rainbow(length(frgTable))
@@ -155,6 +193,7 @@ setMethod(f="plot", signature="specLSet",
             peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             
             .retentiontimePlot(x, file, peptide, iRTpeptides=iRTpeptides, ...)
+            .retentiontimePlotFile(x, file, peptide, iRTpeptides=iRTpeptides, ...)
             
             frg <- unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z, "+",sep='')}))
             frgTable <- table(frg)
