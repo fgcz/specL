@@ -56,6 +56,8 @@
 	  return(res)
 }
 
+
+
 read.bibliospec <- function(file){
     m <- dbDriver("SQLite", max.con=25)       
     con <- dbConnect(m , dbname=file, flags = SQLITE_RO)
@@ -79,27 +81,31 @@ read.bibliospec <- function(file){
         stop(msg$errorMsg)
     }
 
-    SQLQuery1 <- dbSendQuery(con, 
-        statement = "SELECT RefSpectraID, position, mass FROM Modifications;")
 
     if (msg<-dbGetException(con)$errorNum != 0){
         stop(msg$errorMsg)
     }
 
-    modifications <- DBI::fetch(SQLQuery1, n = -1)
-
+    
     if (msg<-dbGetException(con)$errorNum != 0){
         stop(msg$errorMsg)
     }
 
     message(paste("fetched", nrow(data), "rows."))
     
-    res <<- .convert_blib2psm(data)
+    res <- .convert_blib2psm(data)
     
+    ###  extracting modifications 
+    ### inline because con can't be copied (?)
+    #res <- .setExactModificationMasses(con, res)
+    SQLQuery1 <- dbSendQuery(con,
+                             statement = "SELECT RefSpectraID, position, mass FROM Modifications;")
+    modifications <- DBI::fetch(SQLQuery1, n = -1)
     message(paste("assigning", nrow(modifications), "modifications ..."))
     for (i in 1:nrow(modifications)){
-        res[[ modifications$RefSpectraID[i] ]]$varModification[modifications$position[i]] <- modifications$mass[i]
+      res[[ modifications$RefSpectraID[i] ]]$varModification[modifications$position[i]] <- modifications$mass[i]
     }
+    
     class(res)='psmSet'
     dbDisconnect(con)
     return(res)
