@@ -31,7 +31,8 @@
         fragmentIonFUN = .defaultSwathFragmentIon,
         iRT = specL::iRTpeptides,
         AminoAcids = protViz::AA,
-        breaks=NULL)
+        breaks=NULL,
+        NORMALIZE=.normalize_rt)
 }
 
 \arguments{
@@ -76,6 +77,8 @@
 
   \item{breaks}{provides a vector of SWATH windows. If q1 (precursor mass) and q3 (fragment ion) fall into the same SWATH window the fragment ion is ignored in the resulting ion library. The follwing code shows an example \code{breaks=seq(400, 2000, by=25)}.}
 
+  \item{NORMALIZE}{is a \code{function(data, data.fit, iRT, plot=FALSE)} normalizing the rt.
+ The default is a internal R helper function using \code{lm}.}
 }
 
 \details{
@@ -122,7 +125,7 @@ It has been removed in \code{protViz} 0.2.6 to avoid package dependencies.
 \author{
 
    Christian Panse, Christian Trachsel, 
-   and Jonas Grossmann 2012, 2013, 2014
+   and Jonas Grossmann 2012, 2013, 2014, 2016
 
 }
 

@@ -200,7 +200,8 @@ genSwathIonLib <- function(data,
                            fragmentIonFUN = .defaultSwathFragmentIon, 
                            iRT = specL::iRTpeptides,
                            AminoAcids = protViz::AA,
-                           breaks=NULL){ 
+                           breaks=NULL,
+                           NORMALIZE=.normalize_rt){ 
   
   # one transition is useless anyway
   if (fragmentIonRange[1] < 2){
@@ -350,7 +351,7 @@ genSwathIonLib <- function(data,
   x.rt <- sapply(data, function(x){x$rt})
   
   if (length(iRT) > 1 & length(data.fit) > 1){
-    x.rt <- .normalize_rt(data, data.fit, iRT, plot=FALSE)
+    x.rt <- NORMALIZE(data, data.fit, iRT, plot=FALSE)
   }
   
   message("generating ion library ...")
@@ -391,7 +392,8 @@ genSwathIonLib <- function(data,
   message(paste("time taken: ",  difftime(time.end, time.start, units='secs'), "secs"))
   
   
-  output <- output[which(unlist(lapply (output, function (x) {fragmentIonRange[1] <= length(x@q3) && length(x@q3) <= fragmentIonRange[2]})))]
+  output.filter <- which(unlist(lapply (output, function (x) {fragmentIonRange[1] <= length(x@q3) && length(x@q3) <= fragmentIonRange[2]})))
+  output <- output[output.filter]
   message(paste("length of genSwathIonLibSpecL  after fragmentIonRange filtering", length(output)))
   
   return(specLSet(ionlibrary=output, 
@@ -402,7 +404,8 @@ genSwathIonLib <- function(data,
                                        topN = topN,
                                        fragmentIonMzRange = fragmentIonMzRange,
                                        fragmentIonRange = fragmentIonRange),
-                  rt.normalized=unlist(x.rt), 
-                  rt.input=unlist(lapply(data, function(x){x$rt}))))
+                  rt.normalized=unlist(x.rt[output.filter]), 
+                  rt.input=unlist(lapply(data, function(x){x$rt}))[output.filter])
+         )
 }
 
