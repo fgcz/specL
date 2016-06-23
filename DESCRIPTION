@@ -20,7 +20,7 @@ Description: specL provides a function for generating spectra libraries
 License: GPL-3
 URL: http://www.bioconductor.org/packages/devel/bioc/html/specL.html
 Collate: read.bibliospec.R genSwathIonLib.R annotate.protein_id.R
-        AllGenerics.R specL.R specLSet.R cdsw.R ssrc.R
+        AllGenerics.R specL.R specLSet.R cdsw.R ssrc.R zzz.R
 biocViews: MassSpectrometry, Proteomics
 LazyData: true
 URL: https://github.com/fgcz/specL
