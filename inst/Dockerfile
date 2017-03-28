@@ -1,11 +1,8 @@
-FROM bioconductor/devel_proteomics
+FROM bioconductor/release_core2
 MAINTAINER Christian Panse <cp@fgcz.ethz.ch>
-
-RUN sudo apt-get install git -y 
-
-RUN cd /tmp && git clone https://github.com/Bioconductor-mirror/specL.git 
-
-RUN cd /tmp && R CMD build --no-build-vignettes specL \
-	#&& R CMD check specL_*.tar.gz \
-	&& R CMD INSTALL specL_*.tar.gz \
-	&& echo "packageVersion('specL')" | R --no-save
+LABEL version="1.0"
+RUN R -e "install.packages(pkgs=c('devtools', 'knitr'), quiet=FALSE, repos='https://stat.ethz.ch/CRAN/', type='source'); \
+   library(devtools); \
+   source('https://bioconductor.org/biocLite.R'); \
+   biocLite('specL'); \ 
+   install_git('https://github.com/protViz/prozor', build_vignettes = TRUE, quiet = FALSE)" 
