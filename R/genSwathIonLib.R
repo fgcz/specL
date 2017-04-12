@@ -180,7 +180,7 @@
   mZ.idx<-order(mZ)
   NN_measured <- findNN_(q=unlist(mZ_sorted_fragment_ion), vec=mZ[mZ.idx]) 
   
-  op<-par(mfrow=c(2,1))
+  # op<-par(mfrow=c(2,1))
   plot(x$mZ[idx_topN_peaks], x$intensity[idx_topN_peaks], type='h', log='y')
   text(x$mZ[idx_topN_peaks], x$intensity[idx_topN_peaks], names(mZ_sorted_fragment_ion[NN_in_silico]), cex=0.5)
   
