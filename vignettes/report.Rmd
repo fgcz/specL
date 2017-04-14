@@ -21,6 +21,7 @@ output:
 ---
 
 
+
 # Requirements
 
 The following R packages has to be installed on the compute box.
@@ -30,6 +31,15 @@ library(specL)
 # library(Matrix)
 # library(prozor)
 ```
+
+This file can be rendered by useing the following code snippet.
+```{r eval=FALSE}
+library(rmarkdown)
+library(BiocStyle)
+report_file <- tempfile(fileext='.Rmd'); 
+file.copy(system.file("doc", "report.Rmd", package = "specL"), report_file); 
+rmarkdown::render(report_file, output_format='html_document', output_file='/tmp/report_specL.html')
+```       
 
 
 # Input
@@ -165,9 +175,6 @@ slotNames(specLibrary@ionlibrary[[1]])
 plot(specLibrary)
 ```
 
-
-
-
 # Output
 
 ```{r eval=TRUE}
@@ -190,6 +197,7 @@ Please cite our publication:
 Bioinformatics, pp. 2228-2231. 
 [DOI:10.1093/bioinformatics/btv105](http://dx.doi.org/10.1093/bioinformatics/btv105), 
 [PMID: 25712692](https://www.ncbi.nlm.nih.gov/pubmed/25712692).
+
 
 For questions and improvements please do contact the authors of the application [_generateSpecLibrary_](https://github.com/fgcz/generateSpecLibrary/graphs/contributors).
 
