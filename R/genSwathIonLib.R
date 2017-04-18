@@ -403,7 +403,8 @@ genSwathIonLib <- function(data,
                                        ignoreMascotIonScore = ignoreMascotIonScore,
                                        topN = topN,
                                        fragmentIonMzRange = fragmentIonMzRange,
-                                       fragmentIonRange = fragmentIonRange),
+                                       fragmentIonRange = fragmentIonRange,
+                                       iRTpeptides=iRT),
                   rt.normalized=unlist(x.rt[output.filter]), 
                   rt.input=unlist(lapply(data, function(x){x$rt}))[output.filter])
          )

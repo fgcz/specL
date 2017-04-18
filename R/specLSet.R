@@ -187,7 +187,7 @@ setMethod(f="summary", signature="specLSet", function(object){
 
 
 setMethod(f="plot", signature="specLSet", 
-          definition=function(x, iRTpeptides=specL::iRTpeptides, art=FALSE, ...){
+          definition=function(x, iRTpeptides=x@input.parameter$iRTpeptides, art=FALSE, ...){
             
             file <- as.factor(unlist( lapply(x@ionlibrary, function(y){ y@filename }) ))
             peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )

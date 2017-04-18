@@ -139,14 +139,16 @@ Month="Oct"
 
 % pmid25712692 
 @Article{specLBioInf,
-Author="Panse, C.  and Trachsel, C.  and Grossmann, J.  and Schlapbach, R. ",  
-Title="{spec{L} - {A}n {R}/{B}ioconductor package to prepare peptide spectrum matches for use in targeted proteomics}",
-Journal="Bioinformatics",
-Year="2015",
-Pages=" ",
-Month="Feb",
-Abstract={Targeted data extraction methods are attractive ways to obtain quantitative peptide information from a proteomics experiment. SWATH (Sequential Window Acquisition of all Theoretical Spectra) and DIA (Data Independent Acquisition) methods increase reproducibility of acquired data because the classical precursor selection is omitted and all present precursors are fragmented. However, especially for targeted data extraction, MS coordinates (retention time information precursor and fragment masses) are required for the particular entities (peptide ions). These coordinates are usually generated in a so called discovery experiment earlier on in the project if not available in public spectral library repositories. The quality of the assay panel is crucial to ensure appropriate downstream analysis. For that, a method is needed to create spectral libraries and to export customisable assay panels.\\ Here, we present a versatile set of functions to generate assay panels from spectral libraries for use in targeted data extraction methods (SWATH/DIA) in the area of proteomics. Availability: specL is implemented in the R language and available under an open-source license (GPL-3) in Bioconductor since BioC 3.0 (R-3.1) http://www.bioconductor.org (Trachsel, Panse, and Grossmann, 2015). A vignette with a complete tutorial describing data import/export and analysis is included in the package and can also be found as supplement material of this paper.\\ cp@fgcz.ethz.ch,jg@fgcz.ethz.ch.},
-Note={[DOI:\href{http://dx.doi.org/10.1093/bioinformatics/btv105}{10.1093/bioinformatics/btv105}] [PubMed:\href{http://www.ncbi.nlm.nih.gov/pubmed/25712692}{25712692}] }
+author = {Panse, Christian and Trachsel, Christian and Grossmann, Jonas and Schlapbach, Ralph},
+title = {specL—an R/Bioconductor package to prepare peptide spectrum matches for use in targeted proteomics},
+journal = {Bioinformatics},
+volume = {31},
+number = {13},
+pages = {2228},
+year = {2015},
+doi = {10.1093/bioinformatics/btv105},
+URL = { + http://dx.doi.org/10.1093/bioinformatics/btv105},
+eprint = {/oup/backfile/Content_public/Journal/bioinformatics/31/13/10.1093/bioinformatics/btv105/2/btv105.pdf}
 }
 
 
@@ -162,3 +164,25 @@ Pages="908--919",
 Month="Sep"
 }
 
+
+
+@inproceedings{bfabric,
+  author    = {Can T{\"{u}}rker and
+               Fuat Akal and
+               Dieter Studer{-}Joho and
+               Christian Panse and
+               Simon Barkow{-}Oesterreicher and
+               Hubert Rehrauer and
+               Ralph Schlapbach},
+  title     = {B-Fabric: the Swiss Army Knife for life sciences},
+  booktitle = {{EDBT} 2010, 13th International Conference on Extending Database Technology,
+               Lausanne, Switzerland, March 22-26, 2010, Proceedings},
+  pages     = {717--720},
+  year      = {2010},
+  crossref  = {DBLP:conf/edbt/2010},
+  url       = {http://doi.acm.org/10.1145/1739041.1739135},
+  doi       = {10.1145/1739041.1739135},
+  timestamp = {Wed, 06 Apr 2016 19:14:32 +0200},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/edbt/TurkerAJPBRS10},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
