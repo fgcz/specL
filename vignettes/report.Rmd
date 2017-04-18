@@ -151,7 +151,7 @@ BLIB_FILTERED <- annotate.protein_id(BLIB_FILTERED, fasta=FASTA)
 ```
 
 
-## Peptides used for RT normailization
+## Peptides used for RT normalization
 
 
 The following peptides are used for the RT normalization. The last column 
