@@ -11,5 +11,5 @@ http://www.bioconductor.org/developers/how-to/git-mirrors/
 ```r
 install.packages("devtools")
 library(devtools)
-install_github("fgcz/specL")
+install_github("Bioconductor-mirror/specL")
 ```
