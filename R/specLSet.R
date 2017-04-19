@@ -59,8 +59,8 @@ setMethod(f="summary", signature="specLSet", function(object){
   #    cat("\nInput:\n")
   cat("\nParameter:\n")
   
-  mapply (function(x, y){cat(paste("\t",x,'=',y,'\n',sep=''))}, 
-          names(object@input.parameter), object@input.parameter)
+  #mapply (function(x, y){cat(paste("\t",x,'=',y,'\n',sep=''))}, 
+  #        names(object@input.parameter), object@input.parameter)
   
   #    cat("\nOutput:\n")
   

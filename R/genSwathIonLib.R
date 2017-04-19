@@ -4,8 +4,6 @@
 # $Id$
 # $Date$
 
-
-
 .plot_ptm_ion <- function(psm){
   # find all spec idxs having at least one modification
   psm.mod_idx <- which(lapply(psm, function(x){sum(x$varModification != 0.0)}) > 0)
@@ -404,7 +402,8 @@ genSwathIonLib <- function(data,
                                        topN = topN,
                                        fragmentIonMzRange = fragmentIonMzRange,
                                        fragmentIonRange = fragmentIonRange,
-                                       iRTpeptides=iRT),
+                                       iRTpeptides=iRT,
+                                       fragmentIonFUN=fragmentIonFUN),
                   rt.normalized=unlist(x.rt[output.filter]), 
                   rt.input=unlist(lapply(data, function(x){x$rt}))[output.filter])
          )

@@ -151,7 +151,7 @@ BLIB_FILTERED <- annotate.protein_id(BLIB_FILTERED, fasta=FASTA)
 ```
 
 
-## Peptides used for RT normalization
+## Peptides used for RT nSormalization
 
 
 The following peptides are used for the RT normalization. The last column 
@@ -197,18 +197,21 @@ That means that __`r round(length(specLibrary@ionlibrary)/length(BLIB_FILTERED) 
 summary(specLibrary)
 ```
 
+
+In the following two code snippets the first element of the ion library is displayed:
 ```{r}
-length(specLibrary)
-slotNames(specLibrary)
-
-length(specLibrary@rt.input)
-length(specLibrary@rt.normalized)
+#  slotNames(specLibrary@ionlibrary[[1]])
 specLibrary@ionlibrary[[1]]
-
-slotNames(specLibrary@ionlibrary[[1]])
 ```
 
-```{r}
+
+```{r fig.retina=3}
+plot(specLibrary@ionlibrary[[1]])
+```
+
+
+plot an overview of the whole ion library
+```{r fig.retina=3}
 plot(specLibrary)
 ```
 
