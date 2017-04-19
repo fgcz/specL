@@ -173,7 +173,7 @@ kable(res, caption='peptides used for RT normaization.')
 
 
 ```{r message=FALSE}
-specLibrary <- specL::genSwathIonLib(
+specLibrary <<- specL::genSwathIonLib(
   data = BLIB_FILTERED,
   data.fit = BLIB_REDUNDANT,
   max.mZ.Da.error = INPUT$MZ_ERROR,
