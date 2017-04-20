@@ -159,16 +159,21 @@ setMethod(f="summary", signature="specLSet", function(object){
        main='specLSet iRT normalization',
        xlab="input retention time",
        ylab="independent retention time",
-       cex=0.5,
-       sub=f, 
-       cex.sub=0.5,
+       cex = 1.0,
+       pch = 16,
+       col = rgb(0.1, 0.1, 0,1, alpha=0.1),
+       sub = f, 
+       cex.sub = 0.5,
        ...)
   
   idx <- which(peptide %in% iRTpeptides$peptide & f == file)
   # mark the iRT peptides 
   points(x@rt.input[idx], 
          x@rt.normalized[idx], 
-         lwd=4, pch="X", cex=1.0, col='darkgreen')
+         lwd=4, 
+         pch="X", 
+         cex=1.0, 
+         col='darkgreen')
   
   legend('topleft', 'iRT peptides', pch='X', col='darkgreen')
   

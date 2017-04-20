@@ -1,16 +1,20 @@
 \name{NEWS}
+
 \title{News for Package 'specL'}
 \newcommand{\ghpr}{\href{https://github.com/protViz/specL/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/protViz/specL/issues/#1}{##1}}
 
-\section{CHANGES UNTIL VERSION 1.9.6 (2017-04-18)}{
+\section{CHANGES UNTIL VERSION 1.9.13 (2017-04-20)}{
 \itemize{
+  \item in \code{plot.specLSet} (normalized RT versus RT) use \code{pch=16} and color with parameter \code{alpha=0.1}. 
   \item fixed issue \ghit{22} by including the iRTs in the ionlibrary; \code{LIB <- genSwathIonLib(data=peptideStd, data.fit=peptideStd.redundant); LIB@input.parameter$iRTpeptides}.
   \item fixed issue \ghit{19}.
   \item added report.Rmd
   \item removed \code{par} command in specLset plot function
+  }
 }
-}
+
+
 \section{CHANGES IN VERSION 1.7.4 (2016-05-19)}{
   \itemize{
   \item USER VISIBLE CHANGES
