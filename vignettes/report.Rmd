@@ -279,10 +279,16 @@ plot(specLibrary@ionlibrary[[1]])
 ```
 
 
-plot an overview of the whole ion library
+plot an overview of the whole ion library. 
+Please note, that the iRT peptides used for the normalization of RT do not have
+to be included in the resulting  \code{specLibrary}.
+
 ```{r fig.retina=3}
 plot(specLibrary)
 ```
+
+
+
 
 # Output
 

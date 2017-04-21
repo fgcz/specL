@@ -4,13 +4,17 @@
 \newcommand{\ghpr}{\href{https://github.com/protViz/specL/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/protViz/specL/issues/#1}{##1}}
 
-\section{CHANGES UNTIL VERSION 1.9.13 (2017-04-20)}{
+\section{CHANGES UNTIL VERSION 1.9.15 (2017-04-21)}{
 \itemize{
-  \item in \code{plot.specLSet} (normalized RT versus RT) use \code{pch=16} and color with parameter \code{alpha=0.1}. 
+  \item added \CRANpkg{prozor} \code{(>= 0.2.2)} to the Suggest list.
+  \item added more specific R package version numbers in DESCRIPTION file.
+  \item in \code{plot.specLSet} (normalized RT versus RT) use \code{pch=16}
+  and color with parameter \code{alpha=0.1}. 
   \item fixed issue \ghit{22} by including the iRTs in the ionlibrary; \code{LIB <- genSwathIonLib(data=peptideStd, data.fit=peptideStd.redundant); LIB@input.parameter$iRTpeptides}.
   \item fixed issue \ghit{19}.
-  \item added report.Rmd
-  \item removed \code{par} command in specLset plot function
+  \item removed \code{par} command in specLset plot function.
+  \item added \code{vignettes/report.Rmd} file, 
+  see also \url{http://bioconductor.org/packages/devel/bioc/vignettes/specL/inst/doc/report.html}.
   }
 }
 

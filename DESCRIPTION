@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.9.13
+Version: 1.9.15
 Authors@R: c(person("Christian", "Panse", email = "cp@fgcz.ethz.ch", role = c("aut", "cre")),
         person("Jonas", "Grossmann", email = "jg@fgcz.ethz.ch", role = "aut"),
         person("Christian", "Trachsel", email = "christian.trachsel@fgcz.uzh.ch", role = "aut"),
@@ -12,19 +12,20 @@ Author: Christian Trachsel [aut],
 	Jonas Grossmann [aut],
 	Witold E. Wolski [ctb]
 Maintainer: Christian Panse <cp@fgcz.ethz.ch>, Witold E. Wolski <wewolski@gmail.com>
-Depends: R (>= 3.3),
-	DBI,
-	methods,
-	protViz (>= 0.2.15), 
-	RSQLite,
-	seqinr
+Depends: R (>= 3.3.2),
+	DBI (>= 0.5.1),
+	methods (>= 3.3.2),
+	protViz (>= 0.2.28), 
+	RSQLite (>= 1.1.2),
+	seqinr (>= 3.3.3)
 LinkingTo: Rcpp (>= 0.12.4)
 Suggests: BiocGenerics,
-	BiocStyle,
-	knitr,
+	BiocStyle (>= 2.2.1),
+	knitr (>= 1.15.1),
 	msqc1 (>= 1.0.0),
-	plotrix,
-	RUnit
+	plotrix (>= 3.6.4),
+	prozor (>= 0.2.2),
+	RUnit (>= 0.4.31)
 Description: specL provides a function for generating spectra libraries
         which can be used for MRM SRM MS workflows in proteomics. The
         package provides a BiblioSpec reader, a function which can add
