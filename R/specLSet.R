@@ -224,7 +224,7 @@ setMethod(f="plot", signature="specLSet",
                    type='n',
                    ...)
               
-              draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})),
+              plotrix::draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@q1, length(xx@q3))})),
                           unlist(lapply(x@ionlibrary, function(xx){xx@q3})),
                           unlist(lapply(x@ionlibrary, function(xx){sqrt(xx@relativeFragmentIntensity)})),
                           col=colorMapAlpha[as.factor(frg)], border=colorMapAlpha[as.factor(frg)])
@@ -239,7 +239,7 @@ setMethod(f="plot", signature="specLSet",
                    main='Relative Fragment Intensity ~ rt * fragment ion map',
                    sub='The areas represent the fragment ion intensities.',
                    ...)
-              draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})),
+              plotrix::draw.circle(unlist(lapply(x@ionlibrary, function(xx){rep(xx@irt, length(xx@q3))})),
                           unlist(lapply(x@ionlibrary, function(xx){xx@q3})),
                           unlist(lapply(x@ionlibrary, function(xx){sqrt(xx@relativeFragmentIntensity)}))/10,
                           col=colorMapAlpha[as.factor(frg)], border=colorMapAlpha[as.factor(frg)])
