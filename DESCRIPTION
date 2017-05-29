@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.11.1
+Version: 1.11.2
 Authors@R: c(person("Christian", "Panse", email = "cp@fgcz.ethz.ch", role = c("aut", "cre")),
         person("Jonas", "Grossmann", email = "jg@fgcz.ethz.ch", role = "aut"),
         person("Christian", "Trachsel", email = "christian.trachsel@fgcz.uzh.ch", role = "aut"),
@@ -15,7 +15,7 @@ Maintainer: Christian Panse <cp@fgcz.ethz.ch>, Witold E. Wolski <wewolski@gmail.
 Depends: R (>= 3.3.2),
 	DBI (>= 0.5.1),
 	methods (>= 3.3.2),
-	protViz (>= 0.2.28), 
+	protViz (>= 0.2.31), 
 	RSQLite (>= 1.1.2),
 	seqinr (>= 3.3.3)
 LinkingTo: Rcpp (>= 0.12.4)
@@ -35,7 +35,7 @@ Description: specL provides a function for generating spectra libraries
 License: GPL-3
 URL: http://www.bioconductor.org/packages/devel/bioc/html/specL.html
 Collate: read.bibliospec.R genSwathIonLib.R annotate.protein_id.R
-        AllGenerics.R specL.R specLSet.R cdsw.R ssrc.R zzz.R
+        AllGenerics.R specL.R specLSet.R cdsw.R zzz.R
 biocViews: MassSpectrometry, Proteomics
 LazyData: true
 URL: https://github.com/fgcz/specL
