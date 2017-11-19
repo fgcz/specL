@@ -55,8 +55,10 @@
     q3 <- x@q3
     q1 <- x@q1
     
-    q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
-    q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
+    q1_idx <- lower_bound_(q1, breaks)
+    q3_idx <- lower_bound_(q3, breaks)
+    # q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
+    #q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
     
     
     res <- cbind(q1, q1_idx, q3_idx,  

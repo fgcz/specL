@@ -12,6 +12,7 @@ importFrom("protViz", findNN)
 importFrom("protViz", findNN_)
 importFrom("protViz", fragmentIon)
 importFrom("protViz", ssrc)
+importFrom("protViz", lower_bound_)
 
 importFrom("seqinr", read.fasta)
 
