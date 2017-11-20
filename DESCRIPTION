@@ -3,19 +3,19 @@ Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
 Version: 1.13.2
-Authors@R: c(person("Christian", "Panse", email = "cp@fgcz.ethz.ch", role = c("aut", "cre")),
-        person("Jonas", "Grossmann", email = "jg@fgcz.ethz.ch", role = "aut"),
+Authors@R: c(person("Christian", "Panse", email = "cp@fgcz.ethz.ch", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1975-3064")),
+        person("Jonas", "Grossmann", email = "jg@fgcz.ethz.ch", role = "aut", comment = c(ORCID = "0000-0002-6899-9020")),
         person("Christian", "Trachsel", email = "christian.trachsel@fgcz.uzh.ch", role = "aut"),
         person("Witold E.", "Wolski", email = "wewolski@gmail.com", role = "ctb"))
 Author: Christian Trachsel [aut],
-	Christian Panse [aut, cre], 
-	Jonas Grossmann [aut],
+	Christian Panse [aut, cre] (0000-0003-1975-3064), 
+	Jonas Grossmann [aut] (0000-0002-6899-9020),
 	Witold E. Wolski [ctb]
 Maintainer: Christian Panse <cp@fgcz.ethz.ch>, Witold E. Wolski <wewolski@gmail.com>
 Depends: R (>= 3.3.2),
 	DBI (>= 0.5.1),
 	methods (>= 3.3.2),
-	protViz (>= 0.2.31), 
+	protViz (>= 0.2.45), 
 	RSQLite (>= 1.1.2),
 	seqinr (>= 3.3.3)
 Suggests: BiocGenerics,
@@ -25,7 +25,7 @@ Suggests: BiocGenerics,
 	plotrix (>= 3.6.4),
 	prozor (>= 0.2.2),
 	RUnit (>= 0.4.31)
-Description: specL provides a function for generating spectra libraries
+Description: provides a function for generating spectra libraries
         which can be used for MRM SRM MS workflows in proteomics. The
         package provides a BiblioSpec reader, a function which can add
         the protein information using a FASTA formatted amino acid
