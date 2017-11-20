@@ -1,6 +1,3 @@
-#import("Rcpp")
-useDynLib(specL)
-
 import("methods")
 import("RSQLite")
 

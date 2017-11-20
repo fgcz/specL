@@ -57,9 +57,6 @@
     
     q1_idx <- lower_bound_(q1, breaks)
     q3_idx <- lower_bound_(q3, breaks)
-    # q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
-    #q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
-    
     
     res <- cbind(q1, q1_idx, q3_idx,  
                  lower=breaks[q3_idx], q3, upper=breaks[q3_idx+1], 
@@ -256,8 +253,11 @@ genSwathIonLib <- function(data,
     
     # TODO(cp): add the SWATH window filter here
     if (length(breaks) > 1){
-      q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
-      q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
+      # q1_idx <- .Call("lower_bound_", q1, breaks, PACKAGE = "specL")
+      # q3_idx <- .Call("lower_bound_", q3, breaks, PACKAGE = "specL")
+
+      q1_idx <- lower_bound_(q1, breaks)
+      q3_idx <- lower_bound_(q3, breaks)
       
       filter_swath_window <- (rep(q1_idx, length(q3_idx)) != q3_idx)
       if (length(filter_mass_error) != length(filter_swath_window)){

@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.13.0
+Version: 1.13.2
 Authors@R: c(person("Christian", "Panse", email = "cp@fgcz.ethz.ch", role = c("aut", "cre")),
         person("Jonas", "Grossmann", email = "jg@fgcz.ethz.ch", role = "aut"),
         person("Christian", "Trachsel", email = "christian.trachsel@fgcz.uzh.ch", role = "aut"),
@@ -18,7 +18,6 @@ Depends: R (>= 3.3.2),
 	protViz (>= 0.2.31), 
 	RSQLite (>= 1.1.2),
 	seqinr (>= 3.3.3)
-LinkingTo: Rcpp (>= 0.12.4)
 Suggests: BiocGenerics,
 	BiocStyle (>= 2.2.1),
 	knitr (>= 1.15.1),
@@ -41,4 +40,3 @@ LazyData: true
 URL: https://github.com/fgcz/specL
 BugReports: https://github.com/fgcz/specL/issues
 VignetteBuilder: knitr
-SystemRequirements: C++11
