@@ -7,7 +7,7 @@
 \section{CHANGES UNTIL VERSION 1.13.02 (2017-11-20)}{
 \itemize{
 	\item Eliminated C++-11 and Rcpp linking. Passing unit tests.
-	\item use \code{lower_bound_} function exported by \url(https://cran.r-project.org/package=protViz)
+	\item use \code{lower_bound_} function exported by \url{https://cran.r-project.org/package=protViz}
 }
 }
 \section{CHANGES UNTIL VERSION 1.9.15 (2017-04-21)}{
