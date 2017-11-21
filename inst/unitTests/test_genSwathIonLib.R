@@ -93,8 +93,8 @@ function(){
     # use case 1 using the breaks option
     x <- ionlibrary(il.swath_windows)[[1]]
     
-    q1_idx <- .Call("lower_bound_", x@q1, breaks, PACKAGE = "specL")
-    q3_idx <- .Call("lower_bound_", x@q3, breaks, PACKAGE = "specL")
+    q1_idx <- lower_bound_(x@q1, breaks)
+    q3_idx <- lower_bound_(x@q3, breaks)
     
     checkTrue(q1_idx == 32)
     
@@ -110,8 +110,8 @@ function(){
     x <- ionlibrary(il.default)[[1]]
     
     # compute collision ions, should be id 32
-    q1_idx <- .Call("lower_bound_", x@q1, breaks, PACKAGE = "specL")
-    q3_idx <- .Call("lower_bound_", x@q3, breaks, PACKAGE = "specL")
+    q1_idx <- lower_bound_(x@q1, breaks)
+    q3_idx <- lower_bound_(x@q3, breaks)
 
     checkTrue(q1_idx == 32)
     lapply (q3_idx == c(35, 50, 29, 32, 46), function(x){checkTrue(x)} )
