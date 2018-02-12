@@ -107,7 +107,8 @@ to read the blib files into R.
 The from \Rcode{read.bibliospec} generated object has its own plot functions.
 The LC-MS map graphs peptide mass versus retention time.
 <<keep.source = TRUE, eval = TRUE, fig = TRUE>>=
-plot(peptideStd)
+# plot(peptideStd)
+plot(0,0, main='MISSING')
 @
 
 
@@ -116,7 +117,8 @@ The individual peptide spectrum match (psm) is displayed by using the
 <<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=5>>=
 demoIdx <- 40
 # str(peptideStd[[demoIdx]])
-res <- plot(peptideStd[[demoIdx]], ion.axes=TRUE)
+#res <- plot(peptideStd[[demoIdx]], ion.axes=TRUE)
+plot(0,0, main='MISSING')
 @
 
 \subsection{Read from Mascot result files}
