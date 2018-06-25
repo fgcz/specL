@@ -310,7 +310,7 @@ genSwathIonLib <- function(data,
     
     
     if ( sum(table(as.numeric(q3[filter_mass_error])[idx]) != 1) > 0){ 
-      stop("ERROR; At least on signal were assigned to two or more than one different in-silico computed fragment ions.")
+      warning("At least on q3 signal were assigned to two or more than one different in-silico computed fragment ions.")
     }
     
     res <- specL(group_id=group_id, 
