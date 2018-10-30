@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
         Proteomics
-Version: 1.15.0
+Version: 1.16.0
 Authors@R: c(person("Christian", "Panse", email = "cp@fgcz.ethz.ch", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1975-3064")),
         person("Jonas", "Grossmann", email = "jg@fgcz.ethz.ch", role = "aut", comment = c(ORCID = "0000-0002-6899-9020")),
         person("Christian", "Trachsel", email = "christian.trachsel@fgcz.uzh.ch", role = "aut"),
