@@ -4,6 +4,12 @@
 \newcommand{\ghpr}{\href{https://github.com/protViz/specL/pull/#1}{##1}}
 \newcommand{\ghit}{\href{https://github.com/protViz/specL/issues/#1}{##1}}
 
+\section{CHANGES UNTIL VERSION 1.17.22 (2019-01-24)}{
+\itemize{
+	\item{code cosmetics to eliminate ERRORS and WARNINGS in \code{R CMD BiocCheck} of version 3.9.}
+}
+}
+
 \section{CHANGES UNTIL VERSION 1.13.02 (2017-11-20)}{
 \itemize{
 	\item Eliminated C++-11 and Rcpp linking. Passing unit tests.

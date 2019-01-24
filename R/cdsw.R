@@ -7,7 +7,7 @@
 
 # compute dynamic swath windows
 cdsw <- function(x, n = 20, overlap = 1.0, ...) {
-  if (class(x) == "psmSet") {
+  if (is.psmSet(x)) {
     x <- unlist(lapply(x, function(x) {
       x$pepmass
     }))
@@ -17,7 +17,7 @@ cdsw <- function(x, n = 20, overlap = 1.0, ...) {
     }))
   }
   # x should be numeric
-  if (class(x) != "numeric") {
+  if (!is.numeric(x)) {
     warning("can not compute quantils. 'x' is not numeric.")
     return (NULL)
   }
