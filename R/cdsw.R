@@ -7,7 +7,7 @@
 
 # compute dynamic swath windows
 cdsw <- function(x, n = 20, overlap = 1.0, ...) {
-  if (is.psmSet(x)) {
+  if ("psmSet" %in% class(x)) {
     x <- unlist(lapply(x, function(x) {
       x$pepmass
     }))

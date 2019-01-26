@@ -1,42 +1,43 @@
 Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
-        Proteomics
-Version: 1.17.2
+    Proteomics
+Version: 1.17.3
 Authors@R: c(person("Christian", "Panse", 
-            email = "cp@fgcz.ethz.ch",
-	    role = c("aut", "cre"),
-	    comment = c(ORCID = "0000-0003-1975-3064")),
-        person("Jonas", "Grossmann",
-	    email = "jg@fgcz.ethz.ch",
-	    role = "aut",
-	    comment = c(ORCID = "0000-0002-6899-9020")),
-        person("Christian", "Trachsel",
-	    role = "aut"),
-        person("Witold E.", "Wolski",
-	    email = "wewolski@gmail.com",
-	    role = "ctb"))
+        email = "cp@fgcz.ethz.ch",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0003-1975-3064")),
+    person("Jonas", "Grossmann",
+        email = "jg@fgcz.ethz.ch",
+	role = "aut",
+	comment = c(ORCID = "0000-0002-6899-9020")),
+    person("Christian", "Trachsel",
+	role = "aut"),
+    person("Witold E.", "Wolski",
+	email = "wewolski@gmail.com",
+	role = "ctb"))
 Depends: R (>= 3.6),
-	DBI (>= 0.5.1),
-	methods (>= 3.3.2),
-	protViz (>= 0.4.0), 
-	RSQLite (>= 1.1.2),
-	seqinr (>= 3.3.3)
-Suggests: BiocStyle (>= 2.2.1),
-	knitr (>= 1.15.1),
-	msqc1 (>= 1.0.0),
-	rmarkdown,
-	RUnit (>= 0.4.31)
+    DBI (>= 0.5.1),
+    methods (>= 3.3.2),
+    protViz (>= 0.4.0), 
+    RSQLite (>= 1.1.2),
+    seqinr (>= 3.3.3)
+Suggests: BiocGenerics,
+    BiocStyle (>= 2.2.1),
+    knitr (>= 1.15.1),
+    msqc1 (>= 1.0.0),
+    rmarkdown,
+    RUnit (>= 0.4.31)
 Description: provides a function for generating spectra libraries
-        which can be used for MRM SRM MS workflows in proteomics. The
-        package provides a BiblioSpec reader, a function which can add
-        the protein information using a FASTA formatted amino acid
-        file, and an export method for using the created library in the
-        Spectronaut software.
+    which can be used for MRM SRM MS workflows in proteomics. The
+    package provides a BiblioSpec reader, a function which can add
+    the protein information using a FASTA formatted amino acid
+    file, and an export method for using the created library in the
+    Spectronaut software.
 License: GPL-3
 URL: http://www.bioconductor.org/packages/devel/bioc/html/specL.html
 Collate: read.bibliospec.R genSwathIonLib.R annotate.protein_id.R
-        AllGenerics.R specL.R specLSet.R cdsw.R zzz.R
+    AllGenerics.R specL.R specLSet.R cdsw.R zzz.R
 biocViews: MassSpectrometry, Proteomics
 LazyData: true
 URL: https://github.com/fgcz/specL
