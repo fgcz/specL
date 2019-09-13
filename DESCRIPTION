@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
     Proteomics
-Version: 1.19.0
+Version: 1.19.1
 Authors@R: c(person("Christian", "Panse", 
         email = "cp@fgcz.ethz.ch",
         role = c("aut", "cre"),
@@ -17,17 +17,16 @@ Authors@R: c(person("Christian", "Panse",
 	email = "wewolski@gmail.com",
 	role = "ctb"))
 Depends: R (>= 3.6),
-    DBI (>= 0.5.1),
-    methods (>= 3.3.2),
-    protViz (>= 0.4.0), 
-    RSQLite (>= 1.1.2),
-    seqinr (>= 3.3.3)
+    DBI (>= 0.5),
+    methods (>= 3.3),
+    protViz (>= 0.4),
+    RSQLite (>= 1.1),
+    seqinr (>= 3.3)
 Suggests: BiocGenerics,
-    BiocStyle (>= 2.2.1),
-    knitr (>= 1.15.1),
-    msqc1 (>= 1.0.0),
+    BiocStyle (>= 2.2),
+    knitr (>= 1.15),
     rmarkdown,
-    RUnit (>= 0.4.31)
+    RUnit (>= 0.4)
 Description: provides a function for generating spectra libraries
     which can be used for MRM SRM MS workflows in proteomics. The
     package provides a BiblioSpec reader, a function which can add
@@ -35,11 +34,10 @@ Description: provides a function for generating spectra libraries
     file, and an export method for using the created library in the
     Spectronaut software.
 License: GPL-3
-URL: http://www.bioconductor.org/packages/devel/bioc/html/specL.html
+URL: http://bioconductor.org/packages/specL/
 Collate: read.bibliospec.R genSwathIonLib.R annotate.protein_id.R
     AllGenerics.R specL.R specLSet.R cdsw.R zzz.R
 biocViews: MassSpectrometry, Proteomics
 LazyData: true
-URL: https://github.com/fgcz/specL
 BugReports: https://github.com/fgcz/specL/issues
 VignetteBuilder: knitr
