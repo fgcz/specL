@@ -93,13 +93,13 @@ described in [@pmid25712692].
 
 The following R packages has to be installed on the compute box.
 
-```{r}
+```{r library}
 library(specL)
 ```
 
 This file can be rendered by useing the following code snippet.
 
-```{r eval=FALSE}
+```{r render, eval=FALSE}
 library(rmarkdown)
 library(BiocStyle)
 report_file <- tempfile(fileext='.Rmd'); 
@@ -117,7 +117,7 @@ rmarkdown::render(report_file,
 ## Parameter
 If no `INPUT` is defined the report uses the `r Biocpkg("specL")` package's data
 and the following default parameters. 
-```{r}
+```{r defineInput}
 if(!exists("INPUT")){
   INPUT <- list(FASTA_FILE 
       = system.file("extdata", "SP201602-specL.fasta.gz",
@@ -142,7 +142,7 @@ if(!exists("INPUT")){
 ```
 
 The library generation workflow was performed using the following parameters:
-```{r echo=FALSE, eval=FALSE}
+```{r cat, echo=FALSE, eval=FALSE}
   cat(
   " MASCOTSCORECUTOFF = ", INPUT$MASCOTSCORECUTOFF, "\n",
   " BLIB_FILTERED_FILE = ", INPUT$BLIB_FILTERED_FILE, "\n",
@@ -157,7 +157,7 @@ The library generation workflow was performed using the following parameters:
 
 ```
 
-```{r echo=FALSE, results='asis'}
+```{r kableParameter, echo=FALSE, results='asis'}
 library(knitr)
 # kable(t(as.data.frame(INPUT)))
 ii <- ((lapply(INPUT, function(x){ if(typeof(x) %in% c("character", "double")){paste(x, collapse = ', ')}else{NULL} } )))
@@ -172,7 +172,7 @@ kable(parameter, caption = 'used INPUT parameter')
 
 The following R helper function is used for composing the in-silico 
 fragment ions using `r CRANpkg("protViz")`.
-```{r}
+```{r defineFragmenIons}
 fragmentIonFunction_specL <- function (b, y) {
   Hydrogen <- 1.007825
   Oxygen <- 15.994915
@@ -188,14 +188,14 @@ fragmentIonFunction_specL <- function (b, y) {
 
 ## Read the sqlite files
 
-```{r warning=FALSE}
+```{r readSqliteFILTERED, warning=FALSE}
 BLIB_FILTERED <- read.bibliospec(INPUT$BLIB_FILTERED_FILE) 
 
 summary(BLIB_FILTERED)
 ```
 
 
-```{r warning=FALSE}
+```{r readSqliteREDUNDANT, warning=FALSE}
 BLIB_REDUNDANT <- read.bibliospec(INPUT$BLIB_REDUNDANT_FILE) 
 summary(BLIB_REDUNDANT)
 ```
@@ -237,8 +237,6 @@ if (sum(incl) > 0){
 }
 ```
 
-
-
 # Generate the ion library
 
 ```{r specL::genSwathIonLib, message=FALSE}
@@ -257,38 +255,36 @@ specLibrary <- specL::genSwathIonLib(
 
 ## Library Generation Summary
 
-Total Number of PSM's with Mascot e score < 0.05, in your search is __`r length(BLIB_REDUNDANT)`__. The number of unique precurosors is __`r length(BLIB_FILTERED)`__.
+Total Number of PSM's with Mascot e score < 0.05,
+in your search is __`r length(BLIB_REDUNDANT)`__.
+The number of unique precurosors is __`r length(BLIB_FILTERED)`__.
 The size of the generated ion library is __`r length(specLibrary@ionlibrary)`__.
-That means that __`r round(length(specLibrary@ionlibrary)/length(BLIB_FILTERED) * 100, 2)`__ % of the unique precursors fullfilled the filtering criteria.
+That means that __`r round(length(specLibrary@ionlibrary)/length(BLIB_FILTERED) * 100, 2)`__ % 
+of the unique precursors fullfilled the filtering criteria.
 
 
-```{r summary}
+```{r summarySpecLibrary}
 summary(specLibrary)
 ```
 
 
 In the following two code snippets the first element of the ion library is displayed:
-```{r}
+```{r showSpecLibrary}
 #  slotNames(specLibrary@ionlibrary[[1]])
 specLibrary@ionlibrary[[1]]
 ```
 
-
-```{r fig.retina=3}
+```{r plotSpecLibraryIons, fig.retina=3}
 plot(specLibrary@ionlibrary[[1]])
 ```
-
 
 plot an overview of the whole ion library. 
 Please note, that the iRT peptides used for the normalization of RT do not have
 to be included in the resulting  \code{specLibrary}.
 
-```{r fig.retina=3}
+```{r plotSpecLibrary, fig.retina=3}
 plot(specLibrary)
 ```
-
-
-
 
 # Output
 
@@ -298,7 +294,9 @@ write.spectronaut(specLibrary, file =  INPUT$OUTPUT_LIBRARY_FILE)
 
 # Remarks
 
-For questions and improvements please do contact the authors of the application [_generateSpecLibrary_](https://github.com/fgcz/generateSpecLibrary/graphs/contributors).
+For questions and improvements please
+do contact the authors of the application
+[_generateSpecLibrary_](https://github.com/fgcz/generateSpecLibrary/graphs/contributors).
 
 This report Rmarkdown file has been written by Witold E. Wolski and
 is maintained by CP.
