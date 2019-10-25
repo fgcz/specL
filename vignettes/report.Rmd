@@ -135,7 +135,8 @@ if(!exists("INPUT")){
     FRAGMENTIONMZRANGE = c(300, 1250),
     FRAGMENTIONRANGE = c(5, 200),
     NORMRTPEPTIDES = specL::iRTpeptides,
-    OUTPUT_LIBRARY_FILE = tempfile(),
+    OUTPUT_LIBRARY_FILE = tempfile(fileext ='.csv'),
+    RDATA_LIBRARY_FILE = tempfile(fileext ='.RData'),
     ANNOTATE = TRUE
     )
 } 
@@ -217,9 +218,7 @@ if(INPUT$ANNOTATE){
 }
 ```
 
-
 ## Peptides used for RT normalization
-
 
 The following peptides are used for the RT normalization. The last column 
 indicates by FALSE/TRUE if a peptides is included in the data. The rows were 
@@ -255,7 +254,7 @@ specLibrary <- specL::genSwathIonLib(
 
 ## Library Generation Summary
 
-Total Number of PSM's with Mascot e score < 0.05,
+Total Number of PSM's with Mascot e-value < 0.05,
 in your search is __`r length(BLIB_REDUNDANT)`__.
 The number of unique precurosors is __`r length(BLIB_FILTERED)`__.
 The size of the generated ion library is __`r length(specLibrary@ionlibrary)`__.
@@ -278,13 +277,13 @@ specLibrary@ionlibrary[[1]]
 plot(specLibrary@ionlibrary[[1]])
 ```
 
-plot an overview of the whole ion library. 
-Please note, that the iRT peptides used for the normalization of RT do not have
-to be included in the resulting  \code{specLibrary}.
 
 ```{r plotSpecLibrary, fig.retina=3}
 plot(specLibrary)
 ```
+plots an overview of the whole ion library. 
+Please note, that the iRT peptides used for the normalization of RT do not have
+to be included in the resulting  \code{specLibrary}.
 
 # Output
 
@@ -292,13 +291,17 @@ plot(specLibrary)
 write.spectronaut(specLibrary, file =  INPUT$OUTPUT_LIBRARY_FILE)
 ```
 
+```{r save, eval=TRUE}
+save(specLibrary, file = INPUT$RDATA_LIBRARY_FILE)
+```
+saves the result object to a file.
+
 # Remarks
 
 For questions and improvements please
-do contact the authors of the application
-[_generateSpecLibrary_](https://github.com/fgcz/generateSpecLibrary/graphs/contributors).
+do contact the authors of the [specL](https://bioconductor.org/packages/specL/).
 
-This report Rmarkdown file has been written by Witold E. Wolski and
+This report Rmarkdown file has been written by WEW and
 is maintained by CP.
 
 # Session info

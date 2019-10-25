@@ -154,6 +154,9 @@ setMethod(f="summary", signature="specLSet", function(object){
 .retentiontimePlotFile <- function(x, file, peptide, iRTpeptides, ...){
 
 	lapply(unique(file), function(f){
+		try({
+
+	print(head(x@rt.input[f==file]))
 
   plot(x@rt.normalized[f==file] ~ x@rt.input[f==file],
        main='specLSet iRT normalization',
@@ -177,17 +180,18 @@ setMethod(f="summary", signature="specLSet", function(object){
   
   legend('topleft', 'iRT peptides', pch='X', col='darkgreen')
   
-  n<-nchar(as.character(unique(file)))
+  n <- nchar(as.character(unique(file)))
+		})
 	})
 }
 
 
 .ionChargeState <- function(x, frg, frgTable){
-  cm<-rainbow(length(frgTable))
-  hist(x@rt.normalized)
+  cm <- rainbow(length(frgTable))
+
+  hist(x@rt.normalized) 
   
-  barplot(frgTable, col=cm,
-          main='ion type / charge state')
+  barplot(frgTable, col=cm, main='ion type / charge state')
 }
 
 
@@ -198,14 +202,13 @@ setMethod(f="plot", signature="specLSet",
             peptide <- unlist( lapply(x@ionlibrary, function(y){ y@peptide_sequence }) )
             
             .retentiontimePlot(x, file, peptide, iRTpeptides=iRTpeptides, ...)
+
             .retentiontimePlotFile(x, file, peptide, iRTpeptides=iRTpeptides, ...)
             
             frg <- unlist(lapply(x@ionlibrary, function(xx){paste(xx@frg_type, xx@frg_z, "+",sep='')}))
             frgTable <- table(frg)
             
             .ionChargeState(x,frg, frgTable)
-            
-            
             
             #legend('topleft', 
             #       paste(names(frgTable), frgTable, sep'='),
