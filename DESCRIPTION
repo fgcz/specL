@@ -19,7 +19,7 @@ Authors@R: c(person("Christian", "Panse",
 Depends: R (>= 3.6),
     DBI (>= 0.5),
     methods (>= 3.3),
-    protViz (>= 0.4),
+    protViz (>= 0.5),
     RSQLite (>= 1.1),
     seqinr (>= 3.3)
 Suggests: BiocGenerics,
