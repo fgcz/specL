@@ -11,8 +11,8 @@ function(){
   s2 <- genSwathIonLib(peptideStd[seq(2,length(peptideStd), by=2)], peptideStd.redundant)
   s <- genSwathIonLib(peptideStd, peptideStd.redundant)
   
-  m12 <- merge(s1, s2)
-  m21 <- merge(s2, s1)
+  m12 <- merge.specLSet(s1, s2)
+  m21 <- merge.specLSet(s2, s1)
 
   idx.s <- order(unlist(lapply(ionlibrary(s), function(x){x@group_id})))
   idx.m12 <- order(unlist(lapply(ionlibrary(m12), function(x){x@group_id})))
