@@ -10,9 +10,9 @@ BiocStyle::latex()
 
 \author{
     Christian Panse\thanks{\email{cp@fgcz.ethz.ch}}\\
-    Christian Trachsel\thanks{\email{christian.trachsel@fgcz.ethz.ch}}\\
+    Christian Trachsel\\
     Jonas Grossmann\thanks{\email{jg@fgcz.ethz.ch}}\\
-    Witold Wolski\thanks{\email{wewolski@gmail.com}}\\
+    Witold Wolski\thanks{\email{wew@fgcz.ethz.ch}}
 }
 
 \begin{document}
@@ -74,8 +74,13 @@ The first step which has to be performed on the R shell is loading
 \Biocpkg{specL} library.
 
 <<keep.source = FALSE, eval = TRUE, fig = FALSE, echo=FALSE>>=
-rm(list=ls())
-options(width = 80)
+#rm(list=ls())
+#options(width = 80)
+options(prompt = "R> ",
+        continue = "+  ",
+        width = 60,
+        useFancyQuotes = FALSE,
+        warn = -1)
 @
 
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
@@ -231,13 +236,14 @@ However if you have no iRT peptide continue reading in section \ref{sec:noiRT}.
 
 Generation of the spec Library with default (see Table \ref{table:default}) settings.
 <<keep.source = TRUE, eval = TRUE, fig = FALSE>>=
-res.genSwathIonLib <- genSwathIonLib(data=peptideStd, 
-                                     data.fit=peptideStd.redundant)
+res.genSwathIonLib <- genSwathIonLib(data = peptideStd, 
+   data.fit = peptideStd.redundant)
 @
 
 \begin{table}[h]
 \centering
 
+\resizebox{.99\textwidth}{!}{
 \begin{tabular}{l|l|r}
 
 \hline
@@ -250,6 +256,7 @@ parameter      &    description&    value      \\
   \Rcode{fragmentIonFUN} &desired fragment ion types& \Rcode{b1+,y1+,b2+,y2+,b3+,y3+}\\
 \hline
 \end{tabular}
+}
 \caption{\label{table:default}\Rfunction{genSwathIonLib} default settings}
 \end{table}
 
@@ -326,8 +333,8 @@ iRTpeptides
 The method genSwathIonLib uses:
 
 <<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
-fit <- lm(formula = rt ~ aggregateInputRT * fileName, data=m)
-
+fit <- lm(formula = rt ~ aggregateInputRT * fileName,
+  data=m)
 @
 
 to build the linear models for each MS measurement individually. 
@@ -335,10 +342,11 @@ For defining \Rcode{m} both data sets were aggregated over the attributes
 \Rcode{peptide} and \Rcode{fileName} using the \Rcode{mean} operator.
 
 <<keep.source = TRUE, eval = FALSE, fig = FALSE>>=
-data<-aggregate(df$rt, by=list(df$peptide, df$fileName), FUN=mean)
-data.fit<-aggregate(df.fit$rt, 
-                    by=list(df.fit$peptide, df.fit$fileName), 
-                    FUN=mean)
+data <- aggregate(df$rt, by = list(df$peptide, df$fileName),
+  FUN = mean)
+data.fit <- aggregate(df.fit$rt, 
+  by = list(df.fit$peptide, df.fit$fileName), 
+  FUN = mean)
 @
 
 Afterwards the following join operator was applied.
@@ -356,7 +364,7 @@ to the two data sets.
 
 <<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=6>>=
 # calls the plot method for a specLSet object
-op<-par(mfrow=c(2,3)) 
+op <- par(mfrow=c(2,3)) 
 plot(res.genSwathIonLib)
 par(op)
 @
@@ -370,14 +378,16 @@ regression.
 If no iRT peptides are contained in the data not iRT normalization is applied.
 The scatter plot below shows on the y axis that there were not iRT transformation.
 <<keep.source = TRUE, eval = TRUE, fig = TRUE, width=8, height=6>>=
-idx.iRT<-which(unlist(lapply(peptideStd, function(x){
-  if(x$peptideSequence %in% iRTpeptides$peptide){0}else{1}
+idx.iRT <- which(unlist(lapply(peptideStd,
+  function(x){
+    if(x$peptideSequence %in% iRTpeptides$peptide){0}
+    else{1}
   })) == 0)
 
 # remove all iRTs and compute ion library
 res.genSwathIonLib.no_iRT <- genSwathIonLib(peptideStd[-idx.iRT])
 summary(res.genSwathIonLib.no_iRT)
-op<-par(mfrow=c(2,3)) 
+op <- par(mfrow = c(2, 3)) 
 plot(res.genSwathIonLib.no_iRT)
 par(op)
 @
@@ -386,7 +396,8 @@ par(op)
 The output can be written as an ASCII text file.
 
 <<keep.source = TRUE, eval = TRUE, fig = FALSE, echo=TRUE>>=
-write.spectronaut(res.genSwathIonLib, file="specL-Spectronaut.txt")
+write.spectronaut(res.genSwathIonLib,
+  file="specL-Spectronaut.txt")
 @
 
 %\subsection{Best praxis parameter settings for library generation}
@@ -400,7 +411,7 @@ Peakview. Alternatively it can be used as a basis for script based
 construction of SRM/MRM assays.
 
 \subsection{Benchmark}
-The benchmark were processed on a 
+The benchmarks were processed on a 
 12 core XEON Server (X5650 @ 2.67GHz) running Linux Debian wheezy
 having
 R version 3.1.1 (2014-07-10) , specL 1.1.2, and BiocParallel 1.0.0
@@ -409,7 +420,7 @@ As FASTA we used a TAIR10 retrived from \url{http://www.arabidopsis.org/} and Hu
 
 \begin{table}[h]
 \centering
-{\small
+\resizebox{.99\textwidth}{!}{
 \begin{tabular}{rrr|rr|rr}
 \hline
 fasta=TAIR10     &                    &           & blib  [unpublished]                 &           & runtime  &           \\
@@ -437,14 +448,13 @@ res <- genSwathIonLib(data, data.fit,
 \section{Acknowledgement}
 
 The authors thank all colleagues of the Functional Genomics Center 
-Zuerich (FGCZ), and especial thank goes to our test users Sira 
-Echevarr\'{i}a Zome\~{n}o (Swiss Federal Institute of Technology in 
-Zurich (ETHZ)), Tobias Kockmann (Swiss Federal Institute of Technology in 
-Zurich (ETHZ)),
-Lukas von Ziegler (Brain Research Institute, UZH\texttt{|}ETH Zurich),
-and Stephan Michalik (Ernst-Moritz-Arndt-Universit{\"a}t Greifswald, Germany).
+Zuerich (FGCZ), and especial thank goes to our test users
+Sira~Echevarr\'{i}a~Zome\~{n}o (ETHZ),
+Tobias~Kockmann (ETHZ),
+Lukas~von~Ziegler (Brain Research Institute, UZH\texttt{|}ETH Zurich),
+and Stephan~Michalik (Ernst-Moritz-Arndt-Universit{\"a}t Greifswald, Germany).
 
-\section{To Do for next releases}
+\section{TODO for next releases}
 \begin{itemize}
 
 \item importer for peakview csv format; enable \Rcode{compare.specLSet(object0, object1)}
