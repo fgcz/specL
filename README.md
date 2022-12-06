@@ -3,6 +3,7 @@
 
 # specL
 
+prepare peptide spectrum matches for use in targeted proteomics using R and Bioconductor 
 
 ## Talks
 
