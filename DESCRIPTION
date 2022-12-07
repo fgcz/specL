@@ -2,7 +2,7 @@ Package: specL
 Type: Package
 Title: specL - Prepare Peptide Spectrum Matches for Use in Targeted
     Proteomics
-Version: 1.33.1
+Version: 1.33.2
 Authors@R: c(person("Christian", "Panse", 
         email = "cp@fgcz.ethz.ch",
         role = c("aut", "cre"),
@@ -16,10 +16,10 @@ Authors@R: c(person("Christian", "Panse",
     person("Witold E.", "Wolski",
 	email = "wew@fgcz.ethz.ch",
 	role = "ctb"))
-Depends: R (>= 3.6),
+Depends: R (>= 4.1),
     DBI (>= 0.5),
     methods (>= 3.3),
-    protViz (>= 0.5),
+    protViz (>= 0.7),
     RSQLite (>= 1.1),
     seqinr (>= 3.3)
 Suggests: BiocGenerics,
@@ -33,8 +33,7 @@ Description: provides a functions for generating spectra libraries
     the protein information using a FASTA formatted amino acid
     file, and an export method for using the created library in the
     Spectronaut software. The package is developed, tested and used
-    at the Functional Genomics Center Zurich
-    <http://www.fgcz.ethz.ch>.
+    at the Functional Genomics Center Zurich <https://fgcz.ch>.
 License: GPL-3
 URL: http://bioconductor.org/packages/specL/
 Collate: read.bibliospec.R genSwathIonLib.R annotate.protein_id.R
