@@ -4,7 +4,7 @@ author:
 - name: Christian Panse
   affiliation:
     - &fgcz Functional Genomics Center Zurich - Swiss Federal Institute of Technology in Zurich
-    - &sib Swiss Institute of Bioinformatics
+    - &sib Swiss Institute of Bioinformatics, Quartier Sorge - Batiment Amphipole, CH-1015 Lausanne, Switzerland
   email: cp@fgcz.ethz.ch
 - name: Christian Trachsel
   affiliation:
